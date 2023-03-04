@@ -51,7 +51,7 @@ export default function Layout({ children }: LayoutProps) {
               />
             </MediaQuery>
             <Link href={"/"} style={{ textDecoration: "none", color: "inherit" }}>
-              <Center inline>
+              <Center>
                 <IconAtom size={rem(48)} />
                 <Text size={"lg"}>MeetIn</Text>
               </Center>
