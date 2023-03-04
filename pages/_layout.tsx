@@ -1,6 +1,17 @@
 import { useState } from "react";
-import { AppShell, Navbar, Header, Text, MediaQuery, Burger, useMantineTheme } from "@mantine/core";
+import {
+  AppShell,
+  Navbar,
+  Header,
+  Text,
+  Center,
+  MediaQuery,
+  Burger,
+  useMantineTheme,
+  rem,
+} from "@mantine/core";
 import { MainLinks } from "../components/MainLinks";
+import { IconAtom } from "@tabler/icons-react";
 import Link from "next/link";
 
 type LayoutProps = {
@@ -10,6 +21,7 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+
   return (
     <AppShell
       styles={{
@@ -38,9 +50,11 @@ export default function Layout({ children }: LayoutProps) {
                 mr="xl"
               />
             </MediaQuery>
-
-            <Link href="/" style={{ textDecoration: "none" }}>
-              <Text>Meetup Planner</Text>
+            <Link href={"/"} style={{ textDecoration: "none", color: "inherit" }}>
+              <Center inline>
+                <IconAtom size={rem(48)} />
+                <Text size={"lg"}>MeetIn</Text>
+              </Center>
             </Link>
           </div>
         </Header>
