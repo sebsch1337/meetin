@@ -23,7 +23,7 @@ const dummyData = db;
 
 export default function LocationCard() {
   return (
-    <Group>
+    <Group position="center">
       {dummyData?.map((location) => (
         <Card
           style={{ width: 350, minHeight: 450 }}
