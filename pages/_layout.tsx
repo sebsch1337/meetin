@@ -32,7 +32,7 @@ export default function Layout({ children }: LayoutProps) {
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
       navbar={
-        <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
+        <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 200 }}>
           <Navbar.Section grow mt="md">
             <MainLinks setOpened={() => setOpened(false)} />
           </Navbar.Section>
