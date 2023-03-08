@@ -47,10 +47,7 @@ function MainLink({ icon, color, label, link, setOpened }: MainLinkProps) {
   );
 }
 
-const data = [
-  { icon: <IconCalendar size="1rem" />, color: "blue", label: "Kalender", link: "/calendar/" },
-  { icon: <IconGlass size="1rem" />, color: "teal", label: "Locations", link: "/locations/" },
-];
+const data = [{ icon: <IconGlass size="1rem" />, color: "teal", label: "Locations", link: "/locations/" }];
 
 export function MainLinks({ setOpened }: MainLinksProps) {
   const links = data.map((link) => <MainLink {...link} key={link.label} setOpened={setOpened} />);
