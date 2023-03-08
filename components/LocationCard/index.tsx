@@ -18,7 +18,17 @@ import Link from "next/link";
 
 import { IconDownload, IconHome, IconSun } from "@tabler/icons-react";
 
-export default function LocationCard({ location, lastVisitedDay, averageVisitors }) {
+import { Location } from "../../dbLocations";
+
+export default function LocationCard({
+  location,
+  lastVisitedDay,
+  averageVisitors,
+}: {
+  location: Location;
+  lastVisitedDay: String;
+  averageVisitors: String;
+}) {
   return (
     <Indicator color="red" size={25} withBorder disabled={!location.noGo} key={location.id}>
       <Card w={350} mih={550} shadow="sm" padding="xl">
