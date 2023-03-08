@@ -1,6 +1,6 @@
 import LocationCard from "@/components/LocationCard";
 import { Group, Space, Title } from "@mantine/core";
-import { db } from "@/dbLocations";
+import { db } from "../dbLocations";
 
 const dummyData = db;
 
@@ -10,11 +10,10 @@ interface Visit {
   notes: string;
 }
 
-const getLastVisit = (visits: Visit[]) => {
+const getLastVisit = (visits: Visit[]) =>
   visits?.length > 0 ? visits.reduce((prev, current) => (prev.date > current.date ? prev : current)) : false;
-};
 
-const getLastVisitedDay = (visits: any): string => {
+const getLastVisitedDay = (visits: Visit[]): string => {
   const lastVisit = getLastVisit(visits);
   if (lastVisit) {
     return new Date(lastVisit.date * 1000).toLocaleDateString("de-DE", { dateStyle: "long" });
@@ -23,7 +22,7 @@ const getLastVisitedDay = (visits: any): string => {
   }
 };
 
-const getAverageVisitors = (visits: any): string => {
+const getAverageVisitors = (visits: Visit[]): string => {
   if (!visits || visits?.length === 0) {
     return "N/A";
   }
