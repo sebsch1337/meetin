@@ -19,7 +19,7 @@ export interface Location {
   visits: Visit[];
 }
 
-export const db: Location[] = [
+export const dbLocations: Location[] = [
   {
     id: 1,
     name: "Wenkers am Markt",
@@ -55,7 +55,7 @@ export const db: Location[] = [
       "https://images.unsplash.com/photo-1636067518443-4c59b8e80e43?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80",
       "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1772&q=80",
     ],
-    visits: [{ visitors: 0, date: 0, notes: "" }],
+    visits: [],
   },
   {
     id: 3,
@@ -72,7 +72,7 @@ export const db: Location[] = [
       "https://images.unsplash.com/photo-1636067518443-4c59b8e80e43?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80",
       "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1772&q=80",
     ],
-    visits: [{ visitors: 0, date: 0, notes: "" }],
+    visits: [],
   },
   {
     id: 4,
@@ -89,6 +89,6 @@ export const db: Location[] = [
       "https://images.unsplash.com/photo-1636067518443-4c59b8e80e43?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80",
       "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1772&q=80",
     ],
-    visits: [{ visitors: 0, date: 0, notes: "" }],
+    visits: [],
   },
 ];
