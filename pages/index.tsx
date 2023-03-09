@@ -1,5 +1,11 @@
-import { Title } from "@mantine/core";
+import { Title, Space } from "@mantine/core";
 
 export default function Home() {
-  return <Title>Home</Title>;
+  return (
+    <>
+      <Title>Home</Title>
+      <Space h={"md"} />
+      <Space h={"xl"} />
+    </>
+  );
 }
