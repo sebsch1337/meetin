@@ -9,6 +9,7 @@ import {
   Burger,
   useMantineTheme,
   rem,
+  Container,
 } from "@mantine/core";
 import { MainLinks } from "../components/MainLinks";
 import { IconAtom } from "@tabler/icons-react";
@@ -60,7 +61,7 @@ export default function Layout({ children }: LayoutProps) {
         </Header>
       }
     >
-      {children}
+      <Container fluid>{children}</Container>
     </AppShell>
   );
 }
