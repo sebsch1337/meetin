@@ -10,12 +10,10 @@ import {
   Space,
   Accordion,
   Button,
-  ActionIcon,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
-import Link from "next/link";
 
-import { IconDownload, IconHome, IconInfoCircle, IconSun } from "@tabler/icons-react";
+import { IconHome, IconInfoCircle, IconSun } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
 
@@ -52,11 +50,6 @@ export default function LocationCard({
                 alt={`Bild von ${location.name}`}
                 style={{ position: "relative" }}
               />
-              <Link href={image} download={location.name}>
-                <ActionIcon variant="filled" pos={"absolute"} top={10} right={10}>
-                  <IconDownload size="1.125rem" />
-                </ActionIcon>
-              </Link>
             </Carousel.Slide>
           ))}
         </Carousel>
