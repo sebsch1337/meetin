@@ -61,7 +61,9 @@ export default function Layout({ children }: LayoutProps) {
         </Header>
       }
     >
-      <Container fluid>{children}</Container>
+      <Container fluid p={"xs"}>
+        {children}
+      </Container>
     </AppShell>
   );
 }
