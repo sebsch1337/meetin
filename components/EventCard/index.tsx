@@ -1,18 +1,4 @@
-import {
-  Text,
-  Card,
-  Flex,
-  Group,
-  Space,
-  Title,
-  Tooltip,
-  ActionIcon,
-  Modal,
-  Divider,
-  Anchor,
-  Container,
-  Button,
-} from "@mantine/core";
+import { Text, Card, Flex, Group, Space, Title, Tooltip, ActionIcon, Modal, Button } from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
 

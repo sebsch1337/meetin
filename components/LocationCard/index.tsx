@@ -11,14 +11,13 @@ import {
   Button,
   Tooltip,
 } from "@mantine/core";
-import { Carousel, Embla } from "@mantine/carousel";
+import { Carousel } from "@mantine/carousel";
 
 import Image from "next/image";
 
 import { IconHome, IconInfoCircle, IconSun } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
-import { useEffect, useState } from "react";
 
 export default function LocationCard({
   location,

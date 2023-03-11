@@ -1,5 +1,4 @@
-import EventTable from "@/components/EventTable";
-import { Title, Space, Box, Paper, Popover, Group, Flex } from "@mantine/core";
+import { Title, Space, Flex } from "@mantine/core";
 
 import { dbEvents } from "@/dbEvents";
 import { dbLocations } from "@/dbLocations";
