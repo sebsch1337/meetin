@@ -3,9 +3,11 @@ export interface Event {
   name: string;
   date: number;
   locationId: number;
-  announced: number;
+  announced?: number;
   visitors?: number;
-  notes?: string;
+  preNotes?: string;
+  postNotes?: string;
+  fbLink?: string;
 }
 
 export const dbEvents: Event[] = [
@@ -16,16 +18,20 @@ export const dbEvents: Event[] = [
     locationId: 1,
     announced: 20,
     visitors: undefined,
-    notes:
+    preNotes:
       "Langer Tisch draussen reserviert! Special Menü für alle, die mehr als 20 EUR ausgeben. Keine Deckel!",
+    postNotes: "3 Bier blieben übrig. Bezahlt von Trinkgeld. 10 neue waren da. Kellner freundlich.",
+    fbLink: "",
   },
   {
     id: 2,
     name: "Stammtisch #2",
     date: 1677754800,
     locationId: 2,
-    announced: 15,
-    visitors: 14,
-    notes: "3 Bier blieben über.",
+    announced: undefined,
+    visitors: 13,
+    preNotes: "Drinnen am Kickertisch reserviert.",
+    postNotes: "",
+    fbLink: "https://fb.me/e/7wuw9e6zl",
   },
 ];
