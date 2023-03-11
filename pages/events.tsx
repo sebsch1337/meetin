@@ -1,8 +1,9 @@
 import EventTable from "@/components/EventTable";
-import { Title, Space } from "@mantine/core";
+import { Title, Space, Box, Paper, Popover, Group, Flex } from "@mantine/core";
 
 import { dbEvents } from "@/dbEvents";
 import { dbLocations } from "@/dbLocations";
+import EventCard from "@/components/EventCard";
 
 const events = dbEvents;
 const locations = dbLocations;
@@ -10,9 +11,13 @@ const locations = dbLocations;
 export default function Events() {
   return (
     <>
-      <Title>Events</Title>
+      <Title order={1}>Events</Title>
       <Space h={"md"} />
-      <EventTable events={events} locations={locations} />
+      <Flex gap={"xs"} wrap={"wrap"}>
+        {events.map((event) => (
+          <EventCard key={event.id} event={event} locations={locations} />
+        ))}
+      </Flex>
       <Space h={"xl"} />
     </>
   );
