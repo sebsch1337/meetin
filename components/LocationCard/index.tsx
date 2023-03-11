@@ -1,6 +1,5 @@
 import {
   Badge,
-  Image,
   Card,
   Group,
   SimpleGrid,
@@ -10,12 +9,13 @@ import {
   Space,
   Accordion,
   Button,
-  ActionIcon,
+  Tooltip,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
-import Link from "next/link";
 
-import { IconDownload, IconHome, IconInfoCircle, IconSun } from "@tabler/icons-react";
+import Image from "next/image";
+
+import { IconHome, IconInfoCircle, IconSun } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
 
@@ -50,26 +50,26 @@ export default function LocationCard({
                 width={350}
                 height={200}
                 alt={`Bild von ${location.name}`}
-                style={{ position: "relative" }}
+                style={{ objectFit: "cover" }}
               />
-              <Link href={image} download={location.name}>
-                <ActionIcon variant="filled" pos={"absolute"} top={10} right={10}>
-                  <IconDownload size="1.125rem" />
-                </ActionIcon>
-              </Link>
             </Carousel.Slide>
           ))}
         </Carousel>
       </Card.Section>
 
       <Title order={2} weight={500} size={"h3"} mt="xs" color={location.noGo ? "red" : ""}>
-        {location.name} {location.noGo && <IconInfoCircle size={15} />}
+        {location.name}{" "}
+        {location.noGo && (
+          <Tooltip label={""}>
+            <IconInfoCircle size={15} />
+          </Tooltip>
+        )}
       </Title>
       <Text size={"xs"}>Innenstadt West</Text>
 
       <SimpleGrid cols={2} verticalSpacing="xs" mt={"xs"}>
         <div>
-          <Text size={"sm"}>Mittelwert Besucher</Text>
+          <Text size={"sm"}>Mittelw. Besucher</Text>
           <Text color="dimmed" size="sm">
             {averageVisitors}
           </Text>
