@@ -3,14 +3,14 @@ import { DateTimePicker } from "@mantine/dates";
 
 import { useForm } from "@mantine/form";
 
-import { dbLocations } from "@/dbLocations";
+import { Location } from "@/dbLocations";
 
-const locationData = dbLocations.map((location): { value: string; label: string } => ({
-  value: location.id,
-  label: location.name,
-}));
+export default function EventForm({ addEventToDb, locations }: { addEventToDb: any; locations: Location[] }) {
+  const locationData = locations.map((location): { value: string; label: string } => ({
+    value: location.id,
+    label: location.name,
+  }));
 
-export default function EventForm({ addEventToDb }: { addEventToDb: any }) {
   const form = useForm({
     initialValues: {
       name: "Stammtisch ",

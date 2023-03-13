@@ -11,9 +11,6 @@ import { nanoid } from "nanoid";
 
 import { useLocalStorage } from "@mantine/hooks";
 
-// const events = dbEvents;
-const locations = dbLocations;
-
 interface FormData {
   name: string;
   location: string;
@@ -28,6 +25,7 @@ interface FormData {
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
   const [events, setEvents] = useLocalStorage(dbEvents);
+  const [locations, setLocation] = useLocalStorage(dbLocations);
 
   const addEventToDb = (formData: FormData) => {
     setEvents((events) => [
@@ -52,7 +50,7 @@ export default function Events() {
       <Space h={"md"} />
       <Group position={"apart"}>
         <Modal opened={opened} onClose={close} title="Neues Event" centered>
-          <EventForm addEventToDb={addEventToDb} />
+          <EventForm addEventToDb={addEventToDb} locations={locations} />
         </Modal>
 
         <Button
