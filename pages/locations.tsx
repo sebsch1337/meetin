@@ -1,5 +1,5 @@
 import LocationCard from "@/components/LocationCard";
-import { Group, Space, Title } from "@mantine/core";
+import { Flex, Space, Title } from "@mantine/core";
 import { dbEvents } from "../dbEvents";
 import { dbLocations } from "../dbLocations";
 import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
@@ -7,14 +7,14 @@ import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
 import { useLocalStorage } from "@mantine/hooks";
 
 export default function Locations() {
-  const [locations, setLocation] = useLocalStorage(dbLocations);
-  const [events, setEvents] = useLocalStorage(dbEvents);
+  const [locations] = useLocalStorage(dbLocations);
+  const [events] = useLocalStorage(dbEvents);
 
   return (
     <>
       <Title>Locations</Title>
       <Space h={"md"} />
-      <Group position="center" spacing={"xl"}>
+      <Flex gap={"xs"} wrap={"wrap"}>
         {locations?.map((location) => (
           <LocationCard
             location={location}
@@ -23,7 +23,7 @@ export default function Locations() {
             key={location.id}
           />
         ))}
-      </Group>
+      </Flex>
       <Space h={"xl"} />
     </>
   );
