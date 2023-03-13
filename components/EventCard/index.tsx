@@ -1,4 +1,4 @@
-import { Text, Card, Flex, Group, Space, Title, Tooltip, ActionIcon, Modal, Button } from "@mantine/core";
+import { Text, Card, Flex, Group, Title, Tooltip, ActionIcon, Modal, Button } from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
 
@@ -9,6 +9,7 @@ import { getLocalDateTime } from "@/utils/date";
 import { Event } from "@/dbEvents";
 import { Location } from "@/dbLocations";
 import { IconSpeakerphone, IconUsers, IconInfoCircle, IconEdit, IconExternalLink } from "@tabler/icons-react";
+import NoGoIcon from "../NoGoIcon";
 
 export default function EventCard({ event, locations }: { event: Event; locations: Location[] }) {
   const [opened, { open, close }] = useDisclosure(false);
@@ -22,7 +23,7 @@ export default function EventCard({ event, locations }: { event: Event; location
           {event?.preNotes && (
             <div>
               <Title order={4} size={"sm"}>
-                Planung
+                Notizen
               </Title>
               <Text size={"sm"}>{event?.preNotes}</Text>
             </div>
@@ -76,13 +77,17 @@ export default function EventCard({ event, locations }: { event: Event; location
             w={"100%"}
           >
             <div>
-              <Text size={"xs"}>{getLocalDateTime(event.date * 1000)}</Text>
+              <Text size={"xs"}>{getLocalDateTime(event.dateTime * 1000)}</Text>
               <Title order={3} size={18} truncate>
                 {event.name}
               </Title>
-              <Text size={"sm"} truncate color={location?.noGo ? "red" : ""}>
-                {location.name}
-              </Text>
+
+              <Group spacing={5} align="center">
+                <Text size={"sm"} maw={180} truncate>
+                  {location.name}
+                </Text>
+                {location.noGo && <NoGoIcon />}
+              </Group>
             </div>
             <Flex justify={"space-between"} w={"100%"}>
               <Group spacing={5}>
