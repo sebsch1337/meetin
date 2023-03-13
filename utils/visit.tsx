@@ -4,30 +4,40 @@ interface Visit {
   notes: string;
 }
 
-export const getLastVisit = (visits: Visit[]): any =>
-  visits?.length > 0 ? visits.reduce((prev, current) => (prev.date > current.date ? prev : current)) : false;
+import { Event } from "@/dbEvents";
 
-export const getLastVisitedDay = (visits: Visit[]): string => {
-  const lastVisit = getLastVisit(visits);
+export const getEventsByLocationId = (locationId: string, events: Event[]): any =>
+  events?.filter((event) => event.locationId === locationId);
+
+export const getLastVisit = (locationId: string, events: Event[]): any =>
+  getEventsByLocationId(locationId, events)?.reduce((prev: any, current: any) =>
+    prev.dateTime > current.dateTime ? prev : current
+  ) || false;
+
+export const getLastVisitedDay = (locationId: string, events: Event[]): string => {
+  const lastVisit = getLastVisit(locationId, events);
   if (lastVisit) {
-    return new Date(lastVisit.date * 1000).toLocaleDateString("de-DE", { dateStyle: "long" });
+    return new Date(lastVisit.dateTime * 1000).toLocaleDateString("de-DE", { dateStyle: "long" });
   } else {
     return "Nie";
   }
 };
 
-export const getAverageVisitors = (visits: Visit[]): string => {
-  if (!visits || visits?.length === 0) {
+export const getAverageVisitors = (locationId: string, events: Event[]): string => {
+  const visitedEvents = getEventsByLocationId(locationId, events).filter(
+    (event: any) => event.visitors !== undefined
+  );
+
+  if (!visitedEvents || visitedEvents.length < 2) {
     return "N/A";
   }
+
   const averageVisitors = Math.round(
-    visits
-      .slice(-3)
-      .map((visit) => visit.visitors)
-      .reduce((a, b) => a + b) / visits.length
+    visitedEvents.map((event: any) => event.visitors).reduce((a: number, b: number) => a + b) /
+      visitedEvents.length
   );
-  const minVisitors = Math.min(...visits.slice(-3).map((visit) => visit.visitors));
-  const maxVisitors = Math.max(...visits.slice(-3).map((visit) => visit.visitors));
+  const minVisitors = Math.min(...visitedEvents.slice(-3).map((event: any) => event.visitors));
+  const maxVisitors = Math.max(...visitedEvents.slice(-3).map((event: any) => event.visitors));
 
   return `${averageVisitors} (${minVisitors} / ${maxVisitors})`;
 };

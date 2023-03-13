@@ -1,23 +1,12 @@
-import {
-  Badge,
-  Card,
-  Group,
-  SimpleGrid,
-  Text,
-  Title,
-  Center,
-  Space,
-  Accordion,
-  Button,
-  Tooltip,
-} from "@mantine/core";
+import { Badge, Card, Group, SimpleGrid, Text, Title, Center, Space, Accordion, Button } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 
 import Image from "next/image";
 
-import { IconHome, IconInfoCircle, IconSun } from "@tabler/icons-react";
+import { IconHome, IconSun } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
+import NoGoIcon from "../NoGoIcon";
 
 export default function LocationCard({
   location,
@@ -58,12 +47,7 @@ export default function LocationCard({
       </Card.Section>
 
       <Title order={2} weight={500} size={"h3"} mt="xs" color={location.noGo ? "red" : ""}>
-        {location.name}{" "}
-        {location.noGo && (
-          <Tooltip label={""}>
-            <IconInfoCircle size={15} />
-          </Tooltip>
-        )}
+        {location.name} {location.noGo && <NoGoIcon />}
       </Title>
       <Text size={"xs"}>Innenstadt West</Text>
 
