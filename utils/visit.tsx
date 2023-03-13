@@ -6,11 +6,11 @@ interface Visit {
 
 import { Event } from "@/dbEvents";
 
-export const getLocationEvents = (locationId: string, events: Event[]): any =>
+export const getEventsByLocationId = (locationId: string, events: Event[]): any =>
   events?.filter((event) => event.locationId === locationId);
 
 export const getLastVisit = (locationId: string, events: Event[]): any =>
-  getLocationEvents(locationId, events)?.reduce((prev: any, current: any) =>
+  getEventsByLocationId(locationId, events)?.reduce((prev: any, current: any) =>
     prev.dateTime > current.dateTime ? prev : current
   ) || false;
 
@@ -24,19 +24,20 @@ export const getLastVisitedDay = (locationId: string, events: Event[]): string =
 };
 
 export const getAverageVisitors = (locationId: string, events: Event[]): string => {
-  const locationEvents = getLocationEvents(locationId, events);
+  const visitedEvents = getEventsByLocationId(locationId, events).filter(
+    (event: any) => event.visitors !== undefined
+  );
 
-  if (!locationEvents) {
+  if (!visitedEvents || visitedEvents.length < 2) {
     return "N/A";
   }
+
   const averageVisitors = Math.round(
-    locationEvents
-      .slice(-3)
-      .map((event: any) => event.visitors)
-      .reduce((a: number, b: number) => a + b) / locationEvents.length
+    visitedEvents.map((event: any) => event.visitors).reduce((a: number, b: number) => a + b) /
+      visitedEvents.length
   );
-  const minVisitors = Math.min(...locationEvents.slice(-3).map((event: any) => event.visitors));
-  const maxVisitors = Math.max(...locationEvents.slice(-3).map((event: any) => event.visitors));
+  const minVisitors = Math.min(...visitedEvents.slice(-3).map((event: any) => event.visitors));
+  const maxVisitors = Math.max(...visitedEvents.slice(-3).map((event: any) => event.visitors));
 
   return `${averageVisitors} (${minVisitors} / ${maxVisitors})`;
 };
