@@ -5,7 +5,15 @@ import { useForm } from "@mantine/form";
 
 import { Location } from "@/dbLocations";
 
-export default function EventForm({ addEventToDb, locations }: { addEventToDb: any; locations: Location[] }) {
+export default function EventForm({
+  addEventToDb,
+  locations,
+  closeModal,
+}: {
+  addEventToDb: any;
+  locations: Location[];
+  closeModal: any;
+}) {
   const locationData = locations.map((location): { value: string; label: string } => ({
     value: location.id,
     label: location.name,
@@ -31,7 +39,12 @@ export default function EventForm({ addEventToDb, locations }: { addEventToDb: a
   });
 
   return (
-    <form onSubmit={form.onSubmit((values) => addEventToDb(values))}>
+    <form
+      onSubmit={form.onSubmit((values) => {
+        addEventToDb(values);
+        closeModal();
+      })}
+    >
       <Flex direction={"column"} gap={"md"}>
         <TextInput
           data-autofocus

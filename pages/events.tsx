@@ -50,7 +50,7 @@ export default function Events() {
       <Space h={"md"} />
       <Group position={"apart"}>
         <Modal opened={opened} onClose={close} title="Neues Event" centered>
-          <EventForm addEventToDb={addEventToDb} locations={locations} />
+          <EventForm addEventToDb={addEventToDb} locations={locations} closeModal={close} />
         </Modal>
 
         <Button
