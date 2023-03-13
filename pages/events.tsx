@@ -25,7 +25,7 @@ interface FormData {
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
   const [events, setEvents] = useLocalStorage(dbEvents);
-  const [locations, setLocation] = useLocalStorage(dbLocations);
+  const [locations] = useLocalStorage(dbLocations);
 
   const addEventToDb = (formData: FormData) => {
     setEvents((events) => [
