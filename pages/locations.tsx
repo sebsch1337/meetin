@@ -8,6 +8,7 @@ import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { IconCheck, IconPlus } from "@tabler/icons-react";
 import LocationForm from "@/components/LocationForm";
 import { nanoid } from "nanoid";
+import { notifications } from "@mantine/notifications";
 
 export default function Locations() {
   const [locations, setLocations] = useLocalStorage(dbLocations);
@@ -40,6 +41,12 @@ export default function Locations() {
         longitude: values?.longitude,
       },
     ]);
+
+    notifications.show({
+      icon: <IconCheck />,
+      title: "Neue Location",
+      message: `${values.name} erfolgreich erstellt!`,
+    });
   };
 
   return (
