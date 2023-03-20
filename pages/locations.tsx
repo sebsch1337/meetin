@@ -5,7 +5,7 @@ import { dbLocations } from "../dbLocations";
 import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
 
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
-import { IconPlus } from "@tabler/icons-react";
+import { IconCheck, IconPlus } from "@tabler/icons-react";
 import LocationForm from "@/components/LocationForm";
 import { nanoid } from "nanoid";
 

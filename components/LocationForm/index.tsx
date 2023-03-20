@@ -1,5 +1,3 @@
-import { nanoid } from "nanoid";
-
 import { useDebouncedValue } from "@mantine/hooks";
 
 import { useForm } from "@mantine/form";
@@ -13,7 +11,6 @@ import {
   NumberInput,
   Select,
   TextInput,
-  Title,
   Text,
   Textarea,
   LoadingOverlay,
@@ -73,11 +70,12 @@ export default function LocationForm({
       const response = await fetch(searchUrl);
       const result = await response.json();
 
-      const filteredLocations = result.filter((location: any) => location.address.amenity);
-
+      // const filteredLocations = result.filter((location: any) => location.address.amenity);
+      const filteredLocations = result || [];
       setLocations(filteredLocations);
       setSearchResults(
         filteredLocations.map((location: any) => ({
+          key: location.place_id,
           value: location.display_name,
           label: location.display_name,
         }))
@@ -91,12 +89,13 @@ export default function LocationForm({
     if (location.length > 0) {
       const address = location[0].address;
       form.setValues({
-        name: address.amenity,
+        name: address.amenity || address.leisure,
         road: address.road || address.square,
         houseNo: address.house_number,
         postcode: address.postcode,
         city: address.city,
         suburb: address.suburb,
+        // suburb: address.neighbourhood || address.quarter || address.industrial || address.suburb,
         latitude: location[0].lat,
         longitude: location[0].lon,
       });
@@ -129,12 +128,9 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           const imageUrls = await uploadImages(images);
-          console.log(imageUrls);
-          console.log("Formvalues: ", form.values);
           createLocation(values, imageUrls);
-
           setLoading(false);
-          // closeModal();
+          closeModal();
         })}
       >
         <Flex direction={"column"} gap={"md"}>
@@ -147,16 +143,12 @@ export default function LocationForm({
           />
           <Group grow>
             <TextInput
-              width={50}
-              withAsterisk
               label="Straße"
               placeholder="Straße"
               spellCheck={false}
               {...form.getInputProps("road")}
             />
             <TextInput
-              width={"20%"}
-              withAsterisk
               label="Hausnummer"
               placeholder="Hausnummer"
               spellCheck={false}
@@ -165,30 +157,21 @@ export default function LocationForm({
           </Group>
           <Group grow>
             <TextInput
-              withAsterisk
               label="Postleitzahl"
               placeholder="Postleitzahl"
               spellCheck={false}
               {...form.getInputProps("postcode")}
             />
-            <TextInput
-              withAsterisk
-              label="Ort"
-              placeholder="Ort"
-              spellCheck={false}
-              {...form.getInputProps("city")}
-            />
+            <TextInput label="Ort" placeholder="Ort" spellCheck={false} {...form.getInputProps("city")} />
           </Group>
           <Group grow>
             <TextInput
-              withAsterisk
               label="Stadtteil"
               placeholder="Stadtteil"
               spellCheck={false}
               {...form.getInputProps("suburb")}
             />
             <TextInput
-              withAsterisk
               label="Telefonnummer"
               placeholder="Telefonnummer"
               spellCheck={false}
@@ -196,18 +179,8 @@ export default function LocationForm({
             />
           </Group>
           <Group grow>
-            <TextInput
-              withAsterisk
-              label="Breitengrad"
-              placeholder="10.2931062"
-              {...form.getInputProps("latitude")}
-            />
-            <TextInput
-              withAsterisk
-              label="Längengrad"
-              placeholder="123.9020773"
-              {...form.getInputProps("longitude")}
-            />
+            <TextInput label="Breitengrad" placeholder="10.2931062" {...form.getInputProps("latitude")} />
+            <TextInput label="Längengrad" placeholder="123.9020773" {...form.getInputProps("longitude")} />
           </Group>
 
           <Divider />
