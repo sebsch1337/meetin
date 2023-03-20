@@ -2,6 +2,7 @@ import Head from "next/head";
 
 import { AppProps } from "next/app";
 import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 import Layout from "./_layout";
 
@@ -24,6 +25,7 @@ export default function App(props: AppProps) {
           colorScheme: "dark",
         }}
       >
+        <Notifications />
         <Layout>
           <Component {...pageProps} />
         </Layout>
