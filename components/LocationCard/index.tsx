@@ -1,4 +1,16 @@
-import { Badge, Card, Group, SimpleGrid, Text, Title, Center, Space, Accordion, Button } from "@mantine/core";
+import {
+  Badge,
+  Card,
+  Group,
+  SimpleGrid,
+  Text,
+  Title,
+  Center,
+  Space,
+  Accordion,
+  Button,
+  Image as MantineImage,
+} from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 
 import Image from "next/image";
@@ -38,17 +50,22 @@ export default function LocationCard({
             },
           }}
         >
-          {location.images.map((image) => (
-            <Carousel.Slide key={image}>
-              <Image
-                src={image}
-                width={350}
-                height={200}
-                alt={`Bild von ${location.name}`}
-                style={{ objectFit: "cover" }}
-              />
-            </Carousel.Slide>
-          ))}
+          {location.images.length > 0 ? (
+            location?.images?.map((image) => (
+              <Carousel.Slide key={image}>
+                <Image
+                  src={image}
+                  width={350}
+                  height={200}
+                  alt={`Bild von ${location.name}`}
+                  style={{ objectFit: "cover" }}
+                  placeholder={"empty"}
+                />
+              </Carousel.Slide>
+            ))
+          ) : (
+            <MantineImage width={350} height={200} src={null} alt="Kein Bild vorhanden" withPlaceholder />
+          )}
         </Carousel>
       </Card.Section>
 
