@@ -22,32 +22,34 @@ import { uploadImages } from "../../utils/upload";
 export default function LocationForm({
   closeModal,
   createLocation,
+  location,
 }: {
   closeModal: any;
   createLocation: any;
+  location: any;
 }) {
   const form = useForm({
     initialValues: {
-      name: "",
-      road: "",
-      houseNo: "",
-      postcode: "",
-      city: "",
-      suburb: "",
-      tel: "",
-      description: "",
-      latitude: "",
-      longitude: "",
-      infos: "",
-      tags: [],
-      maxCapacity: null,
-      indoor: false,
-      outdoor: false,
-      noGo: false,
+      name: location?.name || "",
+      road: location?.address?.road || "",
+      houseNo: location?.address?.houseNo || "",
+      postcode: location?.address?.postcode || "",
+      city: location?.address?.city || "",
+      suburb: location?.address?.suburb || "",
+      tel: location?.tel || "",
+      description: location?.description || "",
+      latitude: location?.latitude || "",
+      longitude: location?.longitude || "",
+      infos: location?.infos || "",
+      tags: location?.tags || [],
+      maxCapacity: location?.maxCapacity || null,
+      indoor: location?.indoor || false,
+      outdoor: location?.outdoor || false,
+      noGo: location?.noGo || false,
     },
 
     validate: {
-      name: (value) => (value.length === 0 ? "Bitte gib der Location einen Namen" : null),
+      name: (value) => (value?.length > 0 ? null : "Bitte gib der Location einen Namen"),
     },
   });
 
@@ -57,11 +59,9 @@ export default function LocationForm({
   const [debouncedOptions] = useDebouncedValue(search, 200);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState([
-    { value: "Bar", label: "Bar" },
-    { value: "Restaurant", label: "Restaurant" },
-    { value: "Kneipe", label: "Kneipe" },
-  ]);
+  const [tags, setTags] = useState(
+    location?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
+  );
 
   useEffect(() => {
     const getExternalLocation = async (searchString: string) => {
@@ -70,7 +70,6 @@ export default function LocationForm({
       const response = await fetch(searchUrl);
       const result = await response.json();
 
-      // const filteredLocations = result.filter((location: any) => location.address.amenity);
       const filteredLocations = result || [];
       setLocations(filteredLocations);
       setSearchResults(
@@ -95,7 +94,6 @@ export default function LocationForm({
         postcode: address.postcode,
         city: address.city,
         suburb: address.suburb,
-        // suburb: address.neighbourhood || address.quarter || address.industrial || address.suburb,
         latitude: location[0].lat,
         longitude: location[0].lon,
       });
@@ -231,8 +229,7 @@ export default function LocationForm({
             getCreateLabel={(query) => `+ Erstelle ${query}`}
             onCreate={(query) => {
               const item = { value: query, label: query };
-              setTags((current) => [...current, item]);
-              console.log(tags);
+              setTags((currentTags: any) => [...currentTags, item]);
               return item;
             }}
             {...form.getInputProps("tags")}
@@ -244,7 +241,7 @@ export default function LocationForm({
 
           <Group position="right">
             <Button type="submit" variant={"light"} size={"sm"} color={"teal"}>
-              Erstellen
+              {location?.name ? "Speichern" : "Erstellen"}
             </Button>
           </Group>
         </Flex>

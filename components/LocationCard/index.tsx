@@ -12,10 +12,16 @@ export default function LocationCard({
   location,
   lastVisitedDay,
   averageVisitors,
+  setLocationEditValues,
+  openModal,
+  setEditLocationMode,
 }: {
   location: Location;
   lastVisitedDay: String;
   averageVisitors: String;
+  setLocationEditValues: any;
+  openModal: any;
+  setEditLocationMode: any;
 }) {
   return (
     <Card w={350} mih={550} shadow="sm" padding="xl" key={location.id}>
@@ -121,7 +127,18 @@ export default function LocationCard({
         ))}
       </Group>
 
-      <Button variant="light" color="blue" fullWidth mt="xl" radius="md">
+      <Button
+        variant="light"
+        color="blue"
+        fullWidth
+        mt="xl"
+        radius="md"
+        onClick={() => {
+          setEditLocationMode(true);
+          setLocationEditValues(location);
+          openModal();
+        }}
+      >
         Bearbeiten
       </Button>
     </Card>
