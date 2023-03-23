@@ -18,22 +18,23 @@ import Image from "next/image";
 import { IconHome, IconSun } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
+
 import NoGoIcon from "../NoGoIcon";
 
 export default function LocationCard({
   location,
   lastVisitedDay,
   averageVisitors,
-  setLocationEditValues,
   openModal,
   setEditLocationMode,
+  setPreValues,
 }: {
   location: Location;
   lastVisitedDay: String;
   averageVisitors: String;
-  setLocationEditValues: any;
   openModal: any;
   setEditLocationMode: any;
+  setPreValues: any;
 }) {
   return (
     <Card w={350} mih={550} shadow="sm" padding="xl" key={location.id}>
@@ -50,7 +51,7 @@ export default function LocationCard({
             },
           }}
         >
-          {location.images.length > 0 ? (
+          {location?.images?.length > 0 ? (
             location?.images?.map((image) => (
               <Carousel.Slide key={image}>
                 <Image
@@ -72,7 +73,7 @@ export default function LocationCard({
       <Title order={2} weight={500} size={"h3"} mt="xs" color={location.noGo ? "red" : ""}>
         {location.name} {location.noGo && <NoGoIcon />}
       </Title>
-      <Text size={"xs"}>Innenstadt West</Text>
+      <Text size={"xs"}>{location?.address?.suburb}</Text>
 
       <SimpleGrid cols={2} verticalSpacing="xs" mt={"xs"}>
         <div>
@@ -152,7 +153,7 @@ export default function LocationCard({
         radius="md"
         onClick={() => {
           setEditLocationMode(true);
-          setLocationEditValues(location);
+          setPreValues(location);
           openModal();
         }}
       >

@@ -4,7 +4,7 @@ import { dbEvents } from "../dbEvents";
 import { dbLocations } from "../dbLocations";
 import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
 
-import { useDisclosure, useLocalStorage, useScrollIntoView } from "@mantine/hooks";
+import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { IconCheck, IconPlus } from "@tabler/icons-react";
 
 import { nanoid } from "nanoid";
@@ -13,14 +13,14 @@ import LocationForm from "@/components/LocationForm";
 import { useState } from "react";
 
 export default function Locations() {
-  const [locations, setLocations] = useLocalStorage(dbLocations);
+  const [locations, setLocations] = useLocalStorage({ key: "dbLocations", defaultValue: [] });
   const [events] = useLocalStorage(dbEvents);
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
-  const [locationEditValues, setLocationEditValues] = useState({});
   const [editLocationMode, setEditLocationMode] = useState(false);
+  const [preValues, setPreValues] = useState({});
 
   const createLocation = (values: any, images: string[] = []) => {
-    setLocations((prevLocations: any) => [
+    setLocations((prevLocations): any => [
       ...prevLocations,
       {
         id: nanoid(4),
@@ -49,7 +49,45 @@ export default function Locations() {
     notifications.show({
       icon: <IconCheck />,
       title: values.name,
-      message: `Eintrag erfolgreich erstellt!`,
+      message: `Eintrag erfolgreich erstellt.`,
+    });
+  };
+
+  const editLocation = (values: any, locationId: string, images: string[] = []) => {
+    setLocations((prevLocations): any =>
+      prevLocations.map((location: any) =>
+        location.id === locationId
+          ? {
+              id: locationId,
+              name: values?.name,
+              address: {
+                road: values?.road,
+                houseNo: values?.houseNo,
+                postcode: values?.postcode,
+                city: values?.city,
+                suburb: values?.suburb,
+              },
+              description: values?.description,
+              infos: values?.infos,
+              tel: values?.tel,
+              tags: values?.tags,
+              maxCapacity: values?.maxCapacity,
+              indoor: values?.indoor,
+              outdoor: values?.outdoor,
+              noGo: values?.noGo,
+              // images: images,
+              latitude: values?.latitude,
+              longitude: values?.longitude,
+              test: "test",
+            }
+          : location
+      )
+    );
+
+    notifications.show({
+      icon: <IconCheck />,
+      title: values.name,
+      message: `Eintrag erfolgreich bearbeitet.`,
     });
   };
 
@@ -67,7 +105,8 @@ export default function Locations() {
           <LocationForm
             closeModal={closeModal}
             createLocation={createLocation}
-            location={locationEditValues}
+            editLocation={editLocation}
+            preValues={preValues}
           />
         </Modal>
 
@@ -78,6 +117,7 @@ export default function Locations() {
           color={"teal"}
           onClick={() => {
             setEditLocationMode(false);
+            setPreValues({});
             openModal();
           }}
         >
@@ -93,7 +133,7 @@ export default function Locations() {
             averageVisitors={getAverageVisitors(location.id, events)}
             key={location.id}
             setEditLocationMode={setEditLocationMode}
-            setLocationEditValues={setLocationEditValues}
+            setPreValues={setPreValues}
             openModal={openModal}
           />
         ))}

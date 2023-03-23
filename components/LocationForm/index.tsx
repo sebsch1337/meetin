@@ -22,30 +22,32 @@ import { uploadImages } from "../../utils/upload";
 export default function LocationForm({
   closeModal,
   createLocation,
-  location,
+  editLocation,
+  preValues,
 }: {
   closeModal: any;
   createLocation: any;
-  location: any;
+  editLocation: any;
+  preValues: any;
 }) {
   const form = useForm({
     initialValues: {
-      name: location?.name || "",
-      road: location?.address?.road || "",
-      houseNo: location?.address?.houseNo || "",
-      postcode: location?.address?.postcode || "",
-      city: location?.address?.city || "",
-      suburb: location?.address?.suburb || "",
-      tel: location?.tel || "",
-      description: location?.description || "",
-      latitude: location?.latitude || "",
-      longitude: location?.longitude || "",
-      infos: location?.infos || "",
-      tags: location?.tags || [],
-      maxCapacity: location?.maxCapacity || null,
-      indoor: location?.indoor || false,
-      outdoor: location?.outdoor || false,
-      noGo: location?.noGo || false,
+      name: preValues?.name || "",
+      road: preValues?.address?.road || "",
+      houseNo: preValues?.address?.houseNo || "",
+      postcode: preValues?.address?.postcode || "",
+      city: preValues?.address?.city || "",
+      suburb: preValues?.address?.suburb || "",
+      tel: preValues?.tel || "",
+      description: preValues?.description || "",
+      latitude: preValues?.latitude || "",
+      longitude: preValues?.longitude || "",
+      infos: preValues?.infos || "",
+      tags: preValues?.tags || [],
+      maxCapacity: preValues?.maxCapacity || null,
+      indoor: preValues?.indoor || false,
+      outdoor: preValues?.outdoor || false,
+      noGo: preValues?.noGo || false,
     },
 
     validate: {
@@ -60,7 +62,7 @@ export default function LocationForm({
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(
-    location?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
+    preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
   );
 
   useEffect(() => {
@@ -126,8 +128,10 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           const imageUrls = await uploadImages(images);
-          createLocation(values, imageUrls);
+          console.log(preValues);
+          preValues?.name ? editLocation(values, preValues.id) : createLocation(values, imageUrls);
           setLoading(false);
+          form.reset();
           closeModal();
         })}
       >
@@ -241,7 +245,7 @@ export default function LocationForm({
 
           <Group position="right">
             <Button type="submit" variant={"light"} size={"sm"} color={"teal"}>
-              {location?.name ? "Speichern" : "Erstellen"}
+              {preValues?.name ? "Speichern" : "Erstellen"}
             </Button>
           </Group>
         </Flex>
