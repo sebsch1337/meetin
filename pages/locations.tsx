@@ -53,35 +53,28 @@ export default function Locations() {
   };
 
   const editLocation = (values: any, locationId: string, images: string[] = []) => {
-    setLocations((prevLocations): any =>
-      prevLocations.map((location: any) =>
-        location.id === locationId
-          ? {
-              id: locationId,
-              name: values?.name,
-              address: {
-                road: values?.road,
-                houseNo: values?.houseNo,
-                postcode: values?.postcode,
-                city: values?.city,
-                suburb: values?.suburb,
-              },
-              description: values?.description,
-              infos: values?.infos,
-              tel: values?.tel,
-              tags: values?.tags,
-              maxCapacity: values?.maxCapacity,
-              indoor: values?.indoor,
-              outdoor: values?.outdoor,
-              noGo: values?.noGo,
-              // images: images,
-              latitude: values?.latitude,
-              longitude: values?.longitude,
-              test: "test",
-            }
-          : location
-      )
-    );
+    setLocations((prevLocations): any => {
+      const locationToChange: any = prevLocations?.find((location: any) => location.id === locationId);
+      locationToChange.name = values?.name;
+      locationToChange.address.road = values?.road;
+      locationToChange.address.houseNo = values?.houseNo;
+      locationToChange.address.postcode = values?.postcode;
+      locationToChange.address.city = values?.city;
+      locationToChange.address.suburb = values?.suburb;
+      locationToChange.description = values?.description;
+      locationToChange.infos = values?.infos;
+      locationToChange.tel = values?.tel;
+      locationToChange.tags = values?.tags;
+      locationToChange.maxCapacity = values?.maxCapacity;
+      locationToChange.indoor = values?.indoor;
+      locationToChange.outdoor = values?.outdoor;
+      locationToChange.noGo = values?.noGo;
+      // locationToChange.images = values?.noGo;
+      locationToChange.latitude = values?.latitude;
+      locationToChange.longitude = values?.longitude;
+
+      return prevLocations;
+    });
 
     notifications.show({
       icon: <IconCheck />,
