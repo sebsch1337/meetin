@@ -1,4 +1,15 @@
-import { Text, Card, Flex, Group, Title, Tooltip, ActionIcon, Modal, Button } from "@mantine/core";
+import {
+  Text,
+  Card,
+  Flex,
+  Group,
+  Title,
+  Tooltip,
+  ActionIcon,
+  Modal,
+  Button,
+  Image as MantineImage,
+} from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
 
@@ -59,13 +70,24 @@ export default function EventCard({ event, locations }: { event: Event; location
       <Card w={350} shadow="sm">
         <Flex>
           <Group>
-            <Image
-              src={location.images[0]}
-              width={100}
-              height={100}
-              alt={`Bild von ${location.name}`}
-              style={{ objectFit: "cover", borderRadius: 5 }}
-            />
+            {location?.images?.length > 0 ? (
+              <Image
+                src={location?.images[0]}
+                width={100}
+                height={100}
+                alt={`Bild von ${location?.name}`}
+                style={{ objectFit: "cover", borderRadius: 5 }}
+              />
+            ) : (
+              <MantineImage
+                width={100}
+                height={100}
+                src={null}
+                alt="Kein Bild vorhanden"
+                radius={"xs"}
+                withPlaceholder
+              />
+            )}
           </Group>
 
           <Flex
@@ -84,9 +106,9 @@ export default function EventCard({ event, locations }: { event: Event; location
 
               <Group spacing={5} align="center">
                 <Text size={"sm"} maw={180} truncate>
-                  {location.name}
+                  {location?.name}
                 </Text>
-                {location.noGo && <NoGoIcon />}
+                {location?.noGo && <NoGoIcon />}
               </Group>
             </div>
             <Flex justify={"space-between"} w={"100%"}>
