@@ -1,7 +1,6 @@
 import LocationCard from "@/components/LocationCard";
 import { Button, Flex, Group, Modal, Space, Title } from "@mantine/core";
 import { dbEvents } from "../dbEvents";
-import { dbLocations } from "../dbLocations";
 import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
 
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
@@ -126,7 +125,7 @@ export default function Locations() {
       </Group>
       <Space h={"md"} />
       <Flex gap={"xs"} wrap={"wrap"}>
-        {locations?.map((location) => (
+        {locations?.map((location: any) => (
           <LocationCard
             location={location}
             lastVisitedDay={getLastVisitedDay(location.id, events)}
