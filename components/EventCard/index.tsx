@@ -19,7 +19,14 @@ import { getLocalDateTime } from "@/utils/date";
 
 import { Event } from "@/dbEvents";
 import { Location } from "@/dbLocations";
-import { IconSpeakerphone, IconUsers, IconInfoCircle, IconEdit, IconExternalLink } from "@tabler/icons-react";
+import {
+  IconSpeakerphone,
+  IconUsers,
+  IconInfoCircle,
+  IconEdit,
+  IconExternalLink,
+  IconPhotoOff,
+} from "@tabler/icons-react";
 import NoGoIcon from "../NoGoIcon";
 
 export default function EventCard({ event, locations }: { event: Event; locations: Location[] }) {
@@ -86,6 +93,7 @@ export default function EventCard({ event, locations }: { event: Event; location
                 alt="Kein Bild vorhanden"
                 radius={"xs"}
                 withPlaceholder
+                placeholder={<IconPhotoOff size={40} />}
               />
             )}
           </Group>

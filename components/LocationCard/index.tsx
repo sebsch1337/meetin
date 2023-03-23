@@ -15,7 +15,7 @@ import { Carousel } from "@mantine/carousel";
 
 import Image from "next/image";
 
-import { IconHome, IconSun } from "@tabler/icons-react";
+import { IconHome, IconPhotoOff, IconSun } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
 
@@ -65,7 +65,14 @@ export default function LocationCard({
               </Carousel.Slide>
             ))
           ) : (
-            <MantineImage width={350} height={200} src={null} alt="Kein Bild vorhanden" withPlaceholder />
+            <MantineImage
+              width={350}
+              height={200}
+              src={null}
+              alt="Kein Bild vorhanden"
+              withPlaceholder
+              placeholder={<IconPhotoOff size={40} />}
+            />
           )}
         </Carousel>
       </Card.Section>
