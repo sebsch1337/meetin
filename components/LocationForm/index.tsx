@@ -1,4 +1,4 @@
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue, useNetwork } from "@mantine/hooks";
 
 import { useForm } from "@mantine/form";
 import {
@@ -65,26 +65,34 @@ export default function LocationForm({
     preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
   );
 
+  const networkStatus = useNetwork();
+
   useEffect(() => {
     const getExternalLocation = async (searchString: string) => {
       const sanitizedSearchString = searchString.replaceAll(" ", "+");
-      const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
-      const response = await fetch(searchUrl);
-      const result = await response.json();
+      if (sanitizedSearchString.length > 0 && networkStatus.online) {
+        try {
+          const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
+          const response = await fetch(searchUrl);
+          const result = await response.json();
 
-      const filteredLocations = result || [];
-      setLocations(filteredLocations);
-      setSearchResults(
-        filteredLocations.map((location: any) => ({
-          key: location.place_id,
-          value: location.display_name,
-          label: location.display_name,
-        }))
-      );
+          const filteredLocations = result || [];
+          setLocations(filteredLocations);
+          setSearchResults(
+            filteredLocations.map((location: any) => ({
+              key: location.place_id,
+              value: location.display_name,
+              label: location.display_name,
+            }))
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      }
     };
 
     getExternalLocation(debouncedOptions);
-  }, [debouncedOptions]);
+  }, [debouncedOptions, networkStatus]);
 
   const setFormData = (location: any) => {
     if (location.length > 0) {
@@ -128,8 +136,9 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           const imageUrls = await uploadImages(images);
-          console.log(preValues);
-          preValues?.name ? editLocation(values, preValues.id) : createLocation(values, imageUrls);
+          preValues?.name
+            ? editLocation(values, preValues.id, imageUrls ?? preValues.images)
+            : createLocation(values, imageUrls);
           setLoading(false);
           form.reset();
           closeModal();
