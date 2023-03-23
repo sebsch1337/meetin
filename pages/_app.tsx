@@ -25,7 +25,7 @@ export default function App(props: AppProps) {
           colorScheme: "dark",
         }}
       >
-        <Notifications />
+        <Notifications autoClose={2000} />
         <Layout>
           <Component {...pageProps} />
         </Layout>
