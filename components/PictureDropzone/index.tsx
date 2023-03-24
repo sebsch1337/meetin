@@ -1,17 +1,18 @@
-import { useState } from "react";
 import { Text, Image, SimpleGrid, Flex } from "@mantine/core";
-import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconPhoto } from "@tabler/icons-react";
 
 export default function FileDropzone({ images, setImages }: { images: string[]; setImages: any }) {
   const previews = images.map((file: any, index) => {
     const imageUrl = URL.createObjectURL(file);
+
     return (
       <Image
         key={index}
         src={imageUrl}
         alt={"Uploaded image"}
         imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
+        radius={"xs"}
       />
     );
   });

@@ -16,7 +16,7 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import FileDropzone from "../FileDropzone";
+import FileDropzone from "../PictureDropzone";
 import { uploadImages } from "../../utils/upload";
 
 export default function LocationForm({
