@@ -98,6 +98,7 @@ export default function Locations() {
             closeModal={closeModal}
             createLocation={createLocation}
             editLocation={editLocation}
+            editLocationMode={editLocationMode}
             preValues={preValues}
           />
         </Modal>

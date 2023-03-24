@@ -16,18 +16,21 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import FileDropzone from "../PictureDropzone";
+import PictureDropzone from "../PictureDropzone";
 import { uploadImages } from "../../utils/upload";
+import PictureBox from "../PictureBox";
 
 export default function LocationForm({
   closeModal,
   createLocation,
   editLocation,
+  editLocationMode,
   preValues,
 }: {
   closeModal: any;
   createLocation: any;
   editLocation: any;
+  editLocationMode: boolean;
   preValues: any;
 }) {
   const form = useForm({
@@ -136,7 +139,7 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           const imageUrls = await uploadImages(images);
-          preValues?.name
+          editLocationMode
             ? editLocation(values, preValues.id, imageUrls ?? preValues.images)
             : createLocation(values, imageUrls);
           setLoading(false);
@@ -250,11 +253,18 @@ export default function LocationForm({
 
           <Divider />
 
-          <FileDropzone images={images} setImages={setImages} {...form.getInputProps("images")} />
+          {editLocationMode && <PictureBox images={preValues.images} />}
+
+          <PictureDropzone
+            preValues={preValues}
+            images={images}
+            setImages={setImages}
+            {...form.getInputProps("images")}
+          />
 
           <Group position="right">
             <Button type="submit" variant={"light"} size={"sm"} color={"teal"}>
-              {preValues?.name ? "Speichern" : "Erstellen"}
+              {editLocationMode ? "Speichern" : "Erstellen"}
             </Button>
           </Group>
         </Flex>
