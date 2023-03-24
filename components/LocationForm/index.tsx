@@ -1,4 +1,4 @@
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue, useNetwork } from "@mantine/hooks";
 
 import { useForm } from "@mantine/form";
 import {
@@ -16,38 +16,42 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import FileDropzone from "../FileDropzone";
+import FileDropzone from "../PictureDropzone";
 import { uploadImages } from "../../utils/upload";
 
 export default function LocationForm({
   closeModal,
   createLocation,
+  editLocation,
+  preValues,
 }: {
   closeModal: any;
   createLocation: any;
+  editLocation: any;
+  preValues: any;
 }) {
   const form = useForm({
     initialValues: {
-      name: "",
-      road: "",
-      houseNo: "",
-      postcode: "",
-      city: "",
-      suburb: "",
-      tel: "",
-      description: "",
-      latitude: "",
-      longitude: "",
-      infos: "",
-      tags: [],
-      maxCapacity: null,
-      indoor: false,
-      outdoor: false,
-      noGo: false,
+      name: preValues?.name || "",
+      road: preValues?.address?.road || "",
+      houseNo: preValues?.address?.houseNo || "",
+      postcode: preValues?.address?.postcode || "",
+      city: preValues?.address?.city || "",
+      suburb: preValues?.address?.suburb || "",
+      tel: preValues?.tel || "",
+      description: preValues?.description || "",
+      latitude: preValues?.latitude || "",
+      longitude: preValues?.longitude || "",
+      infos: preValues?.infos || "",
+      tags: preValues?.tags || [],
+      maxCapacity: preValues?.maxCapacity || null,
+      indoor: preValues?.indoor || false,
+      outdoor: preValues?.outdoor || false,
+      noGo: preValues?.noGo || false,
     },
 
     validate: {
-      name: (value) => (value.length === 0 ? "Bitte gib der Location einen Namen" : null),
+      name: (value) => (value?.length > 0 ? null : "Bitte gib der Location einen Namen"),
     },
   });
 
@@ -57,33 +61,38 @@ export default function LocationForm({
   const [debouncedOptions] = useDebouncedValue(search, 200);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState([
-    { value: "Bar", label: "Bar" },
-    { value: "Restaurant", label: "Restaurant" },
-    { value: "Kneipe", label: "Kneipe" },
-  ]);
+  const [tags, setTags] = useState(
+    preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
+  );
+
+  const networkStatus = useNetwork();
 
   useEffect(() => {
     const getExternalLocation = async (searchString: string) => {
       const sanitizedSearchString = searchString.replaceAll(" ", "+");
-      const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
-      const response = await fetch(searchUrl);
-      const result = await response.json();
+      if (sanitizedSearchString.length > 0 && networkStatus.online) {
+        try {
+          const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
+          const response = await fetch(searchUrl);
+          const result = await response.json();
 
-      // const filteredLocations = result.filter((location: any) => location.address.amenity);
-      const filteredLocations = result || [];
-      setLocations(filteredLocations);
-      setSearchResults(
-        filteredLocations.map((location: any) => ({
-          key: location.place_id,
-          value: location.display_name,
-          label: location.display_name,
-        }))
-      );
+          const filteredLocations = result || [];
+          setLocations(filteredLocations);
+          setSearchResults(
+            filteredLocations.map((location: any) => ({
+              key: location.place_id,
+              value: location.display_name,
+              label: location.display_name,
+            }))
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      }
     };
 
     getExternalLocation(debouncedOptions);
-  }, [debouncedOptions]);
+  }, [debouncedOptions, networkStatus]);
 
   const setFormData = (location: any) => {
     if (location.length > 0) {
@@ -95,7 +104,6 @@ export default function LocationForm({
         postcode: address.postcode,
         city: address.city,
         suburb: address.suburb,
-        // suburb: address.neighbourhood || address.quarter || address.industrial || address.suburb,
         latitude: location[0].lat,
         longitude: location[0].lon,
       });
@@ -128,8 +136,11 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           const imageUrls = await uploadImages(images);
-          createLocation(values, imageUrls);
+          preValues?.name
+            ? editLocation(values, preValues.id, imageUrls ?? preValues.images)
+            : createLocation(values, imageUrls);
           setLoading(false);
+          form.reset();
           closeModal();
         })}
       >
@@ -231,8 +242,7 @@ export default function LocationForm({
             getCreateLabel={(query) => `+ Erstelle ${query}`}
             onCreate={(query) => {
               const item = { value: query, label: query };
-              setTags((current) => [...current, item]);
-              console.log(tags);
+              setTags((currentTags: any) => [...currentTags, item]);
               return item;
             }}
             {...form.getInputProps("tags")}
@@ -244,7 +254,7 @@ export default function LocationForm({
 
           <Group position="right">
             <Button type="submit" variant={"light"} size={"sm"} color={"teal"}>
-              Erstellen
+              {preValues?.name ? "Speichern" : "Erstellen"}
             </Button>
           </Group>
         </Flex>

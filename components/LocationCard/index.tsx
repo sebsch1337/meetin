@@ -1,21 +1,40 @@
-import { Badge, Card, Group, SimpleGrid, Text, Title, Center, Space, Accordion, Button } from "@mantine/core";
+import {
+  Badge,
+  Card,
+  Group,
+  SimpleGrid,
+  Text,
+  Title,
+  Center,
+  Space,
+  Accordion,
+  Button,
+  Image as MantineImage,
+} from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 
 import Image from "next/image";
 
-import { IconHome, IconSun } from "@tabler/icons-react";
+import { IconHome, IconPhotoOff, IconSun } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
+
 import NoGoIcon from "../NoGoIcon";
 
 export default function LocationCard({
   location,
   lastVisitedDay,
   averageVisitors,
+  openModal,
+  setEditLocationMode,
+  setPreValues,
 }: {
   location: Location;
   lastVisitedDay: String;
   averageVisitors: String;
+  openModal: any;
+  setEditLocationMode: any;
+  setPreValues: any;
 }) {
   return (
     <Card w={350} mih={550} shadow="sm" padding="xl" key={location.id}>
@@ -32,24 +51,36 @@ export default function LocationCard({
             },
           }}
         >
-          {location.images.map((image) => (
-            <Carousel.Slide key={image}>
-              <Image
-                src={image}
-                width={350}
-                height={200}
-                alt={`Bild von ${location.name}`}
-                style={{ objectFit: "cover" }}
-              />
-            </Carousel.Slide>
-          ))}
+          {location?.images?.length > 0 ? (
+            location?.images?.map((image) => (
+              <Carousel.Slide key={image}>
+                <Image
+                  src={image}
+                  width={350}
+                  height={200}
+                  alt={`Bild von ${location.name}`}
+                  style={{ objectFit: "cover" }}
+                  placeholder={"empty"}
+                />
+              </Carousel.Slide>
+            ))
+          ) : (
+            <MantineImage
+              width={350}
+              height={200}
+              src={null}
+              alt="Kein Bild vorhanden"
+              withPlaceholder
+              placeholder={<IconPhotoOff size={40} />}
+            />
+          )}
         </Carousel>
       </Card.Section>
 
       <Title order={2} weight={500} size={"h3"} mt="xs" color={location.noGo ? "red" : ""}>
         {location.name} {location.noGo && <NoGoIcon />}
       </Title>
-      <Text size={"xs"}>Innenstadt West</Text>
+      <Text size={"xs"}>{location?.address?.suburb}</Text>
 
       <SimpleGrid cols={2} verticalSpacing="xs" mt={"xs"}>
         <div>
@@ -121,7 +152,18 @@ export default function LocationCard({
         ))}
       </Group>
 
-      <Button variant="light" color="blue" fullWidth mt="xl" radius="md">
+      <Button
+        variant="light"
+        color="blue"
+        fullWidth
+        mt="xl"
+        radius="md"
+        onClick={() => {
+          setEditLocationMode(true);
+          setPreValues(location);
+          openModal();
+        }}
+      >
         Bearbeiten
       </Button>
     </Card>

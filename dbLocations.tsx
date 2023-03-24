@@ -6,7 +6,7 @@ interface DbLocations {
 export interface Location {
   id: string;
   name: string;
-  address: string;
+  address: Address;
   description: string;
   infos: string;
   tags: string[];
@@ -17,13 +17,27 @@ export interface Location {
   images: string[];
 }
 
+export interface Address {
+  city: string;
+  houseNo: string;
+  postcode: string;
+  road: string;
+  suburb: string;
+}
+
 export const dbLocations: DbLocations = {
   key: "dbLocations",
   defaultValue: [
     {
       id: "k543",
       name: "Wenkers am Markt",
-      address: "1, Betenstraße, Mitte, Innenstadt West, Dortmund, Nordrhein-Westfalen, 44137, Deutschland",
+      address: {
+        houseNo: "1",
+        road: "Betenstrasse",
+        suburb: "Innenstadt West",
+        city: "Dortmund",
+        postcode: "44137",
+      },
       description: "Alte Dortmunder Traditionskneipe mit leckerem Bier und gutem Essen.",
       infos: "Eher teuer. Macht keine Deckel! Am besten 3 Wochen im Voraus reservieren.",
       tags: ["Restaurant", "Biergarten", "Bar", "Outdoor", "Indoor"],
@@ -39,8 +53,13 @@ export const dbLocations: DbLocations = {
     {
       id: "ep30",
       name: "Rock Cafe",
-      address:
-        "21, Reinoldistraße, Mitte, Innenstadt West, Dortmund, Nordrhein-Westfalen, 44135, Deutschland",
+      address: {
+        houseNo: "21",
+        road: "Reinoldistraße",
+        suburb: "Innenstadt West",
+        city: "Dortmund",
+        postcode: "44135",
+      },
       description: "Ungezwungener Treffpunkt mit Rockmusik, Sport-TV und Kicker.",
       infos: "Hier gibts Astra!",
       tags: ["Kneipe", "Bar", "Kicker", "Fußball"],
