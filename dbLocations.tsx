@@ -14,7 +14,7 @@ export interface Location {
   indoor: boolean;
   outdoor: boolean;
   noGo: boolean;
-  images: string[];
+  images: Images[];
 }
 
 export interface Address {
@@ -23,6 +23,11 @@ export interface Address {
   postcode: string;
   road: string;
   suburb: string;
+}
+
+export interface Images {
+  publicId: string;
+  url: string;
 }
 
 export const dbLocations: DbLocations = {
