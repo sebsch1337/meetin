@@ -79,7 +79,7 @@ export default function EventCard({ event, locations }: { event: Event; location
           <Group>
             {location?.images?.length > 0 ? (
               <Image
-                src={location?.images[0]}
+                src={location?.images[0].url}
                 width={100}
                 height={100}
                 alt={`Bild von ${location?.name}`}
