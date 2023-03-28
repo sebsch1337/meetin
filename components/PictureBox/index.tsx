@@ -8,6 +8,8 @@ import {
   Text,
   Button,
   LoadingOverlay,
+  Group,
+  Space,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
@@ -48,18 +50,24 @@ export default function PictureBox({ deleteImage, preValues }: { deleteImage: an
   return (
     <>
       <Modal opened={opened} onClose={close} title="Bild löschen" centered>
-        <Text>Möchtest du das Bild wirklich löschen?</Text>
-        <Button
-          onClick={async () => {
-            close();
-            setVisible(true);
-            await deleteImage(deleteImageId, preValues.id);
-            setImages((images: any) => images.filter((image: any) => image.publicId !== deleteImageId));
-            setVisible(false);
-          }}
-        >
-          Löschen
-        </Button>
+        <Text size={"sm"}>Bild unwiderruflich löschen?</Text>
+        <Space h={"md"} />
+        <Group position="right">
+          <Button
+            variant={"light"}
+            size={"sm"}
+            color={"red"}
+            onClick={async () => {
+              close();
+              setVisible(true);
+              await deleteImage(deleteImageId, preValues.id);
+              setImages((images: any) => images.filter((image: any) => image.publicId !== deleteImageId));
+              setVisible(false);
+            }}
+          >
+            Löschen
+          </Button>
+        </Group>
       </Modal>
 
       {images?.length > 0 && (
