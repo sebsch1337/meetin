@@ -26,12 +26,14 @@ export default function LocationForm({
   editLocation,
   editLocationMode,
   preValues,
+  deleteImage,
 }: {
   closeModal: any;
   createLocation: any;
   editLocation: any;
   editLocationMode: boolean;
   preValues: any;
+  deleteImage: any;
 }) {
   const form = useForm({
     initialValues: {
@@ -255,7 +257,7 @@ export default function LocationForm({
 
           <Divider />
 
-          {editLocationMode && <PictureBox images={preValues.images} />}
+          {editLocationMode && <PictureBox preValues={preValues} deleteImage={deleteImage} />}
 
           <PictureDropzone
             preValues={preValues}
