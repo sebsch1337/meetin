@@ -69,7 +69,6 @@ export default function Locations() {
       locationToChange.indoor = values?.indoor;
       locationToChange.outdoor = values?.outdoor;
       locationToChange.noGo = values?.noGo;
-      // locationToChange.images = values?.noGo;
       locationToChange.latitude = values?.latitude;
       locationToChange.longitude = values?.longitude;
 
@@ -81,6 +80,36 @@ export default function Locations() {
       title: values.name,
       message: `Eintrag erfolgreich bearbeitet.`,
     });
+  };
+
+  const deleteImage = async (deleteImageId: string, locationId: string): Promise<Response> => {
+    setLocations((locations: any) => {
+      const locationToChange = locations.find((location: any) => location.id === locationId);
+
+      if (locationToChange) {
+        const imageIndexToDelete = locationToChange.images.findIndex(
+          (image: any) => image.publicId === deleteImageId
+        );
+
+        if (imageIndexToDelete >= 0) {
+          const newImages = [
+            ...locationToChange.images.slice(0, imageIndexToDelete),
+            ...locationToChange.images.slice(imageIndexToDelete + 1),
+          ];
+
+          const newLocation = { ...locationToChange, images: newImages };
+          const newLocations = locations.map((location: any) =>
+            location.id === locationId ? newLocation : location
+          );
+
+          return newLocations;
+        }
+      }
+
+      return locations;
+    });
+
+    return await fetch("api/images/?publicId=" + deleteImageId, { method: "DELETE" });
   };
 
   return (
@@ -98,7 +127,9 @@ export default function Locations() {
             closeModal={closeModal}
             createLocation={createLocation}
             editLocation={editLocation}
+            editLocationMode={editLocationMode}
             preValues={preValues}
+            deleteImage={deleteImage}
           />
         </Modal>
 

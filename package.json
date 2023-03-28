@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.11.2",
+    "@cloudinary/url-gen": "^1.9.2",
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
     "@mantine/carousel": "^6.0.0",
@@ -31,10 +33,12 @@
     "@types/node": "18.14.6",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "crypto": "^1.0.1",
     "dayjs": "^1.11.7",
     "embla-carousel-react": "^7.0.9",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
+    "fs": "^0.0.1-security",
     "nanoid": "^4.0.1",
     "next": "13.2.3",
     "react": "18.2.0",
