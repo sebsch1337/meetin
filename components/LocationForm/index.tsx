@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { useEffect, useState } from "react";
 import PictureDropzone from "../PictureDropzone";
-import { uploadImages } from "../../utils/upload";
+import { uploadImageToCloudinary } from "../../services/cloudinary";
 import PictureBox from "../PictureBox";
 
 export default function LocationForm({
@@ -138,7 +138,9 @@ export default function LocationForm({
       <form
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
-          const imageUrls = await uploadImages(images);
+          const imageUrls = await Promise.all(
+            images.map(async (image: any) => await uploadImageToCloudinary(image))
+          );
           editLocationMode
             ? editLocation(values, preValues.id, imageUrls ?? preValues.images)
             : createLocation(values, imageUrls);

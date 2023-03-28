@@ -53,9 +53,9 @@ export default function LocationCard({
         >
           {location?.images?.length > 0 ? (
             location?.images?.map((image) => (
-              <Carousel.Slide key={image}>
+              <Carousel.Slide key={image.publicId}>
                 <Image
-                  src={image}
+                  src={image.url}
                   width={350}
                   height={200}
                   alt={`Bild von ${location.name}`}
