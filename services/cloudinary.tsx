@@ -24,7 +24,7 @@ export const getCloudinarySignature = async (publicId: any, timestamp: any, uplo
   return await res.json();
 };
 
-export const uploadImageToCloudinary = async (image: any): Promise<string[]> => {
+export const uploadImageToCloudinary = async (image: any) => {
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const uploadPreset = "meetin";
   const signature = await getCloudinarySignature(null, timestamp, uploadPreset);
@@ -42,20 +42,20 @@ export const uploadImageToCloudinary = async (image: any): Promise<string[]> => 
       body: formData,
     });
     const data = await response.json();
-    return data.secure_url;
+    console.log(data);
+    return { publicId: data.public_id, url: data.secure_url };
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return ["Error: " + e];
   }
 };
 
 export const deleteImageFromCloudinary = async (publicId: string) => {
   const timestamp = Math.floor(Date.now() / 1000).toString();
-  const publicImageId = `images/${publicId}`;
-  const signature = createCloudinarySignature(publicImageId, timestamp, null);
+  const signature = createCloudinarySignature(publicId, timestamp, null);
 
   const formData = new FormData();
-  formData.append("public_id", publicImageId);
+  formData.append("public_id", publicId);
   formData.append("timestamp", timestamp);
   formData.append("api_key", apiKey);
   formData.append("signature", signature);
