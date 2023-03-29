@@ -14,7 +14,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   imageButton: {
@@ -40,12 +40,24 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function PictureBox({ deleteImage, preValues }: { deleteImage: any; preValues: any }) {
+export default function PictureBox({
+  deleteImage,
+  preValues,
+  uploadedImages,
+}: {
+  deleteImage: any;
+  preValues: any;
+  uploadedImages: any;
+}) {
   const { classes } = useStyles();
-  const [images, setImages] = useState(preValues.images);
+  const [images, setImages] = useState([...preValues.images, ...uploadedImages]);
   const [deleteImageId, setDeleteImageId] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
   const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setImages([...preValues.images, ...uploadedImages]);
+  }, [preValues, uploadedImages]);
 
   return (
     <>
