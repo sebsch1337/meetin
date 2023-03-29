@@ -14,11 +14,10 @@ import {
   Text,
   Textarea,
   LoadingOverlay,
+  Space,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import PictureDropzone from "../PictureDropzone";
 import { uploadImageToCloudinary } from "../../services/cloudinary";
-import PictureBox from "../PictureBox";
 
 export default function LocationForm({
   closeModal,
@@ -26,14 +25,12 @@ export default function LocationForm({
   editLocation,
   editLocationMode,
   preValues,
-  deleteImage,
 }: {
   closeModal: any;
   createLocation: any;
   editLocation: any;
   editLocationMode: boolean;
   preValues: any;
-  deleteImage: any;
 }) {
   const form = useForm({
     initialValues: {
@@ -65,13 +62,13 @@ export default function LocationForm({
   const [locations, setLocations] = useState([]);
   const [debouncedOptions] = useDebouncedValue(search, 200);
   const [images, setImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(
     preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
   );
 
   const networkStatus = useNetwork();
-
   useEffect(() => {
     const getExternalLocation = async (searchString: string) => {
       const sanitizedSearchString = searchString.replaceAll(" ", "+");
@@ -115,6 +112,20 @@ export default function LocationForm({
     }
   };
 
+  const uploadImageHandler = async (images: any[]) => {
+    setLoading(true);
+    try {
+      const uploadedImageData: any = await Promise.all(
+        images.map(async (image: any) => uploadImageToCloudinary(image))
+      );
+      setUploadedImages(uploadedImageData);
+      console.log(uploadedImageData);
+    } catch (error) {
+      // Handle error
+    }
+    setLoading(false);
+  };
+
   return (
     <Flex direction={"column"} gap={"md"}>
       <LoadingOverlay visible={loading} overlayBlur={2} />
@@ -140,12 +151,9 @@ export default function LocationForm({
       <form
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
-          const imageUrls = await Promise.all(
-            images.map(async (image: any) => await uploadImageToCloudinary(image))
-          );
           editLocationMode
-            ? editLocation(values, preValues.id, imageUrls ?? preValues.images)
-            : createLocation(values, imageUrls);
+            ? editLocation(values, preValues.id, uploadedImages)
+            : createLocation(values, uploadedImages);
           setLoading(false);
           form.reset();
           closeModal();
@@ -254,18 +262,7 @@ export default function LocationForm({
             }}
             {...form.getInputProps("tags")}
           />
-
-          <Divider />
-
-          {editLocationMode && <PictureBox preValues={preValues} deleteImage={deleteImage} />}
-
-          <PictureDropzone
-            preValues={preValues}
-            images={images}
-            setImages={setImages}
-            {...form.getInputProps("images")}
-          />
-
+          <Space />
           <Group position="right">
             <Button type="submit" variant={"light"} size={"sm"} color={"teal"}>
               {editLocationMode ? "Speichern" : "Erstellen"}
