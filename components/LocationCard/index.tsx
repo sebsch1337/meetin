@@ -56,6 +56,7 @@ export default function LocationCard({
         <LoadingOverlay visible={loading} overlayBlur={2} />
         <Carousel
           withIndicators
+          speed={25}
           maw={350}
           styles={{
             control: {
