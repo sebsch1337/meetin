@@ -42,7 +42,6 @@ export const uploadImageToCloudinary = async (image: any) => {
       body: formData,
     });
     const data = await response.json();
-    console.log(data);
     return { publicId: data.public_id, url: data.secure_url };
   } catch (e) {
     console.error(e);
