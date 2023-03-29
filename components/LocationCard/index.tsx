@@ -9,17 +9,23 @@ import {
   Space,
   Accordion,
   Button,
-  Image as MantineImage,
+  ActionIcon,
+  rem,
+  getStylesRef,
+  Flex,
+  LoadingOverlay,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 
 import Image from "next/image";
 
-import { IconHome, IconPhotoOff, IconSun } from "@tabler/icons-react";
+import { IconEdit, IconHome, IconSun, IconTrash } from "@tabler/icons-react";
 
 import { Location } from "../../dbLocations";
 
 import NoGoIcon from "../NoGoIcon";
+import PictureDropzone from "../PictureDropzone";
+import { useState } from "react";
 
 export default function LocationCard({
   location,
@@ -28,6 +34,9 @@ export default function LocationCard({
   openModal,
   setEditLocationMode,
   setPreValues,
+  setModal,
+  uploadImageHandler,
+  deleteImage,
 }: {
   location: Location;
   lastVisitedDay: String;
@@ -35,10 +44,16 @@ export default function LocationCard({
   openModal: any;
   setEditLocationMode: any;
   setPreValues: any;
+  setModal: any;
+  uploadImageHandler: any;
+  deleteImage: any;
 }) {
+  const [loading, setLoading] = useState(false);
+
   return (
     <Card w={350} mih={550} shadow="sm" padding="xl" key={location.id}>
       <Card.Section>
+        <LoadingOverlay visible={loading} overlayBlur={2} />
         <Carousel
           withIndicators
           maw={350}
@@ -49,11 +64,44 @@ export default function LocationCard({
                 cursor: "default",
               },
             },
+            indicator: {
+              width: rem(12),
+              height: rem(4),
+              transition: "width 250ms ease",
+
+              "&[data-active]": {
+                width: rem(40),
+              },
+            },
+            controls: {
+              ref: getStylesRef("controls"),
+              transition: "opacity 150ms ease",
+              opacity: 0,
+            },
+
+            root: {
+              "&:hover": {
+                [`& .${getStylesRef("controls")}`]: {
+                  opacity: 1,
+                },
+              },
+            },
           }}
         >
-          {location?.images?.length > 0 ? (
+          {location?.images?.length > 0 &&
             location?.images?.map((image) => (
               <Carousel.Slide key={image.publicId}>
+                <ActionIcon
+                  variant="light"
+                  style={{ position: "absolute", top: 10, right: 10, zIndex: 2 }}
+                  onClick={async () => {
+                    setLoading(true);
+                    await deleteImage(image.publicId, location.id);
+                    setLoading(false);
+                  }}
+                >
+                  <IconTrash />
+                </ActionIcon>
                 <Image
                   src={image.url}
                   width={350}
@@ -63,17 +111,16 @@ export default function LocationCard({
                   placeholder={"empty"}
                 />
               </Carousel.Slide>
-            ))
-          ) : (
-            <MantineImage
-              width={350}
-              height={200}
-              src={null}
-              alt="Kein Bild vorhanden"
-              withPlaceholder
-              placeholder={<IconPhotoOff size={40} />}
-            />
-          )}
+            ))}
+          <Carousel.Slide>
+            <Flex justify={"center"} align={"center"} gap={"xs"} h={200}>
+              <PictureDropzone
+                preValues={location}
+                uploadImageHandler={uploadImageHandler}
+                setLoading={setLoading}
+              />
+            </Flex>
+          </Carousel.Slide>
         </Carousel>
       </Card.Section>
 
@@ -154,17 +201,24 @@ export default function LocationCard({
 
       <Button
         variant="light"
-        color="blue"
+        leftIcon={<IconEdit size="1rem" />}
+        size={"sm"}
+        color="teal"
         fullWidth
         mt="xl"
         radius="md"
         onClick={() => {
           setEditLocationMode(true);
           setPreValues(location);
+          setModal({
+            title: "Location bearbeiten",
+            details: true,
+            deleteImage: false,
+          });
           openModal();
         }}
       >
-        Bearbeiten
+        Details bearbeiten
       </Button>
     </Card>
   );
