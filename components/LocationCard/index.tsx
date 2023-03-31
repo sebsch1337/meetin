@@ -94,7 +94,7 @@ export default function LocationCard({
               <Carousel.Slide key={image.publicId}>
                 <ActionIcon
                   variant="light"
-                  style={{ position: "absolute", top: 10, right: 10, zIndex: 2 }}
+                  style={{ position: "absolute", top: "1rem", right: "2rem", zIndex: 2 }}
                   onClick={async () => {
                     setLoading(true);
                     await deleteImage(image.publicId, location.id);
