@@ -13,12 +13,19 @@ import { useState } from "react";
 import { uploadImageToCloudinary } from "@/services/cloudinary";
 
 import useLocalStorage from "@/utils/useLocalStorage";
+import PictureDeleteModal from "@/components/PictureDeleteModal";
 
 export default function Locations() {
   const [locations, setLocations] = useLocalStorage("dbLocations", []);
   const [events] = useLocalStorage("dbEvents", dbEvents ?? []);
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
-  const [modal, setModal] = useState({ title: "", details: false, deleteImage: false });
+  const [modal, setModal] = useState({
+    title: "",
+    details: false,
+    deleteImage: false,
+    imageId: "",
+    locationId: "",
+  });
   const [editLocationMode, setEditLocationMode] = useState(false);
   const [preValues, setPreValues] = useState({});
 
@@ -147,7 +154,12 @@ export default function Locations() {
               preValues={preValues}
             />
           )}
-          {modal.deleteImage && <Text size={"sm"}>Möchtest du dieses Bild löschen?</Text>}
+          {modal.deleteImage && (
+            <PictureDeleteModal
+              deleteImage={async () => await deleteImage(modal.imageId, modal.locationId)}
+              closeModal={closeModal}
+            />
+          )}
         </Modal>
 
         <Button
@@ -162,6 +174,8 @@ export default function Locations() {
               title: "Neue Location",
               details: true,
               deleteImage: false,
+              imageId: "",
+              locationId: "",
             });
             openModal();
           }}
