@@ -14,6 +14,7 @@ import {
   getStylesRef,
   Flex,
   LoadingOverlay,
+  Modal,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 
@@ -26,6 +27,7 @@ import { Location } from "../../dbLocations";
 import NoGoIcon from "../NoGoIcon";
 import PictureDropzone from "../PictureDropzone";
 import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function LocationCard({
   location,
@@ -96,9 +98,14 @@ export default function LocationCard({
                   variant="light"
                   style={{ position: "absolute", top: "1rem", right: "2rem", zIndex: 2 }}
                   onClick={async () => {
-                    setLoading(true);
-                    await deleteImage(image.publicId, location.id);
-                    setLoading(false);
+                    setModal({
+                      title: "Bild löschen",
+                      details: false,
+                      deleteImage: true,
+                      imageId: image.publicId,
+                      locationId: location.id,
+                    });
+                    openModal();
                   }}
                 >
                   <IconTrash />
