@@ -1,6 +1,5 @@
 import LocationCard from "@/components/LocationCard";
-import { Button, Flex, Group, Modal, Space, Title, Text } from "@mantine/core";
-import { dbEvents } from "../dbEvents";
+import { Button, Flex, Group, Modal, Space, Title } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
 
 import { useDisclosure } from "@mantine/hooks";
@@ -199,7 +198,6 @@ export default function Locations() {
             setModal={setModal}
             openModal={openModal}
             uploadImages={uploadImages}
-            deleteImage={deleteImage}
           />
         ))}
       </Flex>

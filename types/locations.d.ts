@@ -1,9 +1,4 @@
-interface DbLocations {
-  key: string;
-  defaultValue: Location[];
-}
-
-export interface Location {
+interface Location {
   id: string;
   name: string;
   address: Address;
@@ -17,7 +12,7 @@ export interface Location {
   images: Images[];
 }
 
-export interface Address {
+interface Address {
   city: string;
   houseNo: string;
   postcode: string;
@@ -25,12 +20,7 @@ export interface Address {
   suburb: string;
 }
 
-export interface Images {
+interface Images {
   publicId: string;
   url: string;
 }
-
-export const dbLocations: DbLocations = {
-  key: "dbLocations",
-  defaultValue: [],
-};

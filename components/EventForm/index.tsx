@@ -3,8 +3,6 @@ import { DateTimePicker } from "@mantine/dates";
 
 import { useForm } from "@mantine/form";
 
-import { Location } from "@/dbLocations";
-
 export default function EventForm({
   addEventToDb,
   locations,

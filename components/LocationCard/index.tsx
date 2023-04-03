@@ -14,7 +14,6 @@ import {
   getStylesRef,
   Flex,
   LoadingOverlay,
-  Modal,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 
@@ -22,12 +21,9 @@ import Image from "next/image";
 
 import { IconEdit, IconHome, IconSun, IconTrash } from "@tabler/icons-react";
 
-import { Location } from "../../dbLocations";
-
 import NoGoIcon from "../NoGoIcon";
 import PictureDropzone from "../PictureDropzone";
 import { useState } from "react";
-import { useDisclosure } from "@mantine/hooks";
 
 export default function LocationCard({
   location,
@@ -38,7 +34,6 @@ export default function LocationCard({
   setPreValues,
   setModal,
   uploadImages,
-  deleteImage,
 }: {
   location: Location;
   lastVisitedDay: String;
@@ -48,7 +43,6 @@ export default function LocationCard({
   setPreValues: any;
   setModal: any;
   uploadImages: any;
-  deleteImage: any;
 }) {
   const [loading, setLoading] = useState(false);
 
