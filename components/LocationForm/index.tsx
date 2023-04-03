@@ -1,5 +1,10 @@
 import { useDebouncedValue, useNetwork } from "@mantine/hooks";
 
+import { useSetAtom } from "jotai";
+import { locationsAtom } from "@/store";
+
+import { notifications } from "@mantine/notifications";
+
 import { useForm } from "@mantine/form";
 import {
   Button,
@@ -17,21 +22,20 @@ import {
   Space,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { uploadImageToCloudinary } from "../../services/cloudinary";
+import { IconCheck } from "@tabler/icons-react";
+import { createLocation, editLocation } from "@/lib/location";
 
 export default function LocationForm({
   closeModal,
-  createLocation,
-  editLocation,
   editLocationMode,
   preValues,
 }: {
   closeModal: any;
-  createLocation: any;
-  editLocation: any;
   editLocationMode: boolean;
   preValues: any;
 }) {
+  const setLocations = useSetAtom(locationsAtom);
+
   const form = useForm({
     initialValues: {
       name: preValues?.name || "",
@@ -59,10 +63,8 @@ export default function LocationForm({
 
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [locations, setLocations] = useState([]);
+  const [searchLocations, setSearchLocations] = useState([]);
   const [debouncedOptions] = useDebouncedValue(search, 200);
-  const [images, setImages] = useState([]);
-  const [uploadedImages, setUploadedImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(
     preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
@@ -79,7 +81,7 @@ export default function LocationForm({
           const result = await response.json();
 
           const filteredLocations = result || [];
-          setLocations(filteredLocations);
+          setSearchLocations(filteredLocations);
           setSearchResults(
             filteredLocations.map((location: any) => ({
               key: location.place_id,
@@ -112,20 +114,6 @@ export default function LocationForm({
     }
   };
 
-  const uploadImageHandler = async (images: any[]) => {
-    setLoading(true);
-    try {
-      const uploadedImageData: any = await Promise.all(
-        images.map(async (image: any) => uploadImageToCloudinary(image))
-      );
-      setUploadedImages(uploadedImageData);
-      console.log(uploadedImageData);
-    } catch (error) {
-      // Handle error
-    }
-    setLoading(false);
-  };
-
   return (
     <Flex direction={"column"} gap={"md"}>
       <LoadingOverlay visible={loading} overlayBlur={2} />
@@ -142,7 +130,7 @@ export default function LocationForm({
         clearable
         filter={(value) => value.toLowerCase().length > 0}
       />
-      <Button variant={"light"} size={"sm"} color={"teal"} onClick={() => setFormData(locations)}>
+      <Button variant={"light"} size={"sm"} color={"teal"} onClick={() => setFormData(searchLocations)}>
         Daten übernehmen
       </Button>
 
@@ -151,11 +139,25 @@ export default function LocationForm({
       <form
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
-          editLocationMode
-            ? editLocation(values, preValues.id, uploadedImages)
-            : createLocation(values, uploadedImages);
+          if (editLocationMode) {
+            editLocation(values, preValues.id, setLocations);
+            notifications.show({
+              icon: <IconCheck />,
+              title: values.name,
+              message: `Eintrag erfolgreich bearbeitet.`,
+            });
+          } else {
+            createLocation(values, setLocations);
+            notifications.show({
+              icon: <IconCheck />,
+              title: values.name,
+              message: `Eintrag erfolgreich erstellt.`,
+            });
+          }
+
           setLoading(false);
           form.reset();
+
           closeModal();
         })}
       >

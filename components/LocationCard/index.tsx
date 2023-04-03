@@ -33,7 +33,6 @@ export default function LocationCard({
   setEditLocationMode,
   setPreValues,
   setModal,
-  uploadImages,
 }: {
   location: Location;
   lastVisitedDay: String;
@@ -42,7 +41,6 @@ export default function LocationCard({
   setEditLocationMode: any;
   setPreValues: any;
   setModal: any;
-  uploadImages: any;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -116,7 +114,7 @@ export default function LocationCard({
             ))}
           <Carousel.Slide>
             <Flex justify={"center"} align={"center"} gap={"xs"} h={200}>
-              <PictureDropzone preValues={location} uploadImages={uploadImages} setLoading={setLoading} />
+              <PictureDropzone preValues={location} setLoading={setLoading} />
             </Flex>
           </Carousel.Slide>
         </Carousel>
