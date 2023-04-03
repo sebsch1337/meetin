@@ -17,8 +17,6 @@ import Image from "next/image";
 
 import { getLocalDateTime } from "@/utils/date";
 
-import { Event } from "@/dbEvents";
-import { Location } from "@/dbLocations";
 import {
   IconSpeakerphone,
   IconUsers,
