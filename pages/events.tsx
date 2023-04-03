@@ -1,7 +1,5 @@
 import { Title, Space, Flex, Group, Button, Modal } from "@mantine/core";
 
-import { dbEvents } from "@/dbEvents";
-import { dbLocations } from "@/dbLocations";
 import EventCard from "@/components/EventCard";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCalendarPlus } from "@tabler/icons-react";
@@ -9,7 +7,8 @@ import EventForm from "@/components/EventForm";
 
 import { nanoid } from "nanoid";
 
-import { useLocalStorage } from "@mantine/hooks";
+import { eventsAtom, locationsAtom } from "@/store";
+import { useAtom } from "jotai";
 
 interface FormData {
   name: string;
@@ -24,11 +23,11 @@ interface FormData {
 
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
-  const [events, setEvents] = useLocalStorage(dbEvents);
-  const [locations] = useLocalStorage(dbLocations);
+  const [events, setEvents] = useAtom(eventsAtom);
+  const [locations] = useAtom(locationsAtom);
 
   const addEventToDb = (formData: FormData) => {
-    setEvents((events) => [
+    setEvents((events): any => [
       ...events,
       {
         id: nanoid(4),
@@ -66,7 +65,7 @@ export default function Events() {
       <Space h={"md"} />
 
       <Flex gap={"xs"} wrap={"wrap"}>
-        {events.map((event) => (
+        {events.map((event: any) => (
           <EventCard key={event.id} event={event} locations={locations} />
         ))}
       </Flex>

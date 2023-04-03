@@ -3,11 +3,11 @@ import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconPhoto, IconPhotoPlus } from "@tabler/icons-react";
 
 export default function PictureDropzone({
-  uploadImageHandler,
+  uploadImages,
   preValues,
   setLoading,
 }: {
-  uploadImageHandler: any;
+  uploadImages: any;
   preValues: any;
   setLoading: any;
 }) {
@@ -30,7 +30,7 @@ export default function PictureDropzone({
       accept={IMAGE_MIME_TYPE}
       onDrop={async (images) => {
         setLoading(true);
-        await uploadImageHandler(images, preValues.id);
+        await uploadImages(images, preValues.id);
         setLoading(false);
       }}
       onReject={(images) => {
