@@ -12,12 +12,15 @@ import LocationForm from "@/components/LocationForm";
 import { useState } from "react";
 import { uploadImageToCloudinary } from "@/services/cloudinary";
 
-import useLocalStorage from "@/utils/useLocalStorage";
 import PictureDeleteModal from "@/components/PictureDeleteModal";
 
+import { useAtom } from "jotai";
+
+import { locationsAtom, eventsAtom } from "@/store";
+
 export default function Locations() {
-  const [locations, setLocations] = useLocalStorage("dbLocations", []);
-  const [events] = useLocalStorage("dbEvents", dbEvents ?? []);
+  const [locations, setLocations] = useAtom(locationsAtom);
+  const [events] = useAtom(eventsAtom);
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [modal, setModal] = useState({
     title: "",
@@ -30,7 +33,7 @@ export default function Locations() {
   const [preValues, setPreValues] = useState({});
 
   const createLocation = (values: any, images: any[] = []) => {
-    setLocations((prevLocations: any) => [
+    setLocations((prevLocations): any => [
       ...prevLocations,
       {
         id: nanoid(4),
@@ -123,7 +126,7 @@ export default function Locations() {
     return await fetch("api/images/?publicId=" + deleteImageId, { method: "DELETE" });
   };
 
-  const uploadImageHandler = async (images: any[], locationId: string) => {
+  const uploadImages = async (images: any[], locationId: string) => {
     try {
       const uploadedImageData: any[] = await Promise.all(
         images.map(async (image: any) => uploadImageToCloudinary(image))
@@ -195,7 +198,7 @@ export default function Locations() {
             setPreValues={setPreValues}
             setModal={setModal}
             openModal={openModal}
-            uploadImageHandler={uploadImageHandler}
+            uploadImages={uploadImages}
             deleteImage={deleteImage}
           />
         ))}
