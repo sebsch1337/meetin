@@ -154,10 +154,8 @@ export default function LocationForm({
               message: `Eintrag erfolgreich erstellt.`,
             });
           }
-
-          setLoading(false);
           form.reset();
-
+          setLoading(false);
           closeModal();
         })}
       >
@@ -266,8 +264,8 @@ export default function LocationForm({
           />
           <Space />
           <Group position="right">
-            <Button type="submit" variant={"light"} size={"sm"} color={"teal"}>
-              {editLocationMode ? "Speichern" : "Erstellen"}
+            <Button type="submit" variant={"light"} size={"sm"} color={"teal"} fullWidth>
+              {editLocationMode ? "Änderungen speichern" : "Location erstellen"}
             </Button>
           </Group>
         </Flex>

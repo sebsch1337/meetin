@@ -47,4 +47,6 @@ export const editLocation = (values: any, locationId: string, setLocations: any)
     locationToChange.noGo = values?.noGo;
     locationToChange.latitude = values?.latitude;
     locationToChange.longitude = values?.longitude;
+
+    return prevLocations;
   });
