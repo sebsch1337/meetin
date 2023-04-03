@@ -1,16 +1,15 @@
-import { Text, Image, SimpleGrid, Flex, createStyles } from "@mantine/core";
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconPhoto, IconPhotoPlus } from "@tabler/icons-react";
+import { uploadImages } from "@/lib/image";
+import { Text, Flex, createStyles } from "@mantine/core";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { IconAlertCircle, IconPhotoPlus, IconX } from "@tabler/icons-react";
 
-export default function PictureDropzone({
-  uploadImages,
-  preValues,
-  setLoading,
-}: {
-  uploadImages: any;
-  preValues: any;
-  setLoading: any;
-}) {
+import { useSetAtom } from "jotai";
+import { locationsAtom } from "@/store";
+import { notifications } from "@mantine/notifications";
+
+export default function PictureDropzone({ preValues, setLoading }: { preValues: any; setLoading: any }) {
+  const setLocations = useSetAtom(locationsAtom);
+
   const useStyles = createStyles((theme) => ({
     disabled: {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
@@ -30,12 +29,16 @@ export default function PictureDropzone({
       accept={IMAGE_MIME_TYPE}
       onDrop={async (images) => {
         setLoading(true);
-        await uploadImages(images, preValues.id);
+        await uploadImages(images, preValues.id, setLocations);
         setLoading(false);
       }}
-      onReject={(images) => {
-        console.log("rejected images", images);
-        console.log("maxfiles", 4 - preValues?.images?.length);
+      onReject={() => {
+        notifications.show({
+          icon: <IconX />,
+          color: "red",
+          title: "Bilderupload abgebrochen",
+          message: `Bitte überprüfe Dateigröße und Anzahl der Dateien.`,
+        });
       }}
       maxFiles={4 - preValues?.images?.length}
       maxSize={5242880}
