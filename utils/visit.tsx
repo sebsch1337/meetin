@@ -1,11 +1,3 @@
-interface Visit {
-  visitors: number;
-  date: number;
-  notes: string;
-}
-
-import { Event } from "@/dbEvents";
-
 export const getEventsByLocationId = (locationId: string, events: Event[]): any[] =>
   events?.length > 0 ? events?.filter((event) => event.locationId === locationId) : [];
 
