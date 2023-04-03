@@ -10,17 +10,6 @@ import { nanoid } from "nanoid";
 import { eventsAtom, locationsAtom } from "@/store";
 import { useAtom } from "jotai";
 
-interface FormData {
-  name: string;
-  location: string;
-  dateTime: number;
-  announced: number;
-  visitors: number;
-  preNotes: string;
-  postNotes: string;
-  fbLink: string;
-}
-
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
   const [events, setEvents] = useAtom(eventsAtom);

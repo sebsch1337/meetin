@@ -1,6 +1,5 @@
 import LocationCard from "@/components/LocationCard";
 import { Button, Flex, Group, Modal, Space, Title, Text } from "@mantine/core";
-import { dbEvents } from "../dbEvents";
 import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
 
 import { useDisclosure } from "@mantine/hooks";
