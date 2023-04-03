@@ -1,6 +1,6 @@
 import LocationCard from "@/components/LocationCard";
 import { Button, Flex, Group, Modal, Space, Title } from "@mantine/core";
-import { getLastVisitedDay, getAverageVisitors } from "@/utils/visit";
+import { getLastVisitedDay, getAverageVisitors } from "@/lib/visit";
 
 import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconPlus } from "@tabler/icons-react";
