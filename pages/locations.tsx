@@ -10,21 +10,16 @@ import { useState } from "react";
 import PictureDeleteModal from "@/components/PictureDeleteModal";
 
 import { useAtom } from "jotai";
-import { locationsAtom, eventsAtom } from "@/store";
+import { locationsAtom, eventsAtom, modalAtom } from "@/store";
 import { IconPlus } from "@tabler/icons-react";
 import { deleteImage } from "@/lib/image";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
   const [events] = useAtom(eventsAtom);
+  const [modal, setModal] = useAtom(modalAtom);
+
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
-  const [modal, setModal] = useState({
-    title: "",
-    details: false,
-    deleteImage: false,
-    imageId: "",
-    locationId: "",
-  });
   const [editLocationMode, setEditLocationMode] = useState(false);
   const [preValues, setPreValues] = useState({});
 
@@ -34,10 +29,10 @@ export default function Locations() {
       <Space h={"md"} />
       <Group position={"apart"}>
         <Modal opened={modalOpened} onClose={closeModal} title={modal.title} centered>
-          {modal.details && (
+          {modal.type === "details" && (
             <LocationForm closeModal={closeModal} editLocationMode={editLocationMode} preValues={preValues} />
           )}
-          {modal.deleteImage && (
+          {modal.type === "deleteImage" && (
             <PictureDeleteModal
               deleteImage={async () => await deleteImage(modal.imageId, modal.locationId, setLocations)}
               closeModal={closeModal}
@@ -53,13 +48,11 @@ export default function Locations() {
           onClick={() => {
             setEditLocationMode(false);
             setPreValues({});
-            setModal({
+            setModal((prev) => ({
+              ...prev,
               title: "Neue Location",
-              details: true,
-              deleteImage: false,
-              imageId: "",
-              locationId: "",
-            });
+              type: "details",
+            }));
             openModal();
           }}
         >
@@ -76,7 +69,6 @@ export default function Locations() {
             key={location.id}
             setEditLocationMode={setEditLocationMode}
             setPreValues={setPreValues}
-            setModal={setModal}
             openModal={openModal}
           />
         ))}
