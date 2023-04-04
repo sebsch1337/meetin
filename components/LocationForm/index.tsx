@@ -263,11 +263,13 @@ export default function LocationForm({
             {...form.getInputProps("tags")}
           />
           <Space />
-          <Group position="right">
-            <Button type="submit" variant={"light"} size={"sm"} color={"teal"} fullWidth>
-              {editLocationMode ? "Änderungen speichern" : "Location erstellen"}
-            </Button>
-          </Group>
+          <Button type="submit" variant={"light"} size={"sm"} color={"teal"} fullWidth>
+            {editLocationMode ? "Änderungen speichern" : "Location erstellen"}
+          </Button>
+          <Divider />
+          <Button variant={"light"} size={"sm"} color={"red"} fullWidth>
+            Location löschen
+          </Button>
         </Flex>
       </form>
     </Flex>
