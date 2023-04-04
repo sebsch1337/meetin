@@ -1,4 +1,4 @@
-import { Button, Group, LoadingOverlay, Text } from "@mantine/core";
+import { Button, LoadingOverlay, Space, Text } from "@mantine/core";
 import { useState } from "react";
 
 export default function PictureDeleteModal({
@@ -14,21 +14,21 @@ export default function PictureDeleteModal({
     <>
       <LoadingOverlay visible={loading} overlayBlur={2} />
       <Text size={"sm"}>Möchtest du dieses Bild löschen?</Text>
-      <Group position="right">
-        <Button
-          variant={"light"}
-          size={"sm"}
-          color={"red"}
-          onClick={async () => {
-            setLoading(true);
-            await deleteImage();
-            setLoading(false);
-            closeModal();
-          }}
-        >
-          Löschen
-        </Button>
-      </Group>
+      <Space mt={"xl"} />
+      <Button
+        variant={"light"}
+        size={"sm"}
+        color={"red"}
+        fullWidth
+        onClick={async () => {
+          setLoading(true);
+          await deleteImage();
+          setLoading(false);
+          closeModal();
+        }}
+      >
+        Löschen
+      </Button>
     </>
   );
 }
