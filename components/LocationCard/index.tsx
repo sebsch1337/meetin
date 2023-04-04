@@ -25,6 +25,9 @@ import NoGoIcon from "../NoGoIcon";
 import PictureDropzone from "../PictureDropzone";
 import { useState } from "react";
 
+import { useSetAtom } from "jotai";
+import { modalAtom } from "@/store";
+
 export default function LocationCard({
   location,
   lastVisitedDay,
@@ -32,7 +35,6 @@ export default function LocationCard({
   openModal,
   setEditLocationMode,
   setPreValues,
-  setModal,
 }: {
   location: Location;
   lastVisitedDay: String;
@@ -40,9 +42,9 @@ export default function LocationCard({
   openModal: any;
   setEditLocationMode: any;
   setPreValues: any;
-  setModal: any;
 }) {
   const [loading, setLoading] = useState(false);
+  const setModal = useSetAtom(modalAtom);
 
   return (
     <Card w={350} mih={550} shadow="sm" padding="xl" key={location.id}>
@@ -90,13 +92,13 @@ export default function LocationCard({
                   variant="light"
                   style={{ position: "absolute", top: "1rem", right: "2rem", zIndex: 2 }}
                   onClick={async () => {
-                    setModal({
+                    setModal((prev) => ({
+                      ...prev,
                       title: "Bild löschen",
-                      details: false,
-                      deleteImage: true,
+                      type: "deleteImage",
                       imageId: image.publicId,
                       locationId: location.id,
-                    });
+                    }));
                     openModal();
                   }}
                 >
@@ -206,11 +208,11 @@ export default function LocationCard({
         onClick={() => {
           setEditLocationMode(true);
           setPreValues(location);
-          setModal({
+          setModal((prev) => ({
+            ...prev,
             title: "Location bearbeiten",
-            details: true,
-            deleteImage: false,
-          });
+            type: "details",
+          }));
           openModal();
         }}
       >
