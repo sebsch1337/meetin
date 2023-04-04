@@ -13,6 +13,8 @@ import { useAtom } from "jotai";
 import { locationsAtom, eventsAtom, modalAtom } from "@/store";
 import { IconPlus } from "@tabler/icons-react";
 import { deleteImage } from "@/lib/image";
+import { LocationDeleteModal } from "@/components/LocationDeleteModal";
+import { deleteLocation } from "@/lib/location";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -35,6 +37,12 @@ export default function Locations() {
           {modal.type === "deleteImage" && (
             <PictureDeleteModal
               deleteImage={async () => await deleteImage(modal.imageId, modal.locationId, setLocations)}
+              closeModal={closeModal}
+            />
+          )}
+          {modal.type === "deleteLocation" && (
+            <LocationDeleteModal
+              deleteLocation={async () => await deleteLocation(modal.locationId, locations, setLocations)}
               closeModal={closeModal}
             />
           )}

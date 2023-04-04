@@ -1,7 +1,7 @@
 import { useDebouncedValue, useNetwork } from "@mantine/hooks";
 
 import { useSetAtom } from "jotai";
-import { locationsAtom } from "@/store";
+import { locationsAtom, modalAtom } from "@/store";
 
 import { notifications } from "@mantine/notifications";
 
@@ -35,6 +35,7 @@ export default function LocationForm({
   preValues: any;
 }) {
   const setLocations = useSetAtom(locationsAtom);
+  const setModal = useSetAtom(modalAtom);
 
   const form = useForm({
     initialValues: {
@@ -266,10 +267,28 @@ export default function LocationForm({
           <Button type="submit" variant={"light"} size={"sm"} color={"teal"} fullWidth>
             {editLocationMode ? "Änderungen speichern" : "Location erstellen"}
           </Button>
-          <Divider />
-          <Button variant={"light"} size={"sm"} color={"red"} fullWidth>
-            Location löschen
-          </Button>
+          {editLocationMode && (
+            <>
+              {" "}
+              <Divider />
+              <Button
+                variant={"light"}
+                size={"sm"}
+                color={"red"}
+                fullWidth
+                onClick={() => {
+                  setModal((prev) => ({
+                    ...prev,
+                    title: "Location löschen",
+                    type: "deleteLocation",
+                    locationId: preValues.id,
+                  }));
+                }}
+              >
+                Location löschen
+              </Button>
+            </>
+          )}
         </Flex>
       </form>
     </Flex>
