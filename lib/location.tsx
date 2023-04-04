@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { deleteImage } from "./image";
 
 export const createLocation = (values: any, setLocations: any) => {
   setLocations((prevLocations: any): any => [
@@ -50,3 +51,19 @@ export const editLocation = (values: any, locationId: string, setLocations: any)
 
     return prevLocations;
   });
+
+export const deleteLocation = async (locationId: string, locations: any, setLocation: any) => {
+  const locationToDelete = locations.find((location: any) => location.id === locationId);
+
+  try {
+    await Promise.all(
+      locationToDelete?.images?.map(async (image: any) => await deleteImage(image.publicId, locationId))
+    );
+  } catch (error) {
+    console.error(error);
+  }
+
+  setLocation((prevLocations: any) =>
+    prevLocations.filter((prevLocation: any) => prevLocation.id !== locationId)
+  );
+};
