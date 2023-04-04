@@ -19,33 +19,35 @@ export const uploadImages = async (images: any[], locationId: string, setLocatio
 export const deleteImage = async (
   deleteImageId: string,
   locationId: string,
-  setLocations: any
+  setLocations?: any
 ): Promise<Response> => {
-  setLocations((locations: any) => {
-    const locationToChange = locations.find((location: any) => location.id === locationId);
+  if (setLocations) {
+    setLocations((locations: any) => {
+      const locationToChange = locations.find((location: any) => location.id === locationId);
 
-    if (locationToChange) {
-      const imageIndexToDelete = locationToChange.images.findIndex(
-        (image: any) => image.publicId === deleteImageId
-      );
-
-      if (imageIndexToDelete >= 0) {
-        const newImages = [
-          ...locationToChange.images.slice(0, imageIndexToDelete),
-          ...locationToChange.images.slice(imageIndexToDelete + 1),
-        ];
-
-        const newLocation = { ...locationToChange, images: newImages };
-        const newLocations = locations.map((location: any) =>
-          location.id === locationId ? newLocation : location
+      if (locationToChange) {
+        const imageIndexToDelete = locationToChange.images.findIndex(
+          (image: any) => image.publicId === deleteImageId
         );
 
-        return newLocations;
-      }
-    }
+        if (imageIndexToDelete >= 0) {
+          const newImages = [
+            ...locationToChange.images.slice(0, imageIndexToDelete),
+            ...locationToChange.images.slice(imageIndexToDelete + 1),
+          ];
 
-    return locations;
-  });
+          const newLocation = { ...locationToChange, images: newImages };
+          const newLocations = locations.map((location: any) =>
+            location.id === locationId ? newLocation : location
+          );
+
+          return newLocations;
+        }
+      }
+      console.log(deleteImageId, " geloescht.");
+      return locations;
+    });
+  }
 
   return await fetch("api/images/?publicId=" + deleteImageId, { method: "DELETE" });
 };
