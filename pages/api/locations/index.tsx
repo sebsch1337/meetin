@@ -1,20 +1,22 @@
 import {
-  createCloudinarySignature,
-  uploadImageToCloudinary,
-  deleteImageFromCloudinary,
-} from "@/services/cloudinaryService";
+  deleteLocation,
+  getAllLocations,
+  getLocationById,
+  postLocation,
+  updateLocation,
+} from "@/services/locationService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { publicId, timestamp, uploadPreset },
+    query: {},
     method,
   } = req;
 
   switch (method) {
     case "GET":
       try {
-        const signature = createCloudinarySignature(publicId || null, timestamp, uploadPreset || null);
-        res.status(200).json(signature);
+        const locations = await getAllLocations();
+        res.status(200).json(locations);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
@@ -26,8 +28,22 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "POST":
       try {
-        const uploadedImage: any = await uploadImageToCloudinary(req.body);
-        res.status(200).json(uploadedImage);
+        const postedLocation: any = await postLocation(req.body);
+        res.status(200).json(postedLocation);
+      } catch (error: any) {
+        if (error.status) {
+          return res.status(error.status).json({ message: error.message });
+        }
+        console.error(error.message);
+        return res.status(500).json({ message: "internal server error" });
+      }
+      break;
+
+    case "PUT":
+      try {
+        await updateLocation(req.body.id, req.body.values);
+        const udpatedLocation = await getLocationById(req.body.id);
+        res.status(200).json(udpatedLocation);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
@@ -39,8 +55,8 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "DELETE":
       try {
-        const deletedImage: any = await deleteImageFromCloudinary(publicId);
-        res.status(200).json(deletedImage);
+        const deletedLocation: any = await deleteLocation(req.body.id);
+        res.status(200).json(deletedLocation);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
