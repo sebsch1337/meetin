@@ -1,6 +1,4 @@
 import { Button, LoadingOverlay, Space, Text } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
 import { useState } from "react";
 
 export const LocationDeleteModal = ({
@@ -27,11 +25,6 @@ export const LocationDeleteModal = ({
           await deleteLocation();
           setLoading(false);
           closeModal();
-          notifications.show({
-            icon: <IconCheck />,
-            title: "Location gelöscht",
-            message: `Location wurde erfolgreich gelöscht.`,
-          });
         }}
       >
         Löschen

@@ -1,4 +1,4 @@
-import { uploadImageToCloudinary } from "@/services/cloudinary";
+import { uploadImageToCloudinary } from "@/services/cloudinaryService";
 
 export const uploadImages = async (images: any[], locationId: string, setLocations: any) => {
   try {

@@ -1,10 +1,3 @@
-import { useDebouncedValue, useNetwork } from "@mantine/hooks";
-
-import { useSetAtom } from "jotai";
-import { locationsAtom, modalAtom } from "@/store";
-
-import { notifications } from "@mantine/notifications";
-
 import { useForm } from "@mantine/form";
 import {
   Button,
@@ -21,8 +14,11 @@ import {
   LoadingOverlay,
   Space,
 } from "@mantine/core";
+
+import { useDebouncedValue, useNetwork } from "@mantine/hooks";
+import { useSetAtom } from "jotai";
+import { locationsAtom, modalAtom } from "@/store";
 import { useEffect, useState } from "react";
-import { IconCheck } from "@tabler/icons-react";
 import { createLocation, editLocation } from "@/lib/location";
 
 export default function LocationForm({
@@ -141,19 +137,9 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           if (editLocationMode) {
-            editLocation(values, preValues.id, setLocations);
-            notifications.show({
-              icon: <IconCheck />,
-              title: values.name,
-              message: `Eintrag erfolgreich bearbeitet.`,
-            });
+            await editLocation(values, preValues.id, setLocations);
           } else {
-            createLocation(values, setLocations);
-            notifications.show({
-              icon: <IconCheck />,
-              title: values.name,
-              message: `Eintrag erfolgreich erstellt.`,
-            });
+            await createLocation(values, setLocations);
           }
           form.reset();
           setLoading(false);
@@ -269,7 +255,6 @@ export default function LocationForm({
           </Button>
           {editLocationMode && (
             <>
-              {" "}
               <Divider />
               <Button
                 variant={"light"}

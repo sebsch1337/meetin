@@ -1,11 +1,14 @@
-import { nanoid } from "nanoid";
+import { notifications } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import { deleteImage } from "./image";
 
-export const createLocation = (values: any, setLocations: any) => {
-  setLocations((prevLocations: any): any => [
-    ...prevLocations,
-    {
-      id: nanoid(4),
+export const createLocation = async (values: any, setLocations: any) => {
+  const response = await fetch("/api/locations", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       name: values?.name,
       address: {
         road: values?.road,
@@ -25,32 +28,81 @@ export const createLocation = (values: any, setLocations: any) => {
       images: [],
       latitude: values?.latitude,
       longitude: values?.longitude,
-    },
-  ]);
+    }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    setLocations((prevLocations: any): any => [
+      ...prevLocations,
+      {
+        id: data?._id,
+        ...data,
+      },
+    ]);
+    notifications.show({
+      icon: <IconCheck />,
+      color: "teal",
+      title: values.name,
+      message: `Location erfolgreich erstellt.`,
+    });
+  } else {
+    console.error("Error posting data:", response.statusText);
+    notifications.show({
+      icon: <IconX />,
+      title: values.name,
+      message: `Fehler beim Erstellen der Location.`,
+    });
+  }
 };
 
-export const editLocation = (values: any, locationId: string, setLocations: any) =>
-  setLocations((prevLocations: any) => {
-    const locationToChange: any = prevLocations?.find((location: any) => location.id === locationId);
-    locationToChange.name = values?.name;
-    locationToChange.address.road = values?.road;
-    locationToChange.address.houseNo = values?.houseNo;
-    locationToChange.address.postcode = values?.postcode;
-    locationToChange.address.city = values?.city;
-    locationToChange.address.suburb = values?.suburb;
-    locationToChange.description = values?.description;
-    locationToChange.infos = values?.infos;
-    locationToChange.tel = values?.tel;
-    locationToChange.tags = values?.tags;
-    locationToChange.maxCapacity = values?.maxCapacity;
-    locationToChange.indoor = values?.indoor;
-    locationToChange.outdoor = values?.outdoor;
-    locationToChange.noGo = values?.noGo;
-    locationToChange.latitude = values?.latitude;
-    locationToChange.longitude = values?.longitude;
+export const editLocation = async (values: any, locationId: string, setLocations: any) => {
+  try {
+    const response = await fetch("/api/locations", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: locationId, values: values }),
+    });
+    if (!response.ok) throw new Error("Failed to update location.");
+    const newLocation: any = await response.json();
 
-    return prevLocations;
-  });
+    setLocations((prevLocations: any) => {
+      const locationToChange: any = prevLocations?.find((location: any) => location.id === locationId);
+      locationToChange.name = newLocation?.name;
+      locationToChange.address.road = newLocation?.address?.road;
+      locationToChange.address.houseNo = newLocation?.address?.houseNo;
+      locationToChange.address.postcode = newLocation?.address?.postcode;
+      locationToChange.address.city = newLocation?.address?.city;
+      locationToChange.address.suburb = newLocation?.address?.suburb;
+      locationToChange.description = newLocation?.description;
+      locationToChange.infos = newLocation?.infos;
+      locationToChange.tel = newLocation?.tel;
+      locationToChange.tags = newLocation?.tags;
+      locationToChange.maxCapacity = newLocation?.maxCapacity;
+      locationToChange.indoor = newLocation?.indoor;
+      locationToChange.outdoor = newLocation?.outdoor;
+      locationToChange.noGo = newLocation?.noGo;
+      locationToChange.latitude = newLocation?.latitude;
+      locationToChange.longitude = newLocation?.longitude;
+
+      return prevLocations;
+    });
+
+    notifications.show({
+      icon: <IconCheck />,
+      title: values.name,
+      message: `Location erfolgreich bearbeitet.`,
+    });
+  } catch (error) {
+    console.error(error);
+    notifications.show({
+      icon: <IconX />,
+      color: "red",
+      message: `Location konnte nicht bearbeitet werden.`,
+    });
+    return error;
+  }
+};
 
 export const deleteLocation = async (locationId: string, locations: any, setLocation: any) => {
   const locationToDelete = locations.find((location: any) => location.id === locationId);
@@ -59,11 +111,30 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
     await Promise.all(
       locationToDelete?.images?.map(async (image: any) => await deleteImage(image.publicId, locationId))
     );
+
+    const response = await fetch("/api/locations", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: locationId }),
+    });
+    if (!response.ok) throw new Error("Failed to delete location.");
   } catch (error) {
     console.error(error);
+    notifications.show({
+      icon: <IconX />,
+      color: "red",
+      message: `Location konnte nicht gelöscht werden.`,
+    });
+    return error;
   }
 
   setLocation((prevLocations: any) =>
     prevLocations.filter((prevLocation: any) => prevLocation.id !== locationId)
   );
+
+  notifications.show({
+    icon: <IconCheck />,
+    title: "Location gelöscht",
+    message: `Location wurde erfolgreich gelöscht.`,
+  });
 };

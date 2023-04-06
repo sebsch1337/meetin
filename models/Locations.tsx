@@ -12,6 +12,8 @@ const locationsSchema = new Schema({
   outdoor: { type: Boolean },
   noGo: { type: Boolean },
   images: { type: Array },
+  latitude: { type: String },
+  longitude: { type: String },
   //   tripId: { type: mongoose.Schema.Types.ObjectId, ref: "trips" },
 });
 
