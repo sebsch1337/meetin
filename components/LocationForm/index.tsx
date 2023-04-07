@@ -153,6 +153,7 @@ export default function LocationForm({
             placeholder="Name der Location"
             spellCheck={false}
             {...form.getInputProps("name")}
+            maxLength={50}
           />
           <Group grow>
             <TextInput
@@ -160,12 +161,14 @@ export default function LocationForm({
               placeholder="Straße"
               spellCheck={false}
               {...form.getInputProps("road")}
+              maxLength={100}
             />
             <TextInput
               label="Hausnummer"
               placeholder="Hausnummer"
               spellCheck={false}
               {...form.getInputProps("houseNo")}
+              maxLength={5}
             />
           </Group>
           <Group grow>
@@ -174,8 +177,15 @@ export default function LocationForm({
               placeholder="Postleitzahl"
               spellCheck={false}
               {...form.getInputProps("postcode")}
+              maxLength={7}
             />
-            <TextInput label="Ort" placeholder="Ort" spellCheck={false} {...form.getInputProps("city")} />
+            <TextInput
+              label="Ort"
+              placeholder="Ort"
+              spellCheck={false}
+              {...form.getInputProps("city")}
+              maxLength={100}
+            />
           </Group>
           <Group grow>
             <TextInput
@@ -183,12 +193,14 @@ export default function LocationForm({
               placeholder="Stadtteil"
               spellCheck={false}
               {...form.getInputProps("suburb")}
+              maxLength={100}
             />
             <TextInput
               label="Telefonnummer"
               placeholder="Telefonnummer"
               spellCheck={false}
               {...form.getInputProps("tel")}
+              maxLength={20}
             />
           </Group>
           <Group grow>
@@ -214,6 +226,8 @@ export default function LocationForm({
               placeholder="Anzahl Besucher"
               spellCheck={false}
               {...form.getInputProps("maxCapacity")}
+              max={999}
+              min={0}
             />
           </Group>
 
@@ -225,6 +239,7 @@ export default function LocationForm({
             placeholder="Beschreibung, Lage, Anreise, Preisklasse, Menü"
             spellCheck={false}
             {...form.getInputProps("description")}
+            maxLength={500}
           />
 
           <Textarea
@@ -233,14 +248,16 @@ export default function LocationForm({
             placeholder="Wichtige Hinweise für die Orga"
             spellCheck={false}
             {...form.getInputProps("infos")}
+            maxLength={500}
           />
 
           <MultiSelect
             label="Tags"
             data={tags}
-            placeholder="Tags hinzufügen"
+            placeholder="Max. 6 Tags hinzufügen"
             searchable
             creatable
+            maxSelectedValues={6}
             getCreateLabel={(query) => `+ Erstelle ${query}`}
             onCreate={(query) => {
               const item = { value: query, label: query };

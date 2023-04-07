@@ -173,6 +173,12 @@ export const sanitizeAndValidateLocation = (location: Location) => {
     throw error;
   }
 
+  if (sanitizedLocation?.address?.suburb && sanitizedLocation?.address?.suburb?.length > 100) {
+    const error: any = new Error("Invalid city name");
+    error.status = 400;
+    throw error;
+  }
+
   if (sanitizedLocation?.description && sanitizedLocation?.description?.length > 500) {
     const error: any = new Error("Description is too long");
     error.status = 400;
