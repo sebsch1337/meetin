@@ -1,3 +1,4 @@
+import { sanitizeAndValidateLocation } from "@/lib/location";
 import dbConnect from "../lib/dbConnect";
 import Locations from "../models/Locations";
 
@@ -67,6 +68,7 @@ export async function getLocationById(id: string) {
     latitude: location?.latitude,
     longitude: location?.longitude,
   };
+
   return sanitizedLocation;
 }
 
@@ -78,20 +80,12 @@ export async function getLocationById(id: string) {
  * @throws {Error} - If the creation of the new location fails.
  */
 export async function postLocation(location: any) {
-  //   const cleanedLocation = body.location.trim();
-  // if (!validateTripName(cleanedLocation)) {
-  //   const error = new Error("invalid name");
-  //   error.status = 400;
-  //   throw error;
-  // }
-
   await dbConnect();
-  const newLocation = await Locations.create(location);
-  if (!newLocation) {
-    throw new Error();
-  }
 
-  return newLocation;
+  const sanitizedLocation = sanitizeAndValidateLocation(location);
+  const newLocation = await Locations.create(sanitizedLocation);
+  const returnedLocation = sanitizeAndValidateLocation(newLocation);
+  return returnedLocation;
 }
 
 /**

@@ -47,9 +47,9 @@ export const createLocation = async (values: any, setLocations: any) => {
       message: `Location erfolgreich erstellt.`,
     });
   } else {
-    console.error("Error posting data:", response.statusText);
     notifications.show({
       icon: <IconX />,
+      color: "red",
       title: values.name,
       message: `Fehler beim Erstellen der Location.`,
     });
@@ -137,4 +137,105 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
     title: "Location gelöscht",
     message: `Location wurde erfolgreich gelöscht.`,
   });
+};
+
+export const sanitizeAndValidateLocation = (location: any) => {
+  const sanitizedLocation = {
+    id: location?._id || location.id,
+    name: location?.name?.trim(),
+    address: {
+      road: location?.address?.road?.trim(),
+      houseNo: location?.address?.houseNo?.trim(),
+      postcode: location?.address?.postcode?.trim(),
+      city: location?.address?.city?.trim(),
+      suburb: location?.address?.suburb?.trim(),
+    },
+    description: location?.description?.trim(),
+    infos: location?.infos?.trim(),
+    tel: location?.tel?.trim(),
+    tags: location?.tags?.map((tag: string) => tag.trim()),
+    maxCapacity: location?.maxCapacity,
+    indoor: location?.indoor,
+    outdoor: location?.outdoor,
+    noGo: location?.noGo,
+    latitude: location?.latitude,
+    longitude: location?.longitude,
+  };
+
+  if (!sanitizedLocation.name || sanitizedLocation.name.length < 2 || sanitizedLocation.name.length > 50) {
+    const error: any = new Error("Invalid location name");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.address?.road?.length > 100) {
+    const error: any = new Error("Invalid road name");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.address?.houseNo?.length > 5) {
+    const error: any = new Error("Invalid house number");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.address?.postcode?.length > 7) {
+    const error: any = new Error("Invalid postcode");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.address?.city?.length > 100) {
+    const error: any = new Error("Invalid city name");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.description?.length > 500) {
+    const error: any = new Error("Description is too long");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.infos?.length > 500) {
+    const error: any = new Error("Information is too long");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.tel?.length > 20) {
+    const error: any = new Error("Phone number is too long");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.tags?.length > 6) {
+    const error: any = new Error("Too many tags (max. 6)");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation?.maxCapacity > 1000) {
+    const error: any = new Error("Invalid max capacity");
+    error.status = 400;
+    throw error;
+  }
+
+  if (sanitizedLocation.latitude && (sanitizedLocation.latitude < -90 || sanitizedLocation.latitude > 90)) {
+    const error: any = new Error("Invalid latitude");
+    error.status = 400;
+    throw error;
+  }
+
+  if (
+    sanitizedLocation.longitude &&
+    (sanitizedLocation.longitude < -180 || sanitizedLocation.longitude > 180)
+  ) {
+    const error: any = new Error("Invalid longitude");
+    error.status = 400;
+    throw error;
+  }
+
+  return sanitizedLocation;
 };
