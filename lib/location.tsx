@@ -64,6 +64,7 @@ export const editLocation = async (values: any, locationId: string, setLocations
       locationToChange.noGo = newLocation?.noGo;
       locationToChange.latitude = newLocation?.latitude;
       locationToChange.longitude = newLocation?.longitude;
+      locationToChange.images = newLocation?.images;
 
       return prevLocations;
     });
@@ -88,11 +89,13 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
   const locationToDelete = locations.find((location: any) => location.id === locationId);
 
   try {
+    console.log("deleting images...");
     if (locationToDelete?.images?.length > 0) {
       await Promise.all(
         locationToDelete?.images?.map(async (image: any) => await deleteImage(image.publicId, locationId))
       );
     }
+    console.log("deleting images done.");
     const response = await fetch("/api/locations", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -141,9 +144,10 @@ export const sanitizeAndValidateLocation = (location: Location) => {
     noGo: location?.noGo,
     latitude: location?.latitude,
     longitude: location?.longitude,
+    images: location?.images,
   };
 
-  if (!sanitizedLocation.name || sanitizedLocation.name.length < 2 || sanitizedLocation.name.length > 50) {
+  if (sanitizedLocation?.name && sanitizedLocation?.name?.length > 50) {
     const error: any = new Error("Invalid location name");
     error.status = 400;
     throw error;

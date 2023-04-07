@@ -26,6 +26,7 @@ interface Location {
   noGo?: boolean;
   latitude?: number;
   longitude?: number;
+  images: Images[];
 }
 
 interface Images {

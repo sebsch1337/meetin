@@ -8,7 +8,7 @@ import Locations from "../models/Locations";
  * @returns An array of sanitized and validated location objects.
  * @throws Error if the locations array is not found or not an array.
  */
-export async function getAllLocationsFromDb() {
+export async function getAllLocationsFromDb(): Promise<any> {
   await dbConnect();
 
   const locations = await Locations.find({});
@@ -25,7 +25,7 @@ export async function getAllLocationsFromDb() {
  * @returns The sanitized and validated location object.
  * @throws Error if the location is not found.
  */
-export async function getLocationByIdFromDb(id: string) {
+export async function getLocationByIdFromDb(id: string): Promise<any> {
   await dbConnect();
 
   const location = await Locations.findById(id);
@@ -41,7 +41,7 @@ export async function getLocationByIdFromDb(id: string) {
  * @param location - The location data to store.
  * @returns The sanitized and validated location object.
  */
-export async function postLocationToDb(location: any) {
+export async function postLocationToDb(location: any): Promise<any> {
   await dbConnect();
 
   const sanitizedLocation = sanitizeAndValidateLocation(location);
@@ -52,14 +52,13 @@ export async function postLocationToDb(location: any) {
 }
 
 /**
- * Updates a location in the database.
- *
- * @param id - The ID of the location to update.
- * @param location - The new location data to store.
- * @returns The updated location object.
- * @throws Error if the update is not acknowledged.
+ * Updates a location document with the specified ID in the database.
+ * @param id The ID of the location document to update.
+ * @param location The updated location document to save to the database.
+ * @returns A Promise that resolves to the updated location document in the database.
+ * @throws An error indicating that the update operation did not complete successfully.
  */
-export async function updateLocationInDb(id: string, location: any) {
+export async function updateLocationInDb(id: string, location: Location): Promise<any> {
   await dbConnect();
 
   const sanitizedLocation = sanitizeAndValidateLocation(location);
@@ -76,7 +75,7 @@ export async function updateLocationInDb(id: string, location: any) {
  * @returns A promise that resolves with the status of the deletion operation.
  * @throws If the deletion operation fails.
  */
-export async function deleteLocationFromDb(id: string) {
+export async function deleteLocationFromDb(id: string): Promise<any> {
   await dbConnect();
 
   const deletedLocation = await Locations.deleteOne({ _id: id });
@@ -84,3 +83,19 @@ export async function deleteLocationFromDb(id: string) {
 
   return deletedLocation;
 }
+
+/**
+ * Deletes an image with the specified public ID from the database for the given location ID.
+ * @param publicId The public ID of the image to delete.
+ * @param locationId The ID of the location document to update.
+ * @returns A Promise that resolves to the updated location document in the database.
+ * @throws An Error if the update operation did not complete successfully.
+ */
+export const deleteImageByIdFromDb = async (publicId: string, locationId: string): Promise<any> => {
+  await dbConnect();
+
+  const updatedLocation = await Locations.updateOne({ _id: locationId }, { $pull: { images: { publicId } } });
+  if (!updatedLocation.acknowledged) throw new Error();
+
+  return updatedLocation;
+};

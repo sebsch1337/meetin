@@ -1,15 +1,18 @@
 import { deleteImageFromCloudinary } from "@/services/cloudinaryService";
+import { deleteImageByIdFromDb } from "@/services/locationService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { id },
+    query: { publicId, locationId, deleteFromDb },
     method,
   } = req;
 
   switch (method) {
     case "DELETE":
       try {
-        const deletedImage: any = await deleteImageFromCloudinary(id.replace("-", "/"));
+        const sanitizedPublicId = publicId.replace("-", "/");
+        const deletedImage: any = await deleteImageFromCloudinary(sanitizedPublicId);
+        await deleteImageByIdFromDb(sanitizedPublicId, locationId);
         res.status(200).json(deletedImage);
       } catch (error: any) {
         if (error.status) {
