@@ -11,6 +11,11 @@ interface Location {
   id?: string;
   name?: string;
   address?: Address;
+  road?: string;
+  houseNo?: string;
+  postcode?: string;
+  city?: string;
+  suburb?: string;
   description?: string;
   infos?: string;
   tel?: string;

@@ -8,27 +8,7 @@ export const createLocation = async (values: any, setLocations: any) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      name: values?.name,
-      address: {
-        road: values?.road,
-        houseNo: values?.houseNo,
-        postcode: values?.postcode,
-        city: values?.city,
-        suburb: values?.suburb,
-      },
-      description: values?.description,
-      infos: values?.infos,
-      tel: values?.tel,
-      tags: values?.tags,
-      maxCapacity: values?.maxCapacity,
-      indoor: values?.indoor,
-      outdoor: values?.outdoor,
-      noGo: values?.noGo,
-      images: [],
-      latitude: values?.latitude,
-      longitude: values?.longitude,
-    }),
+    body: JSON.stringify(values),
   });
 
   if (response.ok) {
@@ -108,10 +88,11 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
   const locationToDelete = locations.find((location: any) => location.id === locationId);
 
   try {
-    await Promise.all(
-      locationToDelete?.images?.map(async (image: any) => await deleteImage(image.publicId, locationId))
-    );
-
+    if (locationToDelete?.images?.length > 0) {
+      await Promise.all(
+        locationToDelete?.images?.map(async (image: any) => await deleteImage(image.publicId, locationId))
+      );
+    }
     const response = await fetch("/api/locations", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -139,16 +120,16 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
   });
 };
 
-export const sanitizeAndValidateLocation = (location: any) => {
+export const sanitizeAndValidateLocation = (location: Location) => {
   const sanitizedLocation = {
     id: location?._id || location.id,
     name: location?.name?.trim(),
     address: {
-      road: location?.address?.road?.trim(),
-      houseNo: location?.address?.houseNo?.trim(),
-      postcode: location?.address?.postcode?.trim(),
-      city: location?.address?.city?.trim(),
-      suburb: location?.address?.suburb?.trim(),
+      road: location?.address?.road?.trim() || location?.road?.trim(),
+      houseNo: location?.address?.houseNo?.trim() || location?.houseNo?.trim(),
+      postcode: location?.address?.postcode?.trim() || location?.postcode?.trim(),
+      city: location?.address?.city?.trim() || location?.city?.trim(),
+      suburb: location?.address?.suburb?.trim() || location?.suburb?.trim(),
     },
     description: location?.description?.trim(),
     infos: location?.infos?.trim(),
@@ -168,55 +149,55 @@ export const sanitizeAndValidateLocation = (location: any) => {
     throw error;
   }
 
-  if (sanitizedLocation?.address?.road?.length > 100) {
+  if (sanitizedLocation?.address?.road && sanitizedLocation?.address?.road?.length > 100) {
     const error: any = new Error("Invalid road name");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.address?.houseNo?.length > 5) {
+  if (sanitizedLocation?.address?.houseNo && sanitizedLocation.address.houseNo.length > 5) {
     const error: any = new Error("Invalid house number");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.address?.postcode?.length > 7) {
+  if (sanitizedLocation?.address?.postcode && sanitizedLocation?.address?.postcode?.length > 7) {
     const error: any = new Error("Invalid postcode");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.address?.city?.length > 100) {
+  if (sanitizedLocation?.address?.city && sanitizedLocation?.address?.city?.length > 100) {
     const error: any = new Error("Invalid city name");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.description?.length > 500) {
+  if (sanitizedLocation?.description && sanitizedLocation?.description?.length > 500) {
     const error: any = new Error("Description is too long");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.infos?.length > 500) {
+  if (sanitizedLocation?.infos && sanitizedLocation?.infos?.length > 500) {
     const error: any = new Error("Information is too long");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.tel?.length > 20) {
+  if (sanitizedLocation?.tel && sanitizedLocation?.tel?.length > 20) {
     const error: any = new Error("Phone number is too long");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.tags?.length > 6) {
+  if (sanitizedLocation?.tags && sanitizedLocation?.tags?.length > 6) {
     const error: any = new Error("Too many tags (max. 6)");
     error.status = 400;
     throw error;
   }
 
-  if (sanitizedLocation?.maxCapacity > 1000) {
+  if (sanitizedLocation?.maxCapacity && sanitizedLocation?.maxCapacity > 1000) {
     const error: any = new Error("Invalid max capacity");
     error.status = 400;
     throw error;
