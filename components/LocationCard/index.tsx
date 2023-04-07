@@ -92,7 +92,7 @@ export default function LocationCard({
                   variant="light"
                   style={{ position: "absolute", top: "1rem", right: "2rem", zIndex: 2 }}
                   onClick={async () => {
-                    setModal((prev) => ({
+                    setModal((prev): any => ({
                       ...prev,
                       title: "Bild löschen",
                       type: "deleteImage",
@@ -190,7 +190,7 @@ export default function LocationCard({
       </Accordion>
 
       <Group mt={"md"} mb={"md"} spacing={"xs"} mih={45}>
-        {location?.tags.map((tag) => (
+        {location?.tags?.map((tag) => (
           <Badge variant={"outline"} key={tag} size={"xs"}>
             {tag}
           </Badge>

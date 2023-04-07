@@ -14,7 +14,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   imageButton: {
@@ -40,24 +40,11 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function PictureBox({
-  deleteImage,
-  preValues,
-  uploadedImages,
-}: {
-  deleteImage: any;
-  preValues: any;
-  uploadedImages: any;
-}) {
+export default function PictureBox({ deleteImage, preValues }: { deleteImage: any; preValues: any }) {
   const { classes } = useStyles();
-  const [images, setImages] = useState([...preValues.images, ...uploadedImages]);
   const [deleteImageId, setDeleteImageId] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
   const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setImages([...preValues.images, ...uploadedImages]);
-  }, [preValues, uploadedImages]);
 
   return (
     <>
@@ -73,7 +60,6 @@ export default function PictureBox({
               close();
               setVisible(true);
               await deleteImage(deleteImageId, preValues.id);
-              setImages((images: any) => images.filter((image: any) => image.publicId !== deleteImageId));
               setVisible(false);
             }}
           >
@@ -82,11 +68,11 @@ export default function PictureBox({
         </Group>
       </Modal>
 
-      {images?.length > 0 && (
+      {preValues?.images?.length > 0 && (
         <Paper withBorder={true} p={10}>
           <LoadingOverlay visible={visible} overlayBlur={2} />
           <Flex gap={"xs"} align={"center"} wrap={"wrap"}>
-            {images?.map((image: any) => (
+            {preValues?.images?.map((image: any) => (
               <UnstyledButton
                 key={image.publicId}
                 className={classes.imageButton}
