@@ -1,8 +1,4 @@
-import {
-  createCloudinarySignature,
-  uploadImageToCloudinary,
-  deleteImageFromCloudinary,
-} from "@/services/cloudinaryService";
+import { createCloudinarySignature, uploadImageToCloudinary } from "@/services/cloudinaryService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
@@ -28,19 +24,6 @@ export default async function handler(req: any, res: any): Promise<any> {
       try {
         const uploadedImage: any = await uploadImageToCloudinary(req.body);
         res.status(200).json(uploadedImage);
-      } catch (error: any) {
-        if (error.status) {
-          return res.status(error.status).json({ message: error.message });
-        }
-        console.error(error.message);
-        return res.status(500).json({ message: "internal server error" });
-      }
-      break;
-
-    case "DELETE":
-      try {
-        const deletedImage: any = await deleteImageFromCloudinary(publicId);
-        res.status(200).json(deletedImage);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
