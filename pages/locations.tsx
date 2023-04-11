@@ -9,14 +9,28 @@ import { useState } from "react";
 
 import PictureDeleteModal from "@/components/PictureDeleteModal";
 
-import { useAtom } from "jotai";
-import { locationsAtom, eventsAtom, modalAtom } from "@/store";
 import { IconPlus } from "@tabler/icons-react";
 import { deleteImage } from "@/lib/image";
 import { LocationDeleteModal } from "@/components/LocationDeleteModal";
 import { deleteLocation } from "@/lib/location";
+import { getAllLocationsFromDb } from "@/services/locationService";
 
-export default function Locations() {
+import { useAtom } from "jotai";
+import { useHydrateAtoms } from "jotai/utils";
+import { eventsAtom, locationsAtom, modalAtom } from "@/store";
+
+export async function getServerSideProps() {
+  const locationsDb = await getAllLocationsFromDb();
+
+  return {
+    props: {
+      locationsDb: locationsDb,
+    },
+  };
+}
+
+export default function Locations({ locationsDb }: { locationsDb: any }) {
+  useHydrateAtoms([[locationsAtom, locationsDb]]);
   const [locations, setLocations] = useAtom(locationsAtom);
   const [events] = useAtom(eventsAtom);
   const [modal, setModal] = useAtom(modalAtom);
