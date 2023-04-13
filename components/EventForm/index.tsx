@@ -13,8 +13,8 @@ export default function EventForm({
   closeModal: any;
 }) {
   const locationData = locations.map((location): { value: string; label: string } => ({
-    value: location.id,
-    label: location.name,
+    value: location?.id || "",
+    label: location?.name || "",
   }));
 
   const form = useForm({
