@@ -12,7 +12,7 @@ export const uploadImages = async (
     );
 
     const response = await fetch("/api/locations", {
-      method: "PUT",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: locationId, values: { images: [...prevImages, ...uploadedImageData] } }),
     });

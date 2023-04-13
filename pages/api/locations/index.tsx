@@ -39,7 +39,7 @@ export default async function handler(req: any, res: any): Promise<any> {
       }
       break;
 
-    case "PUT":
+    case "PATCH":
       try {
         await updateLocationInDb(req.body.id, req.body.values);
         const udpatedLocation = await getLocationByIdFromDb(req.body.id);
