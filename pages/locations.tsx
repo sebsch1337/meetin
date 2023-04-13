@@ -20,7 +20,7 @@ import { useHydrateAtoms } from "jotai/utils";
 import { eventsAtom, locationsAtom, modalAtom } from "@/store";
 
 export async function getServerSideProps() {
-  const locationsDb = await getAllLocationsFromDb();
+  const locationsDb: Location[] = await getAllLocationsFromDb();
 
   return {
     props: {
@@ -29,7 +29,8 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Locations({ locationsDb }: { locationsDb: any }) {
+export default function Locations({ locationsDb }: { locationsDb: Location[] }) {
+  // @ts-ignore
   useHydrateAtoms([[locationsAtom, locationsDb]]);
   const [locations, setLocations] = useAtom(locationsAtom);
   const [events] = useAtom(eventsAtom);
