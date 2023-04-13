@@ -30,7 +30,6 @@ export async function getServerSideProps() {
 }
 
 export default function Locations({ locationsDb }: { locationsDb: Location[] }) {
-  // @ts-ignore
   useHydrateAtoms([[locationsAtom, locationsDb]]);
   const [locations, setLocations] = useAtom(locationsAtom);
   const [events] = useAtom(eventsAtom);
