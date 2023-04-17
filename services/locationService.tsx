@@ -1,6 +1,6 @@
-import { sanitizeAndValidateLocation } from "@/lib/location";
 import dbConnect from "../lib/dbConnect";
 import Locations from "../models/Locations";
+import { sanitizeLocation, validateLocation } from "@/validators/locationValidator";
 
 /**
  * Gets all locations from the database.
@@ -13,7 +13,12 @@ export async function getAllLocationsFromDb(): Promise<any> {
 
   const locations = await Locations.find({});
   if (!Array.isArray(locations)) throw new Error();
-  const sanitizedLocations = locations.map((location) => sanitizeAndValidateLocation(location));
+
+  const sanitizedLocations = await Promise.all(
+    locations.map(async (location) => await validateLocation(sanitizeLocation(location)))
+  );
+
+  // console.log(sanitizedLocations);
 
   return sanitizedLocations;
 }
@@ -30,7 +35,7 @@ export async function getLocationByIdFromDb(id: string): Promise<any> {
 
   const location = await Locations.findById(id);
   if (!location) throw new Error();
-  const sanitizedLocation = sanitizeAndValidateLocation(location);
+  const sanitizedLocation = await validateLocation(sanitizeLocation(location));
 
   return sanitizedLocation;
 }
@@ -44,9 +49,9 @@ export async function getLocationByIdFromDb(id: string): Promise<any> {
 export async function postLocationToDb(location: any): Promise<any> {
   await dbConnect();
 
-  const sanitizedLocation = sanitizeAndValidateLocation(location);
+  const sanitizedLocation = await validateLocation(sanitizeLocation(location));
   const newLocation = await Locations.create(sanitizedLocation);
-  const returnedLocation = sanitizeAndValidateLocation(newLocation);
+  const returnedLocation = validateLocation(sanitizeLocation(newLocation));
 
   return returnedLocation;
 }
@@ -61,7 +66,8 @@ export async function postLocationToDb(location: any): Promise<any> {
 export async function updateLocationInDb(id: string, location: Location): Promise<any> {
   await dbConnect();
 
-  const sanitizedLocation = sanitizeAndValidateLocation(location);
+  const sanitizedLocation = await validateLocation(sanitizeLocation(location));
+
   const updateLocationState = await Locations.updateOne({ _id: id }, { $set: sanitizedLocation });
   if (!updateLocationState.acknowledged) throw new Error();
 
