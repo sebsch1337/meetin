@@ -18,8 +18,6 @@ export async function getAllLocationsFromDb(): Promise<any> {
     locations.map(async (location) => await validateLocation(sanitizeLocation(location)))
   );
 
-  // console.log(sanitizedLocations);
-
   return sanitizedLocations;
 }
 
