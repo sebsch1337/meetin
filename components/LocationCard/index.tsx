@@ -148,7 +148,7 @@ export default function LocationCard({
           </Text>
         </div>
         <div>
-          <Text size={"sm"}>Örtlichkeit</Text>
+          <Text size={"sm"}>Lokalität</Text>
           <Center inline>
             <IconHome color={location?.indoor ? "teal" : "grey"} size={18} />
             <Space w="xs" />
