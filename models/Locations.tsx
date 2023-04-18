@@ -13,6 +13,7 @@ const locationsSchema = new Schema({
   city: { type: String, maxLength: 100 },
   description: { type: String, maxLength: 500 },
   infos: { type: String, maxLength: 500 },
+  tel: { type: String, maxLength: 20 },
   tags: { type: Array, maxLength: 6, default: undefined },
   maxCapacity: { type: Number, min: 1, max: 999 },
   indoor: { type: Boolean },

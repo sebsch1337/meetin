@@ -1,8 +1,8 @@
 import LocationCard from "@/components/LocationCard";
-import { Button, Flex, Group, Modal, Space, Title } from "@mantine/core";
+import { Button, Flex, Group, Loader, Modal, Space, Title } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visit";
 
-import { useDisclosure, useNetwork } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 
 import LocationForm from "@/components/LocationForm";
 import { useEffect, useState } from "react";
@@ -19,15 +19,24 @@ import { eventsAtom, locationsAtom, modalAtom } from "@/store";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
+  const [events] = useAtom(eventsAtom);
+  const [modal, setModal] = useAtom(modalAtom);
+
+  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const [editLocationMode, setEditLocationMode] = useState(false);
+  const [preValues, setPreValues] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getAllLocations = async () => {
       try {
+        setIsLoading(true);
         const searchUrl = `/api/locations`;
         const response = await fetch(searchUrl);
         const result = await response.json();
 
         setLocations(result);
+        setIsLoading(false);
       } catch (e) {
         console.error(e);
         return e;
@@ -36,13 +45,6 @@ export default function Locations() {
 
     getAllLocations();
   }, [setLocations]);
-
-  const [events] = useAtom(eventsAtom);
-  const [modal, setModal] = useAtom(modalAtom);
-
-  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
-  const [editLocationMode, setEditLocationMode] = useState(false);
-  const [preValues, setPreValues] = useState({});
 
   return (
     <>
@@ -87,7 +89,13 @@ export default function Locations() {
         </Button>
       </Group>
       <Space h={"md"} />
+
       <Flex gap={"xs"} wrap={"wrap"}>
+        {isLoading && locations.length === 0 && (
+          <Group position="center" w={"100%"}>
+            <Loader size="xl" color="teal" variant="dots" />
+          </Group>
+        )}
         {locations?.map((location: any) => (
           <LocationCard
             location={location}

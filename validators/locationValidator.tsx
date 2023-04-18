@@ -14,6 +14,7 @@ export const sanitizeLocation = (location: any) => {
     name: location?.name?.toString().trim() || "",
     description: location?.description?.toString().trim() || "",
     infos: location?.infos?.toString().trim() || "",
+    tel: location?.tel?.toString().trim() || "",
     maxCapacity: location?.maxCapacity || null,
     latitude: location?.latitude || null,
     longitude: location?.longitude || null,
