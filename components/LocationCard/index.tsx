@@ -148,11 +148,11 @@ export default function LocationCard({
           </Text>
         </div>
         <div>
-          <Text size={"sm"}>Indoor / Outdoor</Text>
+          <Text size={"sm"}>Örtlichkeit</Text>
           <Center inline>
             <IconHome color={location?.indoor ? "teal" : "grey"} size={18} />
             <Space w="xs" />
-            {"/"}
+            {"|"}
             <Space w="xs" />
             <IconSun color={location?.outdoor ? "yellow" : "grey"} size={18} />
           </Center>
