@@ -42,7 +42,8 @@ export default async function handler(req: any, res: any): Promise<any> {
     case "PATCH":
       try {
         await updateLocationInDb(req.body.id, req.body.values);
-        const udpatedLocation = await getLocationByIdFromDb(req.body.id);
+        const udpatedLocation = await getAllLocationsFromDb();
+        // const udpatedLocation = await getLocationByIdFromDb(req.body.id);
         res.status(200).json(udpatedLocation);
       } catch (error: any) {
         if (error.status) {

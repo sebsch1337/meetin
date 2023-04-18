@@ -2,10 +2,10 @@ import LocationCard from "@/components/LocationCard";
 import { Button, Flex, Group, Modal, Space, Title } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visit";
 
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useNetwork } from "@mantine/hooks";
 
 import LocationForm from "@/components/LocationForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import PictureDeleteModal from "@/components/PictureDeleteModal";
 
@@ -13,25 +13,30 @@ import { IconPlus } from "@tabler/icons-react";
 import { deleteImage } from "@/lib/image";
 import { LocationDeleteModal } from "@/components/LocationDeleteModal";
 import { deleteLocation } from "@/lib/location";
-import { getAllLocationsFromDb } from "@/services/locationService";
 
 import { useAtom } from "jotai";
-import { useHydrateAtoms } from "jotai/utils";
 import { eventsAtom, locationsAtom, modalAtom } from "@/store";
 
-export async function getServerSideProps() {
-  const locationsDb: Location[] = await getAllLocationsFromDb();
-
-  return {
-    props: {
-      locationsDb: locationsDb,
-    },
-  };
-}
-
-export default function Locations({ locationsDb }: { locationsDb: Location[] }) {
-  useHydrateAtoms([[locationsAtom, locationsDb]]);
+export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
+
+  useEffect(() => {
+    const getAllLocations = async () => {
+      try {
+        const searchUrl = `/api/locations`;
+        const response = await fetch(searchUrl);
+        const result = await response.json();
+
+        setLocations(result);
+      } catch (e) {
+        console.error(e);
+        return e;
+      }
+    };
+
+    getAllLocations();
+  }, [setLocations]);
+
   const [events] = useAtom(eventsAtom);
   const [modal, setModal] = useAtom(modalAtom);
 
