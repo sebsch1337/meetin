@@ -2,26 +2,26 @@ import { object, string, number, array, bool } from "yup";
 
 export const sanitizeLocation = (location: any) => {
   const sanitizedAddress = {
-    road: location?.address?.road?.toString().trim() || undefined,
-    houseNo: location?.address?.houseNo?.toString().trim() || undefined,
-    postcode: location?.address?.postcode?.toString().trim() || undefined,
-    city: location?.address?.city?.toString().trim() || undefined,
-    suburb: location?.address?.suburb?.toString().trim() || undefined,
+    road: location?.address?.road?.toString().trim() || location?.road?.toString().trim() || "",
+    houseNo: location?.address?.houseNo?.toString().trim() || location?.houseNo?.toString().trim() || "",
+    postcode: location?.address?.postcode?.toString().trim() || location?.postcode?.toString().trim() || "",
+    city: location?.address?.city?.toString().trim() || location?.city?.toString().trim() || "",
+    suburb: location?.address?.suburb?.toString().trim() || location?.suburb?.toString().trim() || "",
   };
 
   const sanitizedLocation = {
     id: location?._id?.toString().trim() || location?.id?.toString().trim() || undefined,
-    name: location?.name?.toString().trim() || undefined,
-    description: location?.description?.toString().trim() || undefined,
-    infos: location?.infos?.toString().trim() || undefined,
-    maxCapacity: location?.maxCapacity || undefined,
-    latitude: location?.latitude || undefined,
-    longitude: location?.longitude || undefined,
-    indoor: location?.indoor || undefined,
-    outdoor: location?.outdoor || undefined,
-    noGo: location?.noGo || undefined,
-    tags: location?.tags?.length > 0 ? location.tags : undefined,
-    images: location?.images?.length > 0 ? location.images : undefined,
+    name: location?.name?.toString().trim() || "",
+    description: location?.description?.toString().trim() || "",
+    infos: location?.infos?.toString().trim() || "",
+    maxCapacity: location?.maxCapacity || null,
+    latitude: location?.latitude || null,
+    longitude: location?.longitude || null,
+    indoor: location?.indoor || false,
+    outdoor: location?.outdoor || false,
+    noGo: location?.noGo || false,
+    tags: location?.tags?.length > 0 ? location.tags : [],
+    images: location?.images?.length > 0 ? location.images : [],
   };
 
   return {
@@ -48,10 +48,10 @@ export const validateLocation = async (location: any) => {
     infos: string().max(500),
     tel: string().max(20),
     tags: array(string().max(20)).max(6).nullable(),
-    images: array().max(4),
-    maxCapacity: number().max(999),
-    latitude: number().min(-90).max(90),
-    longitude: number().min(-180).max(180),
+    images: array().max(4).nullable(),
+    maxCapacity: number().max(999).nullable(),
+    latitude: number().min(-90).max(90).nullable(),
+    longitude: number().min(-180).max(180).nullable(),
     indoor: bool(),
     outdoor: bool(),
     noGo: bool(),
@@ -62,8 +62,6 @@ export const validateLocation = async (location: any) => {
 
   return {
     ...validatedLocation,
-    ...(!Object.values(validatedAddress).every((prop) => prop === undefined) && {
-      address: validatedAddress,
-    }),
+    address: validatedAddress,
   };
 };
