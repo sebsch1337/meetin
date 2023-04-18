@@ -1,6 +1,6 @@
 import LocationCard from "@/components/LocationCard";
 import { Button, Flex, Group, Loader, Modal, Space, Title } from "@mantine/core";
-import { getLastVisitedDay, getAverageVisitors } from "@/lib/visit";
+import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure } from "@mantine/hooks";
 
@@ -10,9 +10,9 @@ import { useEffect, useState } from "react";
 import PictureDeleteModal from "@/components/PictureDeleteModal";
 
 import { IconPlus } from "@tabler/icons-react";
-import { deleteImage } from "@/lib/image";
+import { deleteImage } from "@/lib/imageLib";
 import { LocationDeleteModal } from "@/components/LocationDeleteModal";
-import { deleteLocation } from "@/lib/location";
+import { deleteLocation } from "@/lib/locationLib";
 
 import { useAtom } from "jotai";
 import { eventsAtom, locationsAtom, modalAtom } from "@/store";

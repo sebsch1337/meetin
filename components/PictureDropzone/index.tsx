@@ -1,4 +1,4 @@
-import { uploadImages } from "@/lib/image";
+import { uploadImages } from "@/lib/imageLib";
 import { Text, Flex, createStyles } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconPhotoPlus, IconX } from "@tabler/icons-react";

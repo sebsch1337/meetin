@@ -19,7 +19,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { useSetAtom } from "jotai";
 import { locationsAtom, modalAtom } from "@/store";
 import { useEffect, useState } from "react";
-import { createLocation, editLocation } from "@/lib/location";
+import { createLocation, editLocation } from "@/lib/locationLib";
 
 export default function LocationForm({
   closeModal,

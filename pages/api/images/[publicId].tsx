@@ -3,7 +3,7 @@ import { deleteImageByIdFromDb } from "@/services/locationService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { publicId, locationId, deleteFromDb },
+    query: { publicId, locationId },
     method,
   } = req;
 

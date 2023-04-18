@@ -1,5 +1,5 @@
 import dbConnect from "../lib/dbConnect";
-import Locations from "../models/Locations";
+import Locations from "../models/locationsModel";
 import { sanitizeLocation, validateLocation } from "@/validators/locationValidator";
 
 /**
