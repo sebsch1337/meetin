@@ -122,8 +122,8 @@ export default function LocationCard({
         </Carousel>
       </Card.Section>
 
-      <Title order={2} weight={500} size={"h3"} mt="xs" color={location.noGo ? "red" : ""}>
-        {location.name} {location.noGo && <NoGoIcon />}
+      <Title order={2} weight={500} size={"h3"} mt="xs" color={location?.noGo ? "red" : ""}>
+        {location?.name} {location?.noGo && <NoGoIcon />}
       </Title>
       <Text size={"xs"}>{location?.address?.suburb}</Text>
 
@@ -144,17 +144,17 @@ export default function LocationCard({
         <div>
           <Text size={"sm"}>Max. Besucher</Text>
           <Text color="dimmed" size="sm">
-            {location.maxCapacity}
+            {location?.maxCapacity}
           </Text>
         </div>
         <div>
           <Text size={"sm"}>Indoor / Outdoor</Text>
           <Center inline>
-            <IconHome color={location.indoor ? "teal" : "grey"} size={18} />
+            <IconHome color={location?.indoor ? "teal" : "grey"} size={18} />
             <Space w="xs" />
             {"/"}
             <Space w="xs" />
-            <IconSun color={location.outdoor ? "yellow" : "grey"} size={18} />
+            <IconSun color={location?.outdoor ? "yellow" : "grey"} size={18} />
           </Center>
         </div>
       </SimpleGrid>
@@ -173,7 +173,7 @@ export default function LocationCard({
             </Text>
           </Accordion.Control>
           <Accordion.Panel>
-            <Text size={"sm"}>{location.description}</Text>
+            <Text size={"sm"}>{location?.description}</Text>
           </Accordion.Panel>
         </Accordion.Item>
 
@@ -184,7 +184,7 @@ export default function LocationCard({
             </Text>
           </Accordion.Control>
           <Accordion.Panel>
-            <Text size={"sm"}>{location.infos}</Text>
+            <Text size={"sm"}>{location?.infos}</Text>
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>

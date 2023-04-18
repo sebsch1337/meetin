@@ -44,30 +44,9 @@ export const editLocation = async (values: any, locationId: string, setLocations
       body: JSON.stringify({ id: locationId, values: values }),
     });
     if (!response.ok) throw new Error("Failed to update location.");
-    const newLocation: any = await response.json();
+    const changedLocationData: any = await response.json();
 
-    setLocations((prevLocations: any) => {
-      const locationToChange: any = prevLocations?.find((location: any) => location.id === locationId);
-      locationToChange.name = newLocation?.name;
-      locationToChange.address.road = newLocation?.address?.road;
-      locationToChange.address.houseNo = newLocation?.address?.houseNo;
-      locationToChange.address.postcode = newLocation?.address?.postcode;
-      locationToChange.address.city = newLocation?.address?.city;
-      locationToChange.address.suburb = newLocation?.address?.suburb;
-      locationToChange.description = newLocation?.description;
-      locationToChange.infos = newLocation?.infos;
-      locationToChange.tel = newLocation?.tel;
-      locationToChange.tags = newLocation?.tags;
-      locationToChange.maxCapacity = newLocation?.maxCapacity;
-      locationToChange.indoor = newLocation?.indoor;
-      locationToChange.outdoor = newLocation?.outdoor;
-      locationToChange.noGo = newLocation?.noGo;
-      locationToChange.latitude = newLocation?.latitude;
-      locationToChange.longitude = newLocation?.longitude;
-      locationToChange.images = newLocation?.images;
-
-      return prevLocations;
-    });
+    setLocations(changedLocationData);
 
     notifications.show({
       icon: <IconCheck />,

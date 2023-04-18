@@ -65,7 +65,6 @@ export async function updateLocationInDb(id: string, location: Location): Promis
   await dbConnect();
 
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
-
   const updateLocationState = await Locations.updateOne({ _id: id }, { $set: sanitizedLocation });
   if (!updateLocationState.acknowledged) throw new Error();
 

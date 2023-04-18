@@ -1,11 +1,6 @@
 import { uploadImageToCloudinary } from "@/services/cloudinaryService";
 
-export const uploadImages = async (
-  uploadedImages: any[],
-  prevImages: any[],
-  locationId: string,
-  setLocations: any
-) => {
+export const uploadImages = async (uploadedImages: any[], location: any, setLocations: any) => {
   try {
     const uploadedImageData: any[] = await Promise.all(
       uploadedImages.map(async (image: any) => uploadImageToCloudinary(image))
@@ -14,15 +9,15 @@ export const uploadImages = async (
     const response = await fetch("/api/locations", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: locationId, values: { images: [...prevImages, ...uploadedImageData] } }),
+      body: JSON.stringify({
+        id: location?.id,
+        values: { ...location, images: [...location?.images, ...uploadedImageData] },
+      }),
     });
     if (!response.ok) throw new Error("Failed to update images in location.");
 
-    setLocations((prevLocations: any) => {
-      const locationToChange: any = prevLocations?.find((location: any) => location.id === locationId);
-      locationToChange.images = [...locationToChange?.images, ...uploadedImageData];
-      return prevLocations;
-    });
+    const changedLocationData: any = await response.json();
+    setLocations(changedLocationData);
   } catch (error) {
     console.error(error);
   }

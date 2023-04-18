@@ -15,7 +15,7 @@ import {
   Space,
 } from "@mantine/core";
 
-import { useDebouncedValue, useNetwork } from "@mantine/hooks";
+import { useDebouncedValue } from "@mantine/hooks";
 import { useSetAtom } from "jotai";
 import { locationsAtom, modalAtom } from "@/store";
 import { useEffect, useState } from "react";
@@ -67,11 +67,10 @@ export default function LocationForm({
     preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
   );
 
-  const networkStatus = useNetwork();
   useEffect(() => {
     const getExternalLocation = async (searchString: string) => {
       const sanitizedSearchString = searchString.replaceAll(" ", "+");
-      if (sanitizedSearchString.length > 0 && networkStatus.online) {
+      if (sanitizedSearchString.length > 0) {
         try {
           const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
           const response = await fetch(searchUrl);
@@ -93,20 +92,20 @@ export default function LocationForm({
     };
 
     getExternalLocation(debouncedOptions);
-  }, [debouncedOptions, networkStatus]);
+  }, [debouncedOptions]);
 
   const setFormData = (location: any) => {
     if (location.length > 0) {
-      const address = location[0].address;
+      const address = location[0]?.address;
       form.setValues({
-        name: address.amenity || address.leisure,
-        road: address.road || address.square,
-        houseNo: address.house_number,
-        postcode: address.postcode,
-        city: address.city,
-        suburb: address.suburb,
-        latitude: location[0].lat,
-        longitude: location[0].lon,
+        name: address?.amenity || address?.leisure,
+        road: address?.road || address?.square,
+        houseNo: address?.house_number,
+        postcode: address?.postcode,
+        city: address?.city,
+        suburb: address?.suburb,
+        latitude: location[0]?.lat,
+        longitude: location[0]?.lon,
       });
     }
   };
@@ -137,12 +136,11 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           if (editLocationMode) {
-            await editLocation(values, preValues.id, setLocations);
+            await editLocation({ ...values, images: [...preValues.images] }, preValues.id, setLocations);
           } else {
             await createLocation(values, setLocations);
           }
           form.reset();
-          setLoading(false);
           closeModal();
         })}
       >
