@@ -29,7 +29,7 @@ export default function PictureDropzone({ preValues, setLoading }: { preValues: 
       accept={IMAGE_MIME_TYPE}
       onDrop={async (images) => {
         setLoading(true);
-        await uploadImages(images, preValues.images, preValues.id, setLocations);
+        await uploadImages(images, preValues, setLocations);
         setLoading(false);
       }}
       onReject={() => {
