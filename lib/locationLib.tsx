@@ -2,6 +2,20 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { deleteImage } from "./imageLib";
 
+export const getAllLocations = async (): Promise<any> => {
+  const response = await fetch("/api/locations", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  }
+};
+
 export const createLocation = async (values: any, setLocations: any) => {
   const response = await fetch("/api/locations", {
     method: "POST",
