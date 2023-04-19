@@ -129,7 +129,7 @@ export default function LocationCard({
 
       <SimpleGrid cols={2} verticalSpacing="xs" mt={"xs"}>
         <div>
-          <Text size={"sm"}>Mittelw. Besucher</Text>
+          <Text size={"sm"}>Besucherzahl</Text>
           <Text color="dimmed" size="sm">
             {averageVisitors}
           </Text>
