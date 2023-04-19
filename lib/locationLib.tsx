@@ -113,3 +113,16 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
     message: `Location wurde erfolgreich gelöscht.`,
   });
 };
+
+export const searchExternalLocation = async (searchString: string): Promise<any> => {
+  const sanitizedSearchString = searchString.replaceAll(" ", "+");
+  const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
+
+  const response = await fetch(searchUrl);
+  if (response.ok) {
+    const result = await response.json();
+    return result || [];
+  } else {
+    throw Error;
+  }
+};

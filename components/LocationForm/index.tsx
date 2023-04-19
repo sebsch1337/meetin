@@ -19,7 +19,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { useSetAtom } from "jotai";
 import { locationsAtom, modalAtom } from "@/store";
 import { useEffect, useState } from "react";
-import { createLocation, editLocation } from "@/lib/locationLib";
+import { createLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
 
 export default function LocationForm({
   closeModal,
@@ -32,6 +32,32 @@ export default function LocationForm({
 }) {
   const setLocations = useSetAtom(locationsAtom);
   const setModal = useSetAtom(modalAtom);
+
+  const [loading, setLoading] = useState(false);
+
+  const [searchString, setSearchString] = useState("");
+  const [searchLocations, setSearchLocations] = useState([]);
+  const [debouncedSearchString] = useDebouncedValue(searchString, 200);
+
+  const [tags, setTags] = useState(
+    preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
+  );
+
+  useEffect(() => {
+    const fetchExternalLocation = async (searchString: string) => {
+      if (searchString.length > 0) {
+        try {
+          const externalLocation = await searchExternalLocation(searchString);
+          setSearchLocations(externalLocation);
+        } catch (e) {
+          console.error(e);
+          return e;
+        }
+      }
+    };
+
+    fetchExternalLocation(debouncedSearchString);
+  }, [debouncedSearchString]);
 
   const form = useForm({
     initialValues: {
@@ -58,42 +84,6 @@ export default function LocationForm({
     },
   });
 
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchLocations, setSearchLocations] = useState([]);
-  const [debouncedOptions] = useDebouncedValue(search, 200);
-  const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState(
-    preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
-  );
-
-  useEffect(() => {
-    const getExternalLocation = async (searchString: string) => {
-      const sanitizedSearchString = searchString.replaceAll(" ", "+");
-      if (sanitizedSearchString.length > 0) {
-        try {
-          const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
-          const response = await fetch(searchUrl);
-          const result = await response.json();
-
-          const filteredLocations = result || [];
-          setSearchLocations(filteredLocations);
-          setSearchResults(
-            filteredLocations.map((location: any) => ({
-              key: location.place_id,
-              value: location.display_name,
-              label: location.display_name,
-            }))
-          );
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    };
-
-    getExternalLocation(debouncedOptions);
-  }, [debouncedOptions]);
-
   const setFormData = (location: any) => {
     if (location.length > 0) {
       const address = location[0]?.address;
@@ -117,9 +107,13 @@ export default function LocationForm({
         label="Suche"
         placeholder="Auf OpenStreetMap suchen"
         searchable
-        data={searchResults}
-        searchValue={search}
-        onSearchChange={setSearch}
+        data={searchLocations.map((location: any) => ({
+          key: location.place_id,
+          value: location.display_name,
+          label: location.display_name,
+        }))}
+        searchValue={searchString}
+        onSearchChange={setSearchString}
         withinPortal
         nothingFound="Keine Ergebnisse"
         spellCheck={false}
@@ -254,7 +248,7 @@ export default function LocationForm({
             data={tags}
             placeholder="Max. 6 Tags hinzufügen"
             searchable
-            creatable
+            creatable={false}
             maxSelectedValues={6}
             getCreateLabel={(query) => `+ Erstelle ${query}`}
             onCreate={(query) => {
