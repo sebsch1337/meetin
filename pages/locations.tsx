@@ -12,7 +12,7 @@ import PictureDeleteModal from "@/components/PictureDeleteModal";
 import { IconPlus } from "@tabler/icons-react";
 import { deleteImage } from "@/lib/imageLib";
 import { LocationDeleteModal } from "@/components/LocationDeleteModal";
-import { deleteLocation } from "@/lib/locationLib";
+import { deleteLocation, getAllLocations } from "@/lib/locationLib";
 
 import { useAtom } from "jotai";
 import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
@@ -30,37 +30,21 @@ export default function Locations() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const getAllLocations = async () => {
+    const loadData = async () => {
       try {
         setIsLoading(true);
-        const searchUrl = `/api/locations`;
-        const response = await fetch(searchUrl);
-        const result = await response.json();
-
-        setLocations(result);
-        setIsLoading(false);
-      } catch (e) {
-        console.error(e);
-        setIsLoading(false);
-        return e;
-      }
-    };
-
-    const loadTags = async () => {
-      try {
-        setIsLoading(true);
-        const allTags = await getAllTags();
+        const [allLocations, allTags] = await Promise.all([getAllLocations(), getAllTags()]);
+        setLocations(allLocations);
         setTags(allTags);
-        setIsLoading(false);
       } catch (e) {
         console.error(e);
-        setIsLoading(false);
         return e;
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    getAllLocations();
-    loadTags();
+    loadData();
   }, [setLocations, setTags]);
 
   return (
