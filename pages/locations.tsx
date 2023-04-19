@@ -15,10 +15,12 @@ import { LocationDeleteModal } from "@/components/LocationDeleteModal";
 import { deleteLocation } from "@/lib/locationLib";
 
 import { useAtom } from "jotai";
-import { eventsAtom, locationsAtom, modalAtom } from "@/store";
+import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
+import { getAllTags } from "@/lib/tagLib";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
+  const [tags, setTags] = useAtom(tagsAtom);
   const [events] = useAtom(eventsAtom);
   const [modal, setModal] = useAtom(modalAtom);
 
@@ -39,12 +41,27 @@ export default function Locations() {
         setIsLoading(false);
       } catch (e) {
         console.error(e);
+        setIsLoading(false);
+        return e;
+      }
+    };
+
+    const loadTags = async () => {
+      try {
+        setIsLoading(true);
+        const allTags = await getAllTags();
+        setTags(allTags);
+        setIsLoading(false);
+      } catch (e) {
+        console.error(e);
+        setIsLoading(false);
         return e;
       }
     };
 
     getAllLocations();
-  }, [setLocations]);
+    loadTags();
+  }, [setLocations, setTags]);
 
   return (
     <>
