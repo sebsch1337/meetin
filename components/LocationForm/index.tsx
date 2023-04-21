@@ -16,8 +16,8 @@ import {
 } from "@mantine/core";
 
 import { useDebouncedValue } from "@mantine/hooks";
-import { useSetAtom } from "jotai";
-import { locationsAtom, modalAtom } from "@/store";
+import { useAtom, useSetAtom } from "jotai";
+import { locationsAtom, modalAtom, tagsAtom } from "@/store";
 import { useEffect, useState } from "react";
 import { createLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
 
@@ -32,16 +32,13 @@ export default function LocationForm({
 }) {
   const setLocations = useSetAtom(locationsAtom);
   const setModal = useSetAtom(modalAtom);
+  const [tags] = useAtom(tagsAtom);
 
   const [loading, setLoading] = useState(false);
 
   const [searchString, setSearchString] = useState("");
   const [searchLocations, setSearchLocations] = useState([]);
   const [debouncedSearchString] = useDebouncedValue(searchString, 200);
-
-  const [tags, setTags] = useState(
-    preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
-  );
 
   useEffect(() => {
     const fetchExternalLocation = async (searchString: string) => {
@@ -245,17 +242,11 @@ export default function LocationForm({
 
           <MultiSelect
             label="Tags"
-            data={tags}
+            data={tags.map((tag: any) => ({ value: tag.id, label: tag.name }))}
             placeholder="Max. 6 Tags hinzufügen"
             searchable
             creatable={false}
             maxSelectedValues={6}
-            getCreateLabel={(query) => `+ Erstelle ${query}`}
-            onCreate={(query) => {
-              const item = { value: query, label: query };
-              setTags((currentTags: any) => [...currentTags, item]);
-              return item;
-            }}
             {...form.getInputProps("tags")}
           />
           <Space />

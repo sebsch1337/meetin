@@ -25,8 +25,8 @@ import NoGoIcon from "../NoGoIcon";
 import PictureDropzone from "../PictureDropzone";
 import { useState } from "react";
 
-import { useSetAtom } from "jotai";
-import { modalAtom } from "@/store";
+import { useAtom, useSetAtom } from "jotai";
+import { modalAtom, tagsAtom } from "@/store";
 
 export default function LocationCard({
   location,
@@ -45,6 +45,7 @@ export default function LocationCard({
 }) {
   const [loading, setLoading] = useState(false);
   const setModal = useSetAtom(modalAtom);
+  const [tags] = useAtom(tagsAtom);
 
   return (
     <Card w={350} mih={550} shadow="sm" padding="xl" key={location.id}>
@@ -190,9 +191,9 @@ export default function LocationCard({
       </Accordion>
 
       <Group mt={"md"} mb={"md"} spacing={"xs"} mih={45}>
-        {location?.tags?.map((tag) => (
-          <Badge variant={"outline"} key={tag} size={"xs"}>
-            {tag}
+        {location?.tags?.map((tagId) => (
+          <Badge variant={"outline"} key={tagId} size={"xs"}>
+            {tags.find((tag: any) => tag.id === tagId)?.name}
           </Badge>
         ))}
       </Group>
