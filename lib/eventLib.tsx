@@ -16,7 +16,6 @@ export const getAllEvents = async (): Promise<any> => {
 };
 
 export const createEvent = async (values: Event, setEvents: any) => {
-  console.log(values);
   const response = await fetch("/api/events", {
     method: "POST",
     headers: {
