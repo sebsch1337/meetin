@@ -14,13 +14,13 @@ import { deleteImage } from "@/lib/imageLib";
 import { LocationDeleteModal } from "@/components/LocationDeleteModal";
 import { deleteLocation, getAllLocations } from "@/lib/locationLib";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
 import { getAllTags } from "@/lib/tagLib";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
-  const [tags, setTags] = useAtom(tagsAtom);
+  const setTags = useSetAtom(tagsAtom);
   const [events] = useAtom(eventsAtom);
   const [modal, setModal] = useAtom(modalAtom);
 
