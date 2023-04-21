@@ -105,7 +105,7 @@ export default function EventCard({ event, locations }: { event: Event; location
             w={"100%"}
           >
             <div>
-              <Text size={"xs"}>{getLocalDateTime(event.dateTime * 1000)}</Text>
+              <Text size={"xs"}>{getLocalDateTime(event?.dateTime)}</Text>
               <Title order={3} size={18} truncate>
                 {event.name}
               </Title>
