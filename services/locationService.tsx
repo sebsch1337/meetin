@@ -11,7 +11,7 @@ import { sanitizeLocation, validateLocation } from "@/validators/locationValidat
 export async function getAllLocationsFromDb(): Promise<any> {
   await dbConnect();
 
-  const locations = await Locations.find({});
+  const locations = await Locations.find({}).exec();
   if (!Array.isArray(locations)) throw new Error();
 
   const sanitizedLocations = await Promise.all(
@@ -31,7 +31,7 @@ export async function getAllLocationsFromDb(): Promise<any> {
 export async function getLocationByIdFromDb(id: string): Promise<any> {
   await dbConnect();
 
-  const location = await Locations.findById(id);
+  const location = await Locations.findById(id).exec();
   if (!location) throw new Error();
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
 
@@ -64,9 +64,14 @@ export async function postLocationToDb(location: any): Promise<any> {
 export async function updateLocationInDb(id: string, location: Location): Promise<any> {
   await dbConnect();
 
-  const sanitizedId = await validateLocation(sanitizeLocation({ id: id }));
-  const sanitizedLocation = await validateLocation(sanitizeLocation(location));
-  const updateLocationState = await Locations.updateOne({ _id: sanitizedId.id }, { $set: sanitizedLocation });
+  const [sanitizedId, sanitizedLocation] = await Promise.all([
+    await validateLocation(sanitizeLocation({ id })),
+    await validateLocation(sanitizeLocation(location)),
+  ]);
+  const updateLocationState = await Locations.updateOne(
+    { _id: sanitizedId.id },
+    { $set: sanitizedLocation }
+  ).exec();
   if (!updateLocationState.acknowledged) throw new Error();
 
   return updateLocationState;
@@ -82,8 +87,8 @@ export async function updateLocationInDb(id: string, location: Location): Promis
 export async function deleteLocationFromDb(id: string): Promise<any> {
   await dbConnect();
 
-  const sanitizedId = await validateLocation(sanitizeLocation({ id: id }));
-  const deletedLocation = await Locations.deleteOne({ _id: sanitizedId.id });
+  const sanitizedId = await validateLocation(sanitizeLocation({ id }));
+  const deletedLocation = await Locations.deleteOne({ _id: sanitizedId.id }).exec();
   if (!deletedLocation.acknowledged) throw new Error();
 
   return deletedLocation;
@@ -99,7 +104,10 @@ export async function deleteLocationFromDb(id: string): Promise<any> {
 export const deleteImageByIdFromDb = async (publicId: string, locationId: string): Promise<any> => {
   await dbConnect();
 
-  const updatedLocation = await Locations.updateOne({ _id: locationId }, { $pull: { images: { publicId } } });
+  const updatedLocation = await Locations.updateOne(
+    { _id: locationId },
+    { $pull: { images: { publicId } } }
+  ).exec();
   if (!updatedLocation.acknowledged) throw new Error();
 
   return updatedLocation;
