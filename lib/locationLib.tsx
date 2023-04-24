@@ -52,10 +52,10 @@ export const createLocation = async (values: any, setLocations: any) => {
 
 export const editLocation = async (values: any, locationId: string, setLocations: any) => {
   try {
-    const response = await fetch("/api/locations", {
+    const response = await fetch(`/api/locations/${locationId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: locationId, values: values }),
+      body: JSON.stringify({ values: values }),
     });
     if (!response.ok) throw new Error("Failed to update location.");
     const changedLocationData: any = await response.json();
@@ -87,10 +87,9 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
         locationToDelete?.images?.map(async (image: any) => await deleteImage(image.publicId, locationId))
       );
     }
-    const response = await fetch("/api/locations", {
+    const response = await fetch(`/api/locations/${locationId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: locationId }),
     });
     if (!response.ok) throw new Error("Failed to delete location.");
   } catch (error) {

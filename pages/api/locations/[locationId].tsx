@@ -8,15 +8,16 @@ import {
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: {},
+    query: { locationId },
     method,
   } = req;
 
   switch (method) {
-    case "GET":
+    case "PATCH":
       try {
-        const locations = await getAllLocationsFromDb();
-        res.status(200).json(locations);
+        await updateLocationInDb(locationId, req.body.values);
+        const udpatedLocation = await getAllLocationsFromDb();
+        res.status(200).json(udpatedLocation);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
@@ -26,10 +27,10 @@ export default async function handler(req: any, res: any): Promise<any> {
       }
       break;
 
-    case "POST":
+    case "DELETE":
       try {
-        const postedLocation: any = await postLocationToDb(req.body);
-        res.status(200).json(postedLocation);
+        const deletedLocation: any = await deleteLocationFromDb(locationId);
+        res.status(200).json(deletedLocation);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });

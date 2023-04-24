@@ -64,8 +64,9 @@ export async function postLocationToDb(location: any): Promise<any> {
 export async function updateLocationInDb(id: string, location: Location): Promise<any> {
   await dbConnect();
 
+  const sanitizedId = await validateLocation(sanitizeLocation({ id: id }));
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
-  const updateLocationState = await Locations.updateOne({ _id: id }, { $set: sanitizedLocation });
+  const updateLocationState = await Locations.updateOne({ _id: sanitizedId.id }, { $set: sanitizedLocation });
   if (!updateLocationState.acknowledged) throw new Error();
 
   return updateLocationState;
@@ -81,7 +82,8 @@ export async function updateLocationInDb(id: string, location: Location): Promis
 export async function deleteLocationFromDb(id: string): Promise<any> {
   await dbConnect();
 
-  const deletedLocation = await Locations.deleteOne({ _id: id });
+  const sanitizedId = await validateLocation(sanitizeLocation({ id: id }));
+  const deletedLocation = await Locations.deleteOne({ _id: sanitizedId.id });
   if (!deletedLocation.acknowledged) throw new Error();
 
   return deletedLocation;
