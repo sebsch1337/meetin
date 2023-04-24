@@ -106,7 +106,7 @@ export const deleteImageByIdFromDb = async (publicId: string, locationId: string
 
   const sanitizedId = await validateLocation(sanitizeLocation({ id: locationId }));
   const updatedLocation = await Locations.updateOne(
-    { _id: sanitizedId },
+    { _id: sanitizedId.id },
     { $pull: { images: { publicId } } }
   ).exec();
   if (!updatedLocation.acknowledged) throw new Error();
