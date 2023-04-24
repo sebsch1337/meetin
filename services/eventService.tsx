@@ -48,8 +48,9 @@ export async function postEventToDb(event: any): Promise<any> {
 export async function updateEventInDb(id: string, event: Event): Promise<any> {
   await dbConnect();
 
+  const sanitizedId = await validateEvent(sanitizeEvent({ id: id }));
   const sanitizedEvent = await validateEvent(sanitizeEvent(event));
-  const updateEventState = await Events.updateOne({ _id: id }, { $set: sanitizedEvent });
+  const updateEventState = await Events.updateOne({ _id: sanitizedId.id }, { $set: sanitizedEvent });
   if (!updateEventState.acknowledged) throw new Error();
 
   return updateEventState;
@@ -65,7 +66,8 @@ export async function updateEventInDb(id: string, event: Event): Promise<any> {
 export async function deleteEventFromDb(id: string): Promise<any> {
   await dbConnect();
 
-  const deletedEvent = await Events.deleteOne({ _id: id });
+  const sanitizedId = await validateEvent(sanitizeEvent({ id: id }));
+  const deletedEvent = await Events.deleteOne({ _id: sanitizedId.id });
   if (!deletedEvent.acknowledged) throw new Error();
 
   return deletedEvent;
