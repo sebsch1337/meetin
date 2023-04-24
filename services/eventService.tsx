@@ -37,3 +37,36 @@ export async function postEventToDb(event: any): Promise<any> {
 
   return returnedEvent;
 }
+
+/**
+ * Updates an event document with the specified ID in the database.
+ * @param id The ID of the event document to update.
+ * @param event The updated event document to save to the database.
+ * @returns A Promise that resolves to the updated event document in the database.
+ * @throws An error indicating that the update operation did not complete successfully.
+ */
+export async function updateEventInDb(id: string, event: Event): Promise<any> {
+  await dbConnect();
+
+  const sanitizedEvent = await validateEvent(sanitizeEvent(event));
+  const updateEventState = await Events.updateOne({ _id: id }, { $set: sanitizedEvent });
+  if (!updateEventState.acknowledged) throw new Error();
+
+  return updateEventState;
+}
+
+/**
+ * Deletes a event from the database using the provided ID.
+ *
+ * @param id The ID of the event to be deleted.
+ * @returns A promise that resolves with the status of the deletion operation.
+ * @throws If the deletion operation fails.
+ */
+export async function deleteEventFromDb(id: string): Promise<any> {
+  await dbConnect();
+
+  const deletedEvent = await Events.deleteOne({ _id: id });
+  if (!deletedEvent.acknowledged) throw new Error();
+
+  return deletedEvent;
+}
