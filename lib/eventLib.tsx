@@ -66,10 +66,10 @@ export const createEvent = async (values: Event, setEvents: any) => {
  */
 export const editEvent = async (values: any, eventId: string, setEvents: any) => {
   try {
-    const response = await fetch("/api/events", {
+    const response = await fetch(`/api/events/${eventId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: eventId, values: values }),
+      body: JSON.stringify({ values: values }),
     });
     if (!response.ok) throw new Error("Failed to update event.");
     const changedEventData: any = await response.json();
@@ -101,10 +101,9 @@ export const editEvent = async (values: any, eventId: string, setEvents: any) =>
  */
 export const deleteEvent = async (eventId: string, events: any, setEvent: any) => {
   try {
-    const response = await fetch("/api/events", {
+    const response = await fetch(`/api/events/${eventId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: eventId }),
     });
     if (!response.ok) throw new Error("Failed to delete event.");
   } catch (error) {

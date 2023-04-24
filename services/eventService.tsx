@@ -1,4 +1,3 @@
-import { sanitizeTag, validateTag } from "@/validators/tagValidator";
 import dbConnect from "../lib/dbConnect";
 import Events from "../models/eventsModel";
 import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";

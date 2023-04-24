@@ -1,9 +1,4 @@
-import {
-  deleteEventFromDb,
-  getAllEventsFromDb,
-  postEventToDb,
-  updateEventInDb,
-} from "@/services/eventService";
+import { deleteEventFromDb, getAllEventsFromDb, updateEventInDb } from "@/services/eventService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
