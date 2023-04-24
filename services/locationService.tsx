@@ -104,8 +104,9 @@ export async function deleteLocationFromDb(id: string): Promise<any> {
 export const deleteImageByIdFromDb = async (publicId: string, locationId: string): Promise<any> => {
   await dbConnect();
 
+  const sanitizedId = await validateLocation(sanitizeLocation({ id: locationId }));
   const updatedLocation = await Locations.updateOne(
-    { _id: locationId },
+    { _id: sanitizedId },
     { $pull: { images: { publicId } } }
   ).exec();
   if (!updatedLocation.acknowledged) throw new Error();
