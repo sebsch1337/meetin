@@ -6,11 +6,10 @@ export const uploadImages = async (uploadedImages: any[], location: any, setLoca
       uploadedImages.map(async (image: any) => uploadImageToCloudinary(image))
     );
 
-    const response = await fetch("/api/locations", {
+    const response = await fetch(`/api/locations/${location.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id: location?.id,
         values: { ...location, images: [...location?.images, ...uploadedImageData] },
       }),
     });
