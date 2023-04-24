@@ -9,6 +9,7 @@ import {
   Modal,
   Button,
   Image as MantineImage,
+  Stack,
 } from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
@@ -72,73 +73,70 @@ export default function EventCard({ event, locations }: { event: Event; location
           </div>
         </Flex>
       </Modal>
-      <Card w={350} shadow="sm">
-        <Flex>
-          <Group>
-            {location?.images?.length > 0 ? (
-              <Image
-                src={location?.images[0].url}
-                width={100}
-                height={100}
-                alt={`Bild von ${location?.name}`}
-                style={{ objectFit: "cover", borderRadius: 5 }}
-              />
-            ) : (
-              <MantineImage
-                width={100}
-                height={100}
-                src={null}
-                alt="Kein Bild vorhanden"
-                radius={"xs"}
-                withPlaceholder
-                placeholder={<IconPhotoOff size={40} />}
-              />
-            )}
-          </Group>
 
-          <Flex
-            justify="space-between"
-            align="flex-start"
-            direction="column"
-            wrap="nowrap"
-            pl={"sm"}
-            w={"100%"}
-          >
-            <div>
-              <Text size={"xs"}>{getLocalDateTime(event?.dateTime)}</Text>
-              <Title order={3} size={18} truncate>
+      <Card maw={350} shadow="sm">
+        <Group noWrap>
+          {location?.images?.length > 0 ? (
+            <Image
+              src={location?.images[0].url}
+              width={100}
+              height={100}
+              alt={`Bild von ${location?.name}`}
+              style={{ objectFit: "cover", borderRadius: 5 }}
+            />
+          ) : (
+            <MantineImage
+              width={100}
+              height={100}
+              src={null}
+              alt="Kein Bild vorhanden"
+              radius={"xs"}
+              withPlaceholder
+              placeholder={<IconPhotoOff size={40} />}
+            />
+          )}
+
+          <Group w={"100%"}>
+            <Stack spacing={0} maw={"100%"}>
+              <Text size={"xs"} w={"100%"}>
+                {getLocalDateTime(event?.dateTime)}
+              </Text>
+              <Title order={3} size={16} truncate maw={180}>
                 {event.name}
               </Title>
 
               <Group spacing={5} align="center">
-                <Text size={"sm"} maw={180} truncate>
+                <Text size={"sm"} truncate w={"100%"}>
                   {location?.name}
                 </Text>
                 {location?.noGo && <NoGoIcon />}
               </Group>
-            </div>
-            <Flex justify={"space-between"} w={"100%"}>
-              <Group spacing={5}>
+            </Stack>
+
+            <Group position="apart" noWrap w={"100%"}>
+              <Group spacing={5} noWrap>
                 <Tooltip label="Angekündigt">
-                  <IconSpeakerphone size={18} />
+                  <IconSpeakerphone size={16} />
                 </Tooltip>
-                <Text size={"sm"}>{event?.announced ?? "-"}</Text>
+                <Text size={"xs"}>{event?.announced ?? "-"}</Text>
               </Group>
-              <Group spacing={5}>
+
+              <Group spacing={5} noWrap>
                 <Tooltip label="Erschienen">
-                  <IconUsers size={18} />
+                  <IconUsers size={16} />
                 </Tooltip>
-                <Text size={"sm"}>{event?.visitors ?? "-"}</Text>
+                <Text size={"xs"}>{event?.visitors ?? "-"}</Text>
               </Group>
+
               <ActionIcon variant={"light"} size={"md"} color={"cyan"} onClick={open}>
-                <IconInfoCircle size={16} />
+                <IconInfoCircle size={14} />
               </ActionIcon>
               <ActionIcon variant={"light"} size={"md"} color={"cyan"}>
-                <IconEdit size={16} />
+                <IconEdit size={14} />
               </ActionIcon>
-            </Flex>
-          </Flex>
-        </Flex>
+            </Group>
+          </Group>
+        </Group>
       </Card>
     </>
   );
