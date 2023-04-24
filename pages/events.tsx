@@ -1,36 +1,39 @@
-import { Title, Space, Flex, Group, Button, Modal } from "@mantine/core";
+import { Title, Space, Flex, Group, Button, Modal, Loader } from "@mantine/core";
 
 import EventCard from "@/components/EventCard";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCalendarPlus } from "@tabler/icons-react";
 import EventForm from "@/components/EventForm";
 
-import { nanoid } from "nanoid";
-
 import { eventsAtom, locationsAtom } from "@/store";
 import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
+import { getAllEvents } from "@/lib/eventLib";
+import { getAllLocations } from "@/lib/locationLib";
 
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
   const [events, setEvents] = useAtom(eventsAtom);
-  const [locations] = useAtom(locationsAtom);
+  const [locations, setLocations] = useAtom(locationsAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const addEventToDb = (formData: FormData) => {
-    setEvents((events): any => [
-      ...events,
-      {
-        id: nanoid(4),
-        name: formData.name,
-        locationId: formData.location,
-        dateTime: Math.round(formData.dateTime / 1000),
-        announced: formData?.announced ?? null,
-        visitors: formData?.visitors ?? null,
-        preNotes: formData?.preNotes ?? "",
-        postNotes: formData?.postNotes ?? "",
-        fbLink: formData?.fbLink ?? "",
-      },
-    ]);
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const [allEvents, allLocations] = await Promise.all([getAllEvents(), getAllLocations()]);
+        setEvents(allEvents);
+        setLocations(allLocations);
+      } catch (e) {
+        console.error(e);
+        return e;
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [setEvents, setLocations]);
 
   return (
     <>
@@ -38,7 +41,7 @@ export default function Events() {
       <Space h={"md"} />
       <Group position={"apart"}>
         <Modal opened={opened} onClose={close} title="Neues Event" centered>
-          <EventForm addEventToDb={addEventToDb} locations={locations} closeModal={close} />
+          <EventForm closeModal={close} />
         </Modal>
 
         <Button
@@ -54,6 +57,11 @@ export default function Events() {
       <Space h={"md"} />
 
       <Flex gap={"xs"} wrap={"wrap"}>
+        {isLoading && locations.length === 0 && (
+          <Group position="center" w={"100%"}>
+            <Loader size="xl" color="teal" variant="dots" />
+          </Group>
+        )}
         {events.map((event: any) => (
           <EventCard key={event.id} event={event} locations={locations} />
         ))}

@@ -1,16 +1,16 @@
-import { createCloudinarySignature, uploadImageToCloudinary } from "@/services/cloudinaryService";
+import { getAllTagsFromDb } from "@/services/tagService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { publicId, timestamp, uploadPreset },
+    query: {},
     method,
   } = req;
 
   switch (method) {
     case "GET":
       try {
-        const signature = createCloudinarySignature(publicId || null, timestamp, uploadPreset || null);
-        res.status(200).json(signature);
+        const tags = await getAllTagsFromDb();
+        res.status(200).json(tags);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });

@@ -2,8 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const tagsSchema = new Schema({
-  name: { type: String, required: true },
-  //   tripId: { type: mongoose.Schema.Types.ObjectId, ref: "trips" },
+  name: { type: String, required: true, maxLength: 20 },
 });
 
 const Tags = mongoose.models.Tags || mongoose.model("Tags", tagsSchema, "tags");

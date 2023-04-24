@@ -1,26 +1,25 @@
+import { createEvent } from "@/lib/eventLib";
 import { TextInput, Button, Group, Select, Flex, Textarea, NumberInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
 import { useForm } from "@mantine/form";
 
-export default function EventForm({
-  addEventToDb,
-  locations,
-  closeModal,
-}: {
-  addEventToDb: any;
-  locations: Location[];
-  closeModal: any;
-}) {
+import { eventsAtom, locationsAtom } from "@/store";
+import { useAtom, useSetAtom } from "jotai";
+
+export default function EventForm({ closeModal }: { closeModal: any }) {
+  const [locations] = useAtom(locationsAtom);
+  const setEvents = useSetAtom(eventsAtom);
+
   const locationData = locations.map((location): { value: string; label: string } => ({
-    value: location.id,
-    label: location.name,
+    value: location?.id || "",
+    label: location?.name || "",
   }));
 
   const form = useForm({
     initialValues: {
       name: "Stammtisch ",
-      location: "",
+      locationId: "",
       dateTime: null,
       announced: null,
       visitors: null,
@@ -31,15 +30,15 @@ export default function EventForm({
 
     validate: {
       name: (value) => (value.length === 0 ? "Bitte gib der Veranstaltung einen Namen" : null),
-      location: (value) => (value.length === 0 ? "Bitte wähle eine Location" : null),
+      locationId: (value) => (value.length === 0 ? "Bitte wähle eine Location" : null),
       dateTime: (value) => (value === null ? "Bitte wähle einen Zeitpunkt" : null),
     },
   });
 
   return (
     <form
-      onSubmit={form.onSubmit((values) => {
-        addEventToDb(values);
+      onSubmit={form.onSubmit((values: any) => {
+        createEvent(values, setEvents);
         closeModal();
       })}
     >
@@ -48,6 +47,7 @@ export default function EventForm({
           data-autofocus
           withAsterisk
           label="Name"
+          maxLength={50}
           placeholder="Stammtisch 01/2023"
           {...form.getInputProps("name")}
         />
@@ -59,7 +59,8 @@ export default function EventForm({
           searchable
           nothingFound="Nichts gefunden"
           data={locationData}
-          {...form.getInputProps("location")}
+          spellCheck={false}
+          {...form.getInputProps("locationId")}
         />
 
         <DateTimePicker
@@ -78,17 +79,20 @@ export default function EventForm({
         <Textarea
           placeholder="Informationen zur Planung"
           label="Notizen"
+          maxLength={1000}
           {...form.getInputProps("preNotes")}
         />
 
         <Textarea
           placeholder="Hinweise zum Stammtisch"
           label="Hinweise"
+          maxLength={1000}
           {...form.getInputProps("postNotes")}
         />
 
         <TextInput
           label="Facebook Link"
+          maxLength={100}
           placeholder="Link zum Facebook Event"
           {...form.getInputProps("fbLink")}
         />

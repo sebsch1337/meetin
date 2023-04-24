@@ -25,8 +25,8 @@ import NoGoIcon from "../NoGoIcon";
 import PictureDropzone from "../PictureDropzone";
 import { useState } from "react";
 
-import { useSetAtom } from "jotai";
-import { modalAtom } from "@/store";
+import { useAtom, useSetAtom } from "jotai";
+import { modalAtom, tagsAtom } from "@/store";
 
 export default function LocationCard({
   location,
@@ -45,6 +45,7 @@ export default function LocationCard({
 }) {
   const [loading, setLoading] = useState(false);
   const setModal = useSetAtom(modalAtom);
+  const [tags] = useAtom(tagsAtom);
 
   return (
     <Card w={350} mih={550} shadow="sm" padding="xl" key={location.id}>
@@ -92,7 +93,7 @@ export default function LocationCard({
                   variant="light"
                   style={{ position: "absolute", top: "1rem", right: "2rem", zIndex: 2 }}
                   onClick={async () => {
-                    setModal((prev) => ({
+                    setModal((prev): any => ({
                       ...prev,
                       title: "Bild löschen",
                       type: "deleteImage",
@@ -122,14 +123,14 @@ export default function LocationCard({
         </Carousel>
       </Card.Section>
 
-      <Title order={2} weight={500} size={"h3"} mt="xs" color={location.noGo ? "red" : ""}>
-        {location.name} {location.noGo && <NoGoIcon />}
+      <Title order={2} weight={500} size={"h3"} mt="xs" color={location?.noGo ? "red" : ""}>
+        {location?.name} {location?.noGo && <NoGoIcon />}
       </Title>
       <Text size={"xs"}>{location?.address?.suburb}</Text>
 
       <SimpleGrid cols={2} verticalSpacing="xs" mt={"xs"}>
         <div>
-          <Text size={"sm"}>Mittelw. Besucher</Text>
+          <Text size={"sm"}>Besucherzahl</Text>
           <Text color="dimmed" size="sm">
             {averageVisitors}
           </Text>
@@ -144,17 +145,17 @@ export default function LocationCard({
         <div>
           <Text size={"sm"}>Max. Besucher</Text>
           <Text color="dimmed" size="sm">
-            {location.maxCapacity}
+            {location?.maxCapacity}
           </Text>
         </div>
         <div>
-          <Text size={"sm"}>Indoor / Outdoor</Text>
+          <Text size={"sm"}>Lokalität</Text>
           <Center inline>
-            <IconHome color={location.indoor ? "teal" : "grey"} size={18} />
+            <IconHome color={location?.indoor ? "teal" : "grey"} size={18} />
             <Space w="xs" />
-            {"/"}
+            {"|"}
             <Space w="xs" />
-            <IconSun color={location.outdoor ? "yellow" : "grey"} size={18} />
+            <IconSun color={location?.outdoor ? "yellow" : "grey"} size={18} />
           </Center>
         </div>
       </SimpleGrid>
@@ -173,7 +174,7 @@ export default function LocationCard({
             </Text>
           </Accordion.Control>
           <Accordion.Panel>
-            <Text size={"sm"}>{location.description}</Text>
+            <Text size={"sm"}>{location?.description}</Text>
           </Accordion.Panel>
         </Accordion.Item>
 
@@ -184,15 +185,15 @@ export default function LocationCard({
             </Text>
           </Accordion.Control>
           <Accordion.Panel>
-            <Text size={"sm"}>{location.infos}</Text>
+            <Text size={"sm"}>{location?.infos}</Text>
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
 
       <Group mt={"md"} mb={"md"} spacing={"xs"} mih={45}>
-        {location?.tags.map((tag) => (
-          <Badge variant={"outline"} key={tag} size={"xs"}>
-            {tag}
+        {location?.tags?.map((tagId) => (
+          <Badge variant={"outline"} key={tagId} size={"xs"}>
+            {tags.find((tag: any) => tag.id === tagId)?.name}
           </Badge>
         ))}
       </Group>

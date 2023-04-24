@@ -1,10 +1,3 @@
-import { useDebouncedValue, useNetwork } from "@mantine/hooks";
-
-import { useSetAtom } from "jotai";
-import { locationsAtom, modalAtom } from "@/store";
-
-import { notifications } from "@mantine/notifications";
-
 import { useForm } from "@mantine/form";
 import {
   Button,
@@ -21,9 +14,12 @@ import {
   LoadingOverlay,
   Space,
 } from "@mantine/core";
+
+import { useDebouncedValue } from "@mantine/hooks";
+import { useAtom, useSetAtom } from "jotai";
+import { locationsAtom, modalAtom, tagsAtom } from "@/store";
 import { useEffect, useState } from "react";
-import { IconCheck } from "@tabler/icons-react";
-import { createLocation, editLocation } from "@/lib/location";
+import { createLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
 
 export default function LocationForm({
   closeModal,
@@ -36,6 +32,29 @@ export default function LocationForm({
 }) {
   const setLocations = useSetAtom(locationsAtom);
   const setModal = useSetAtom(modalAtom);
+  const [tags] = useAtom(tagsAtom);
+
+  const [loading, setLoading] = useState(false);
+
+  const [searchString, setSearchString] = useState("");
+  const [searchLocations, setSearchLocations] = useState([]);
+  const [debouncedSearchString] = useDebouncedValue(searchString, 200);
+
+  useEffect(() => {
+    const fetchExternalLocation = async (searchString: string) => {
+      if (searchString.length > 0) {
+        try {
+          const externalLocation = await searchExternalLocation(searchString);
+          setSearchLocations(externalLocation);
+        } catch (e) {
+          console.error(e);
+          return e;
+        }
+      }
+    };
+
+    fetchExternalLocation(debouncedSearchString);
+  }, [debouncedSearchString]);
 
   const form = useForm({
     initialValues: {
@@ -62,55 +81,18 @@ export default function LocationForm({
     },
   });
 
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchLocations, setSearchLocations] = useState([]);
-  const [debouncedOptions] = useDebouncedValue(search, 200);
-  const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState(
-    preValues?.tags?.map((tag: string[]) => ({ value: tag, label: tag })) || []
-  );
-
-  const networkStatus = useNetwork();
-  useEffect(() => {
-    const getExternalLocation = async (searchString: string) => {
-      const sanitizedSearchString = searchString.replaceAll(" ", "+");
-      if (sanitizedSearchString.length > 0 && networkStatus.online) {
-        try {
-          const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
-          const response = await fetch(searchUrl);
-          const result = await response.json();
-
-          const filteredLocations = result || [];
-          setSearchLocations(filteredLocations);
-          setSearchResults(
-            filteredLocations.map((location: any) => ({
-              key: location.place_id,
-              value: location.display_name,
-              label: location.display_name,
-            }))
-          );
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    };
-
-    getExternalLocation(debouncedOptions);
-  }, [debouncedOptions, networkStatus]);
-
   const setFormData = (location: any) => {
     if (location.length > 0) {
-      const address = location[0].address;
+      const address = location[0]?.address;
       form.setValues({
-        name: address.amenity || address.leisure,
-        road: address.road || address.square,
-        houseNo: address.house_number,
-        postcode: address.postcode,
-        city: address.city,
-        suburb: address.suburb,
-        latitude: location[0].lat,
-        longitude: location[0].lon,
+        name: address?.amenity || address?.leisure,
+        road: address?.road || address?.square,
+        houseNo: address?.house_number,
+        postcode: address?.postcode,
+        city: address?.city,
+        suburb: address?.suburb,
+        latitude: location[0]?.lat,
+        longitude: location[0]?.lon,
       });
     }
   };
@@ -122,9 +104,13 @@ export default function LocationForm({
         label="Suche"
         placeholder="Auf OpenStreetMap suchen"
         searchable
-        data={searchResults}
-        searchValue={search}
-        onSearchChange={setSearch}
+        data={searchLocations.map((location: any) => ({
+          key: location.place_id,
+          value: location.display_name,
+          label: location.display_name,
+        }))}
+        searchValue={searchString}
+        onSearchChange={setSearchString}
         withinPortal
         nothingFound="Keine Ergebnisse"
         spellCheck={false}
@@ -141,22 +127,11 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           if (editLocationMode) {
-            editLocation(values, preValues.id, setLocations);
-            notifications.show({
-              icon: <IconCheck />,
-              title: values.name,
-              message: `Eintrag erfolgreich bearbeitet.`,
-            });
+            await editLocation({ ...values, images: [...preValues.images] }, preValues.id, setLocations);
           } else {
-            createLocation(values, setLocations);
-            notifications.show({
-              icon: <IconCheck />,
-              title: values.name,
-              message: `Eintrag erfolgreich erstellt.`,
-            });
+            await createLocation(values, setLocations);
           }
           form.reset();
-          setLoading(false);
           closeModal();
         })}
       >
@@ -167,6 +142,7 @@ export default function LocationForm({
             placeholder="Name der Location"
             spellCheck={false}
             {...form.getInputProps("name")}
+            maxLength={50}
           />
           <Group grow>
             <TextInput
@@ -174,12 +150,14 @@ export default function LocationForm({
               placeholder="Straße"
               spellCheck={false}
               {...form.getInputProps("road")}
+              maxLength={100}
             />
             <TextInput
               label="Hausnummer"
               placeholder="Hausnummer"
               spellCheck={false}
               {...form.getInputProps("houseNo")}
+              maxLength={5}
             />
           </Group>
           <Group grow>
@@ -188,8 +166,15 @@ export default function LocationForm({
               placeholder="Postleitzahl"
               spellCheck={false}
               {...form.getInputProps("postcode")}
+              maxLength={7}
             />
-            <TextInput label="Ort" placeholder="Ort" spellCheck={false} {...form.getInputProps("city")} />
+            <TextInput
+              label="Ort"
+              placeholder="Ort"
+              spellCheck={false}
+              {...form.getInputProps("city")}
+              maxLength={100}
+            />
           </Group>
           <Group grow>
             <TextInput
@@ -197,12 +182,14 @@ export default function LocationForm({
               placeholder="Stadtteil"
               spellCheck={false}
               {...form.getInputProps("suburb")}
+              maxLength={100}
             />
             <TextInput
               label="Telefonnummer"
               placeholder="Telefonnummer"
               spellCheck={false}
               {...form.getInputProps("tel")}
+              maxLength={20}
             />
           </Group>
           <Group grow>
@@ -228,6 +215,8 @@ export default function LocationForm({
               placeholder="Anzahl Besucher"
               spellCheck={false}
               {...form.getInputProps("maxCapacity")}
+              max={999}
+              min={0}
             />
           </Group>
 
@@ -239,6 +228,7 @@ export default function LocationForm({
             placeholder="Beschreibung, Lage, Anreise, Preisklasse, Menü"
             spellCheck={false}
             {...form.getInputProps("description")}
+            maxLength={500}
           />
 
           <Textarea
@@ -247,20 +237,16 @@ export default function LocationForm({
             placeholder="Wichtige Hinweise für die Orga"
             spellCheck={false}
             {...form.getInputProps("infos")}
+            maxLength={500}
           />
 
           <MultiSelect
             label="Tags"
-            data={tags}
-            placeholder="Tags hinzufügen"
+            data={tags.map((tag: any) => ({ value: tag.id, label: tag.name }))}
+            placeholder="Max. 6 Tags hinzufügen"
             searchable
-            creatable
-            getCreateLabel={(query) => `+ Erstelle ${query}`}
-            onCreate={(query) => {
-              const item = { value: query, label: query };
-              setTags((currentTags: any) => [...currentTags, item]);
-              return item;
-            }}
+            creatable={false}
+            maxSelectedValues={6}
             {...form.getInputProps("tags")}
           />
           <Space />
@@ -269,7 +255,6 @@ export default function LocationForm({
           </Button>
           {editLocationMode && (
             <>
-              {" "}
               <Divider />
               <Button
                 variant={"light"}

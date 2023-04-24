@@ -1,29 +1,51 @@
 import LocationCard from "@/components/LocationCard";
-import { Button, Flex, Group, Modal, Space, Title } from "@mantine/core";
-import { getLastVisitedDay, getAverageVisitors } from "@/lib/visit";
+import { Button, Flex, Group, Loader, Modal, Space, Title } from "@mantine/core";
+import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure } from "@mantine/hooks";
 
 import LocationForm from "@/components/LocationForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import PictureDeleteModal from "@/components/PictureDeleteModal";
 
-import { useAtom } from "jotai";
-import { locationsAtom, eventsAtom, modalAtom } from "@/store";
 import { IconPlus } from "@tabler/icons-react";
-import { deleteImage } from "@/lib/image";
+import { deleteImage } from "@/lib/imageLib";
 import { LocationDeleteModal } from "@/components/LocationDeleteModal";
-import { deleteLocation } from "@/lib/location";
+import { deleteLocation, getAllLocations } from "@/lib/locationLib";
+
+import { useAtom, useSetAtom } from "jotai";
+import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
+import { getAllTags } from "@/lib/tagLib";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
+  const setTags = useSetAtom(tagsAtom);
   const [events] = useAtom(eventsAtom);
   const [modal, setModal] = useAtom(modalAtom);
 
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [editLocationMode, setEditLocationMode] = useState(false);
   const [preValues, setPreValues] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const [allLocations, allTags] = await Promise.all([getAllLocations(), getAllTags()]);
+        setLocations(allLocations);
+        setTags(allTags);
+      } catch (e) {
+        console.error(e);
+        return e;
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [setLocations, setTags]);
 
   return (
     <>
@@ -68,7 +90,13 @@ export default function Locations() {
         </Button>
       </Group>
       <Space h={"md"} />
+
       <Flex gap={"xs"} wrap={"wrap"}>
+        {isLoading && locations.length === 0 && (
+          <Group position="center" w={"100%"}>
+            <Loader size="xl" color="teal" variant="dots" />
+          </Group>
+        )}
         {locations?.map((location: any) => (
           <LocationCard
             location={location}

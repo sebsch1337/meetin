@@ -1,7 +1,7 @@
-import { uploadImages } from "@/lib/image";
+import { uploadImages } from "@/lib/imageLib";
 import { Text, Flex, createStyles } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconAlertCircle, IconPhotoPlus, IconX } from "@tabler/icons-react";
+import { IconPhotoPlus, IconX } from "@tabler/icons-react";
 
 import { useSetAtom } from "jotai";
 import { locationsAtom } from "@/store";
@@ -29,7 +29,7 @@ export default function PictureDropzone({ preValues, setLoading }: { preValues: 
       accept={IMAGE_MIME_TYPE}
       onDrop={async (images) => {
         setLoading(true);
-        await uploadImages(images, preValues.id, setLocations);
+        await uploadImages(images, preValues, setLocations);
         setLoading(false);
       }}
       onReject={() => {

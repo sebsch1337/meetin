@@ -1,22 +1,11 @@
 interface Event {
-  id: string;
+  id?: string;
   name: string;
-  dateTime: number;
   locationId: string;
+  dateTime: date;
   announced?: number;
   visitors?: number;
   preNotes?: string;
   postNotes?: string;
   fbLink?: string;
-}
-
-interface FormData {
-  name: string;
-  location: string;
-  dateTime: number;
-  announced: number;
-  visitors: number;
-  preNotes: string;
-  postNotes: string;
-  fbLink: string;
 }
