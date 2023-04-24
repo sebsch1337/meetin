@@ -7,15 +7,16 @@ import {
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: {},
+    query: { eventId },
     method,
   } = req;
 
   switch (method) {
-    case "GET":
+    case "PATCH":
       try {
-        const tags = await getAllEventsFromDb();
-        res.status(200).json(tags);
+        await updateEventInDb(eventId, req.body.values);
+        const updatedEvent = await getAllEventsFromDb();
+        res.status(200).json(updatedEvent);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
@@ -25,10 +26,10 @@ export default async function handler(req: any, res: any): Promise<any> {
       }
       break;
 
-    case "POST":
+    case "DELETE":
       try {
-        const newEvent: any = await postEventToDb(req.body);
-        res.status(200).json(newEvent);
+        const deletedEvent: any = await deleteEventFromDb(eventId);
+        res.status(200).json(deletedEvent);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
