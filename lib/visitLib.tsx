@@ -17,21 +17,19 @@ export const getLastVisitedDay = (locationId: string, events: Event[]): string =
   }
 };
 
-export const getAverageVisitors = (locationId: string, events: Event[]): string => {
+export const getAverageVisitors = (locationId: string, events: Event[]): number => {
   const visitedEvents = getEventsByLocationId(locationId, events).filter(
     (event: any) => event.visitors !== undefined
   );
 
   if (!visitedEvents || visitedEvents.length < 2) {
-    return "N/A";
+    return 0;
   }
 
   const averageVisitors = Math.round(
     visitedEvents.map((event: any) => event.visitors).reduce((a: number, b: number) => a + b) /
       visitedEvents.length
   );
-  const minVisitors = Math.min(...visitedEvents.slice(-3).map((event: any) => event.visitors));
-  const maxVisitors = Math.max(...visitedEvents.slice(-3).map((event: any) => event.visitors));
 
-  return `${averageVisitors} (${minVisitors} / ${maxVisitors})`;
+  return averageVisitors;
 };
