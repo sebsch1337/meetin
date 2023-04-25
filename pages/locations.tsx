@@ -17,6 +17,7 @@ import { deleteLocation, getAllLocations } from "@/lib/locationLib";
 import { useAtom, useSetAtom } from "jotai";
 import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
 import { getAllTags } from "@/lib/tagLib";
+import LocationCardCompact from "@/components/LocationCardCompact";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -98,14 +99,20 @@ export default function Locations() {
           </Group>
         )}
         {locations?.map((location: any) => (
-          <LocationCard
+          // <LocationCard
+          //   location={location}
+          //   lastVisitedDay={getLastVisitedDay(location.id, events)}
+          //   averageVisitors={getAverageVisitors(location.id, events)}
+          //   key={location.id}
+          //   setEditLocationMode={setEditLocationMode}
+          //   setPreValues={setPreValues}
+          //   openModal={openModal}
+          // />
+          <LocationCardCompact
+            key={location.id}
             location={location}
             lastVisitedDay={getLastVisitedDay(location.id, events)}
             averageVisitors={getAverageVisitors(location.id, events)}
-            key={location.id}
-            setEditLocationMode={setEditLocationMode}
-            setPreValues={setPreValues}
-            openModal={openModal}
           />
         ))}
       </Flex>
