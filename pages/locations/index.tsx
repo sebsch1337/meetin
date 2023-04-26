@@ -19,7 +19,6 @@ import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
 import { getAllTags } from "@/lib/tagLib";
 
 import LocationCardCompact from "@/components/LocationCardCompact";
-import LocationDetails from "@/components/LocationDetails";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -115,8 +114,6 @@ export default function Locations() {
             location={location}
             lastVisitedDay={getLastVisitedDay(location.id, events)}
             averageVisitors={getAverageVisitors(location.id, events)}
-            setPreValues={setPreValues}
-            openModal={openModal}
           />
         ))}
       </Flex>

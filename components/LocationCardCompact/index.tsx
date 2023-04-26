@@ -1,37 +1,31 @@
-import { Flex, Text, Group, Paper, Title, UnstyledButton, rem, Stack, Tooltip } from "@mantine/core";
-import { IconHome, IconUsers, IconCalendarPin, IconSun } from "@tabler/icons-react";
-import Image from "next/image";
+import { Flex, Text, Group, Paper, Title, UnstyledButton, rem, Stack, Tooltip, Overlay } from "@mantine/core";
+import { IconHome, IconUsers, IconCalendarPin, IconSun, IconPictureInPictureOff } from "@tabler/icons-react";
 
-import { useAtom, useSetAtom } from "jotai";
-import { modalAtom, tagsAtom } from "@/store";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function LocationCardCompact({
   location,
   lastVisitedDay,
   averageVisitors,
-  openModal,
-  setPreValues,
 }: {
   location: Location;
   lastVisitedDay: string;
   averageVisitors: number;
-  openModal: any;
-  setPreValues: any;
 }) {
-  const setModal = useSetAtom(modalAtom);
-
   return (
     <Link href={`/locations/${location.id}`}>
       <UnstyledButton pos={"relative"} w={250} h={250}>
-        <Image
-          src={location?.images[0]?.url}
-          width={250}
-          height={250}
-          alt={"Picture"}
-          style={{ objectFit: "cover", borderRadius: rem(15) }}
-          placeholder={"empty"}
-        />
+        {location?.images?.length > 0 && (
+          <Image
+            src={location?.images[0]?.url}
+            width={250}
+            height={250}
+            alt={"Picture"}
+            style={{ objectFit: "cover", borderRadius: rem(15) }}
+            placeholder={"empty"}
+          />
+        )}
         <Paper
           pos={"absolute"}
           top={0}
