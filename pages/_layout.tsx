@@ -1,69 +1,121 @@
 import { useState } from "react";
-import {
-  AppShell,
-  Navbar,
-  Header,
-  Text,
-  Center,
-  MediaQuery,
-  Burger,
-  useMantineTheme,
-  rem,
-  Container,
-} from "@mantine/core";
-import { MainLinks } from "../components/MainLinks";
-import { IconAtom } from "@tabler/icons-react";
+import { createStyles, Header, Group, ActionIcon, Container, Burger, rem, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 import Link from "next/link";
 
-type LayoutProps = {
-  children: React.ReactNode;
-};
+const useStyles = createStyles((theme) => ({
+  inner: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    height: rem(56),
 
-export default function Layout({ children }: LayoutProps) {
-  const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
+    [theme.fn.smallerThan("sm")]: {
+      justifyContent: "flex-start",
+    },
+  },
+
+  links: {
+    width: rem(260),
+
+    [theme.fn.smallerThan("sm")]: {
+      display: "none",
+    },
+  },
+
+  social: {
+    width: rem(260),
+
+    [theme.fn.smallerThan("sm")]: {
+      width: "auto",
+      marginLeft: "auto",
+    },
+  },
+
+  burger: {
+    marginRight: theme.spacing.md,
+
+    [theme.fn.largerThan("sm")]: {
+      display: "none",
+    },
+  },
+
+  link: {
+    display: "block",
+    lineHeight: 1,
+    padding: `${rem(8)} ${rem(12)}`,
+    borderRadius: theme.radius.sm,
+    textDecoration: "none",
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.colors.gray[7],
+    fontSize: theme.fontSizes.sm,
+    fontWeight: 500,
+
+    "&:hover": {
+      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
+    },
+  },
+
+  linkActive: {
+    "&, &:hover": {
+      backgroundColor: theme.fn.variant({ variant: "light", color: theme.primaryColor }).background,
+      color: theme.fn.variant({ variant: "light", color: theme.primaryColor }).color,
+    },
+  },
+}));
+
+interface HeaderMiddleProps {
+  children: any;
+}
+
+export default function HeaderMiddle({ children }: HeaderMiddleProps) {
+  const links = [
+    { link: "/events", label: "Events" },
+    { link: "/locations", label: "Locations" },
+  ];
+
+  const [opened, { toggle }] = useDisclosure(false);
+  const [active, setActive] = useState(links[0].link);
+  const { classes, cx } = useStyles();
+
+  const items = links.map((link) => (
+    <Link
+      key={link.label}
+      href={link.link}
+      className={cx(classes.link, { [classes.linkActive]: active === link.link })}
+      onClick={() => {
+        setActive(link.link);
+      }}
+    >
+      {link.label}
+    </Link>
+  ));
 
   return (
-    <AppShell
-      styles={{
-        main: {
-          background: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
-        },
-      }}
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
-      navbar={
-        <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 200 }}>
-          <Navbar.Section grow mt="md">
-            <MainLinks setOpened={() => setOpened(false)} />
-          </Navbar.Section>
-        </Navbar>
-      }
-      header={
-        <Header height={{ base: 50, md: 70 }} p="md">
-          <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </MediaQuery>
-            <Link href={"/"} style={{ textDecoration: "none", color: "inherit" }}>
-              <Center>
-                <IconAtom size={rem(48)} />
-                <Text size={"lg"}>MeetIn</Text>
-              </Center>
-            </Link>
-          </div>
-        </Header>
-      }
-    >
-      <Container fluid p={"xs"}>
-        {children}
-      </Container>
-    </AppShell>
+    <>
+      <Header height={56}>
+        <Container className={classes.inner}>
+          <Burger opened={opened} onClick={toggle} size="sm" className={classes.burger} />
+          <Group className={classes.links} spacing={5}>
+            {items}
+          </Group>
+
+          <Group spacing={5}>
+            <IconHeartHandshake />
+            <Text size={18}>MeetIn</Text>
+          </Group>
+
+          <Group spacing={0} className={classes.social} position="right" noWrap>
+            <ActionIcon size="lg">
+              <IconBrandFacebook size="1.1rem" stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon size="lg">
+              <IconBrandInstagram size="1.1rem" stroke={1.5} />
+            </ActionIcon>
+          </Group>
+        </Container>
+      </Header>
+      <main>{children}</main>
+    </>
   );
 }
