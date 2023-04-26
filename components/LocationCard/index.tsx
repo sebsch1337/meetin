@@ -212,7 +212,7 @@ export default function LocationCard({
           setModal((prev) => ({
             ...prev,
             title: "Location bearbeiten",
-            type: "details",
+            type: "form",
           }));
           openModal();
         }}
