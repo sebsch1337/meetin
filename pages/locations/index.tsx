@@ -1,5 +1,18 @@
 import LocationCard from "@/components/LocationCard";
-import { Button, Container, Flex, Group, Loader, Modal, Space, Title } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Container,
+  Flex,
+  Group,
+  Loader,
+  Modal,
+  Paper,
+  Skeleton,
+  Space,
+  Stack,
+  Title,
+} from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure } from "@mantine/hooks";
@@ -94,21 +107,23 @@ export default function Locations() {
       <Space h={"md"} />
 
       <Flex gap={"xs"} wrap={"wrap"}>
-        {isLoading && locations.length === 0 && (
-          <Group position="center" w={"100%"}>
-            <Loader size="xl" color="teal" variant="dots" />
-          </Group>
-        )}
+        {isLoading &&
+          locations.length === 0 &&
+          Array.from({ length: 4 }).map((_, count) => (
+            <Flex
+              w={250}
+              h={250}
+              justify={"center"}
+              align={"center"}
+              direction={"column"}
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+              key={count}
+            >
+              <Skeleton w={"90%"} height={32} radius="xl" />
+              <Skeleton w={"50%"} height={18} mt={10} radius="xl" />
+            </Flex>
+          ))}
         {locations?.map((location: any) => (
-          // <LocationCard
-          //   location={location}
-          //   lastVisitedDay={getLastVisitedDay(location.id, events)}
-          //   averageVisitors={getAverageVisitors(location.id, events)}
-          //   key={location.id}
-          //   setEditLocationMode={setEditLocationMode}
-          //   setPreValues={setPreValues}
-          //   openModal={openModal}
-          // />
           <LocationCardCompact
             key={location.id}
             location={location}
