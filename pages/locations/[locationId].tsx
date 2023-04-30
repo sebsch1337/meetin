@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Container, Flex, Tabs, Text, Title } from "@mantine/core";
+import { Container, Flex, LoadingOverlay, Paper, Tabs, Text, Title } from "@mantine/core";
 import { IconInfoCircle, IconMap2, IconPhoto, IconSettings } from "@tabler/icons-react";
 
 import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
@@ -9,6 +9,10 @@ import { getAverageVisitors, getLastVisitedDay } from "@/lib/visitLib";
 
 import { getAllEventsFromDb } from "@/services/eventService";
 import { getLocationByIdFromDb } from "@/services/locationService";
+import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
+import PictureBox from "@/components/PictureBox";
+import { deleteImage } from "@/lib/imageLib";
+import { useMediaQuery } from "@mantine/hooks";
 
 export async function getServerSideProps(context: any) {
   const locationId = context.params.locationId;
@@ -45,9 +49,13 @@ export default function LocationDetails({
 }) {
   const [location, setLocation] = useState(locationData ?? {});
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>("infos");
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
     <>
+      <LoadingOverlay visible={loading} overlayBlur={2} />
       <Container
         h={"20vh"}
         fluid
@@ -76,10 +84,10 @@ export default function LocationDetails({
           </Text>
         </Flex>
       </Container>
-      <Tabs defaultValue="basics" color="teal">
+      <Tabs defaultValue="infos" color="teal" value={activeTab} onTabChange={setActiveTab}>
         <Tabs.List grow>
-          <Tabs.Tab value="basics" icon={<IconInfoCircle size="0.8rem" />}>
-            Basics
+          <Tabs.Tab value="infos" icon={<IconInfoCircle size="0.8rem" />}>
+            Infos
           </Tabs.Tab>
           <Tabs.Tab value="gallery" icon={<IconPhoto size="0.8rem" />}>
             Galerie
@@ -92,16 +100,25 @@ export default function LocationDetails({
           </Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="basics" pt="xs">
-          <LocationDetailsBasics
-            location={location}
-            averageVisitors={averageVisitors}
-            lastVisit={lastVisit}
-          />
+        <Tabs.Panel value="infos" pt="xs">
+          {activeTab === "infos" && (
+            <LocationDetailsBasics
+              location={location}
+              averageVisitors={averageVisitors}
+              lastVisit={lastVisit}
+            />
+          )}
         </Tabs.Panel>
 
         <Tabs.Panel value="gallery" pt="xs">
-          Galerie
+          {activeTab === "gallery" && (
+            <LocationDetailsPictures
+              location={location}
+              setLoading={setLoading}
+              setLocation={setLocation}
+              isMobile={isMobile}
+            />
+          )}
         </Tabs.Panel>
 
         <Tabs.Panel value="map" pt="xs">

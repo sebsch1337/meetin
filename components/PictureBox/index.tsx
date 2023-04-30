@@ -40,7 +40,15 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function PictureBox({ deleteImage, preValues }: { deleteImage: any; preValues: any }) {
+export default function PictureBox({
+  deleteImage,
+  location,
+  setLocation,
+}: {
+  deleteImage: any;
+  location: any;
+  setLocation: any;
+}) {
   const { classes } = useStyles();
   const [deleteImageId, setDeleteImageId] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
@@ -59,7 +67,7 @@ export default function PictureBox({ deleteImage, preValues }: { deleteImage: an
             onClick={async () => {
               close();
               setVisible(true);
-              await deleteImage(deleteImageId, preValues.id);
+              await deleteImage(deleteImageId, location.id, setLocation);
               setVisible(false);
             }}
           >
@@ -68,11 +76,11 @@ export default function PictureBox({ deleteImage, preValues }: { deleteImage: an
         </Group>
       </Modal>
 
-      {preValues?.images?.length > 0 && (
-        <Paper withBorder={true} p={10}>
+      {location?.images?.length > 0 && (
+        <Paper withBorder={true} p={10} maw={500}>
           <LoadingOverlay visible={visible} overlayBlur={2} />
           <Flex gap={"xs"} align={"center"} wrap={"wrap"}>
-            {preValues?.images?.map((image: any) => (
+            {location?.images?.map((image: any) => (
               <UnstyledButton
                 key={image.publicId}
                 className={classes.imageButton}

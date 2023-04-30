@@ -1,6 +1,6 @@
 import { uploadImageToCloudinary } from "@/services/cloudinaryService";
 
-export const uploadImages = async (uploadedImages: any[], location: any, setLocations: any) => {
+export const uploadImages = async (uploadedImages: any[], location: any, setLocation: any) => {
   try {
     const uploadedImageData: any[] = await Promise.all(
       uploadedImages.map(async (image: any) => uploadImageToCloudinary(image))
@@ -16,42 +16,32 @@ export const uploadImages = async (uploadedImages: any[], location: any, setLoca
     if (!response.ok) throw new Error("Failed to update images in location.");
 
     const changedLocationData: any = await response.json();
-    setLocations(changedLocationData);
+    setLocation(changedLocationData.find((locationData: Location) => locationData.id === location.id));
   } catch (error) {
     console.error(error);
   }
 };
 
-export const deleteImage = async (deleteImageId: string, locationId: string, setLocations?: any) => {
-  const response = await fetch(`api/images/${deleteImageId.replace("/", "-")}/?locationId=${locationId}`, {
+export const deleteImage = async (deleteImageId: string, locationId: string, setLocation?: any) => {
+  const response = await fetch(`/api/images/${deleteImageId.replace("/", "-")}/?locationId=${locationId}`, {
     method: "DELETE",
   });
   if (!response.ok) throw new Error("Failed to delete image.");
 
-  if (setLocations) {
-    setLocations((locations: any) => {
-      const locationToChange = locations.find((location: any) => location.id === locationId);
+  if (setLocation) {
+    setLocation((location: any) => {
+      const imageIndexToDelete = location.images.findIndex((image: any) => image.publicId === deleteImageId);
 
-      if (locationToChange) {
-        const imageIndexToDelete = locationToChange.images.findIndex(
-          (image: any) => image.publicId === deleteImageId
-        );
+      if (imageIndexToDelete >= 0) {
+        const newImages = [
+          ...location.images.slice(0, imageIndexToDelete),
+          ...location.images.slice(imageIndexToDelete + 1),
+        ];
 
-        if (imageIndexToDelete >= 0) {
-          const newImages = [
-            ...locationToChange.images.slice(0, imageIndexToDelete),
-            ...locationToChange.images.slice(imageIndexToDelete + 1),
-          ];
-
-          const newLocation = { ...locationToChange, images: newImages };
-          const newLocations = locations.map((location: any) =>
-            location.id === locationId ? newLocation : location
-          );
-
-          return newLocations;
-        }
+        const newLocation = { ...location, images: newImages };
+        return newLocation;
       }
-      return locations;
+      return location;
     });
   }
 };
