@@ -1,18 +1,4 @@
-import LocationCard from "@/components/LocationCard";
-import {
-  Button,
-  Center,
-  Container,
-  Flex,
-  Group,
-  Loader,
-  Modal,
-  Paper,
-  Skeleton,
-  Space,
-  Stack,
-  Title,
-} from "@mantine/core";
+import { Button, Container, Flex, Group, Modal, Skeleton, Space, Title } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure } from "@mantine/hooks";
