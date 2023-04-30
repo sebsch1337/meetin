@@ -18,11 +18,12 @@ import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
 import { getAllTags } from "@/lib/tagLib";
 
 import LocationCardCompact from "@/components/LocationCardCompact";
+import { getAllEvents } from "@/lib/eventLib";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
   const setTags = useSetAtom(tagsAtom);
-  const [events] = useAtom(eventsAtom);
+  const [events, setEvents] = useAtom(eventsAtom);
   const [modal, setModal] = useAtom(modalAtom);
 
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
@@ -34,9 +35,14 @@ export default function Locations() {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const [allLocations, allTags] = await Promise.all([getAllLocations(), getAllTags()]);
+        const [allLocations, allTags, allEvents] = await Promise.all([
+          getAllLocations(),
+          getAllTags(),
+          getAllEvents(),
+        ]);
         setLocations(allLocations);
         setTags(allTags);
+        setEvents(allEvents);
       } catch (e) {
         console.error(e);
         return e;
@@ -46,7 +52,7 @@ export default function Locations() {
     };
 
     loadData();
-  }, [setLocations, setTags]);
+  }, [setLocations, setTags, setEvents]);
 
   return (
     <Container fluid px={"xl"} py={"xs"}>

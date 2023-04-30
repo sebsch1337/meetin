@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Container, Flex, LoadingOverlay, Paper, Tabs, Text, Title } from "@mantine/core";
+import { Container, Flex, LoadingOverlay, Tabs, Text, Title } from "@mantine/core";
 import { IconInfoCircle, IconMap2, IconPhoto, IconSettings } from "@tabler/icons-react";
 
 import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
@@ -10,8 +10,6 @@ import { getAverageVisitors, getLastVisitedDay } from "@/lib/visitLib";
 import { getAllEventsFromDb } from "@/services/eventService";
 import { getLocationByIdFromDb } from "@/services/locationService";
 import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
-import PictureBox from "@/components/PictureBox";
-import { deleteImage } from "@/lib/imageLib";
 import { useMediaQuery } from "@mantine/hooks";
 
 export async function getServerSideProps(context: any) {
@@ -37,18 +35,15 @@ export async function getServerSideProps(context: any) {
 }
 
 export default function LocationDetails({
-  locationId,
   locationData,
   averageVisitors,
   lastVisit,
 }: {
-  locationId: string;
   locationData: Location;
   averageVisitors: number;
   lastVisit: string;
 }) {
   const [location, setLocation] = useState(locationData ?? {});
-  const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>("infos");
   const isMobile = useMediaQuery("(max-width: 768px)");
