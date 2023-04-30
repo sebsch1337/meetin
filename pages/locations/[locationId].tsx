@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Container, Flex, LoadingOverlay, Tabs, Text, Title } from "@mantine/core";
-import { IconInfoCircle, IconMap2, IconPhoto, IconSettings } from "@tabler/icons-react";
+import { IconHistory, IconInfoCircle, IconMap2, IconPhoto, IconSettings } from "@tabler/icons-react";
 
 import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
 
@@ -95,8 +95,8 @@ export default function LocationDetails({
           <Tabs.Tab value="map" icon={<IconMap2 size="0.8rem" />}>
             Karte
           </Tabs.Tab>
-          <Tabs.Tab value="settings" icon={<IconSettings size="0.8rem" />}>
-            Settings
+          <Tabs.Tab value="history" icon={<IconHistory size="0.8rem" />}>
+            Verlauf
           </Tabs.Tab>
         </Tabs.List>
 
@@ -123,13 +123,17 @@ export default function LocationDetails({
 
         <Tabs.Panel value="map" pt="xs">
           {activeTab === "map" && (
-            // @ts-ignore
-            <LocationDetailsMap latitude={location?.latitude ?? 0} longitude={location?.longitude ?? 0} />
+            <LocationDetailsMap
+              // @ts-ignore
+              latitude={location?.latitude ?? 0}
+              longitude={location?.longitude ?? 0}
+              isMobile={isMobile}
+            />
           )}
         </Tabs.Panel>
 
-        <Tabs.Panel value="settings" pt="xs">
-          Einstellungen
+        <Tabs.Panel value="history" pt="xs">
+          Verlauf
         </Tabs.Panel>
       </Tabs>
     </>
