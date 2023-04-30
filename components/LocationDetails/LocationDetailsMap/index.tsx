@@ -7,8 +7,8 @@ import "leaflet-defaulticon-compatibility";
 export default function LocationDetailsMap({ latitude, longitude }: { latitude: number; longitude: number }) {
   return (
     <MapContainer
-      center={[51.5136, 7.4653]}
-      zoom={14}
+      center={[latitude, longitude]}
+      zoom={15}
       scrollWheelZoom={false}
       style={{ height: `60vh`, width: "100vw" }}
     >
