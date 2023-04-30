@@ -12,6 +12,11 @@ import { getLocationByIdFromDb } from "@/services/locationService";
 import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
 import { useMediaQuery } from "@mantine/hooks";
 
+import dynamic from "next/dynamic";
+const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
+  ssr: false,
+});
+
 export async function getServerSideProps(context: any) {
   const locationId = context.params.locationId;
 
@@ -117,7 +122,10 @@ export default function LocationDetails({
         </Tabs.Panel>
 
         <Tabs.Panel value="map" pt="xs">
-          Karte
+          {activeTab === "map" && (
+            // @ts-ignore
+            <LocationDetailsMap latitude={location?.latitude ?? 0} longitude={location?.longitude ?? 0} />
+          )}
         </Tabs.Panel>
 
         <Tabs.Panel value="settings" pt="xs">

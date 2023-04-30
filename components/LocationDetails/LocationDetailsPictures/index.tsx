@@ -18,7 +18,6 @@ export function LocationDetailsPictures({
   setLocation: any;
   isMobile: boolean;
 }) {
-  console.log("isMobile", isMobile);
   return (
     <Flex justify={"center"} align={"center"} direction={"column"} gap={"xs"}>
       <Carousel
