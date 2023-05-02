@@ -16,7 +16,7 @@ import { useDisclosure } from "@mantine/hooks";
 
 import Image from "next/image";
 
-import { getLocalDateTime } from "@/utils/date";
+import { getLocalDateTimeLong } from "@/utils/date";
 
 import {
   IconSpeakerphone,
@@ -99,7 +99,7 @@ export default function EventCard({ event, locations }: { event: Event; location
           <Group w={"100%"}>
             <Stack spacing={0} maw={"100%"}>
               <Text size={"xs"} w={"100%"}>
-                {getLocalDateTime(event?.dateTime)}
+                {getLocalDateTimeLong(event?.dateTime)}
               </Text>
               <Title order={3} size={16} truncate maw={180}>
                 {event.name}
