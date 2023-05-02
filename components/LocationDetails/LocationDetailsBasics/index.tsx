@@ -80,6 +80,17 @@ export default function LocationDetailsBasics({
                   </Link>
                 </Group>
               </Grid.Col>
+              <Grid.Col span={6}>
+                <Text size={"sm"}>Adresse</Text>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Stack spacing={0}>
+                  <Text size={"sm"}>{`${location?.address?.road} ${location?.address?.houseNo}`}</Text>
+                  <Text
+                    size={"sm"}
+                  >{`${location?.address?.postcode} ${location?.address?.city}-${location?.address?.suburb}`}</Text>
+                </Stack>
+              </Grid.Col>
             </Grid>
           </Stack>
         </Grid.Col>
