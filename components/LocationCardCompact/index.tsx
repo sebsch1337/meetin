@@ -1,5 +1,5 @@
-import { Flex, Text, Group, Paper, Title, UnstyledButton, rem, Stack, Tooltip, Overlay } from "@mantine/core";
-import { IconHome, IconUsers, IconCalendarPin, IconSun, IconPictureInPictureOff } from "@tabler/icons-react";
+import { Flex, Text, Group, Paper, Title, UnstyledButton, rem, Stack, Tooltip } from "@mantine/core";
+import { IconHome, IconUsers, IconCalendarPin, IconSun } from "@tabler/icons-react";
 
 import Image from "next/image";
 import Link from "next/link";

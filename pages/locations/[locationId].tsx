@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Container, Flex, LoadingOverlay, Tabs, Text, Title } from "@mantine/core";
 import { IconHistory, IconInfoCircle, IconMap2, IconPhoto, IconSettings } from "@tabler/icons-react";
 
 import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
 
-import { getAverageVisitors, getLastVisitedDay } from "@/lib/visitLib";
+import { getAverageVisitors, getEventsByLocationId, getLastVisitedDay } from "@/lib/visitLib";
 
-import { getAllEventsFromDb } from "@/services/eventService";
+import { getAllEventsByLocationIdFromDb, getAllEventsFromDb } from "@/services/eventService";
 import { getLocationByIdFromDb } from "@/services/locationService";
 import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
 import { useMediaQuery } from "@mantine/hooks";
 
 import dynamic from "next/dynamic";
+import LocationDetailsHistory from "@/components/LocationDetails/LocationDetailsHistory";
 const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
   ssr: false,
 });
@@ -20,35 +21,42 @@ const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetai
 export async function getServerSideProps(context: any) {
   const locationId = context.params.locationId;
 
-  try {
-    const locationData = await getLocationByIdFromDb(locationId);
-    const eventData = await getAllEventsFromDb();
-    const averageVisitors = getAverageVisitors(locationId, eventData);
-    const lastVisit = getLastVisitedDay(locationId, eventData);
+  const [locationData, locationEvents] = await Promise.all([
+    getLocationByIdFromDb(locationId),
+    getAllEventsByLocationIdFromDb(locationId),
+  ]);
+
+  if (locationData.id) {
+    const averageVisitors = getAverageVisitors(locationId, locationEvents);
+    const lastVisit = getLastVisitedDay(locationId, locationEvents);
 
     return {
       props: {
         locationId,
-        locationData,
         averageVisitors,
         lastVisit,
+        locationEvents,
+        locationData,
       },
     };
-  } catch (e) {
+  } else {
     return { redirect: { destination: "/404", permanent: false } };
   }
 }
 
 export default function LocationDetails({
   locationData,
-  averageVisitors,
+  locationEvents,
   lastVisit,
+  averageVisitors,
 }: {
   locationData: Location;
-  averageVisitors: number;
+  locationEvents: Event[];
   lastVisit: string;
-}) {
-  const [location, setLocation] = useState(locationData ?? {});
+  averageVisitors: number;
+}): JSX.Element {
+  const [location, setLocation] = useState<Location>(locationData ?? {});
+  const [events, setEvents] = useState(locationEvents ?? []);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>("infos");
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -61,7 +69,7 @@ export default function LocationDetails({
         fluid
         p={0}
         style={{
-          backgroundImage: `url(${location?.images[0]?.url})`,
+          backgroundImage: `url(${location?.images?.length > 0 ? location.images[0]?.url : ""})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
           backgroundSize: "cover",
@@ -133,7 +141,7 @@ export default function LocationDetails({
         </Tabs.Panel>
 
         <Tabs.Panel value="history" pt="xs">
-          Verlauf
+          <LocationDetailsHistory locationEvents={events} />
         </Tabs.Panel>
       </Tabs>
     </>

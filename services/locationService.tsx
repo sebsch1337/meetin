@@ -32,7 +32,7 @@ export async function getLocationByIdFromDb(id: string): Promise<any> {
   await dbConnect();
 
   const location = await Locations.findById(id).exec();
-  if (!location) throw new Error();
+
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
 
   return sanitizedLocation;
