@@ -1,3 +1,5 @@
+import { getLocalDateLong } from "@/utils/date";
+
 export const getEventsByLocationId = (locationId: string, events: Event[]): any[] =>
   events?.length > 0 ? events?.filter((event) => event.locationId === locationId) : [];
 
@@ -11,11 +13,7 @@ export const getLastVisit = (locationId: string, events: Event[]): any => {
 export const getLastVisitedDay = (locationId: string, events: Event[]): string => {
   const lastVisit = getLastVisit(locationId, events);
 
-  if (lastVisit) {
-    return new Date(lastVisit.dateTime).toLocaleDateString("de-DE", { dateStyle: "long" });
-  } else {
-    return "Nie";
-  }
+  return lastVisit ? getLocalDateLong(lastVisit.dateTime) : "Nie";
 };
 
 export const getAverageVisitors = (locationId: string, events: Event[]): number => {
