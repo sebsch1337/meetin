@@ -10,7 +10,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconEdit, IconHome, IconPhone, IconSun } from "@tabler/icons-react";
+import { IconHome, IconPhone, IconSun } from "@tabler/icons-react";
 import Link from "next/link";
 
 export default function LocationDetailsBasics({
@@ -31,9 +31,9 @@ export default function LocationDetailsBasics({
               <Title order={2} size={18}>
                 Allgemein
               </Title>
-              <ActionIcon color="teal" size={"sm"}>
+              {/* <ActionIcon color="teal" size={"sm"}>
                 <IconEdit size="0.9rem" />
-              </ActionIcon>
+              </ActionIcon> */}
             </Group>
             <Divider />
             <Grid grow mt={"xs"}>
@@ -74,7 +74,7 @@ export default function LocationDetailsBasics({
                 <Group spacing={"xs"}>
                   <Text size={"sm"}>{location?.tel}</Text>
                   <Link href={`tel://${location?.tel}`}>
-                    <ActionIcon size={"sm"} color="teal">
+                    <ActionIcon size={"sm"} color="teal" variant="light">
                       <IconPhone size={"0.9rem"} />
                     </ActionIcon>
                   </Link>
@@ -101,9 +101,9 @@ export default function LocationDetailsBasics({
                 <Title order={2} size={18}>
                   Beschreibung
                 </Title>
-                <ActionIcon color="teal" size={"sm"}>
+                {/* <ActionIcon color="teal" size={"sm"}>
                   <IconEdit size="0.9rem" />
-                </ActionIcon>
+                </ActionIcon> */}
               </Group>
               <Divider />
               <Text size={"sm"} mt={"xs"}>
@@ -115,9 +115,9 @@ export default function LocationDetailsBasics({
                 <Title order={2} size={18}>
                   Hinweise
                 </Title>
-                <ActionIcon color="teal" size={"sm"}>
+                {/* <ActionIcon color="teal" size={"sm"}>
                   <IconEdit size="0.9rem" />
-                </ActionIcon>
+                </ActionIcon> */}
               </Group>
               <Divider />
               <Text size={"sm"} mt={"xs"}>

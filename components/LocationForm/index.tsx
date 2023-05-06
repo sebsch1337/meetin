@@ -25,10 +25,12 @@ export default function LocationForm({
   closeModal,
   editLocationMode,
   preValues,
+  setLocation,
 }: {
   closeModal: any;
   editLocationMode: boolean;
   preValues: any;
+  setLocation?: any;
 }) {
   const setLocations = useSetAtom(locationsAtom);
   const setModal = useSetAtom(modalAtom);
@@ -127,7 +129,7 @@ export default function LocationForm({
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
           if (editLocationMode) {
-            await editLocation({ ...values, images: [...preValues.images] }, preValues.id, setLocations);
+            await editLocation({ ...values, images: [...preValues.images] }, preValues.id, setLocation);
           } else {
             await createLocation(values, setLocations);
           }

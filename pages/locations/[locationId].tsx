@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { Container, Flex, LoadingOverlay, Tabs, Text, Title } from "@mantine/core";
-import { IconHistory, IconInfoCircle, IconMap2, IconPhoto, IconSettings } from "@tabler/icons-react";
+import { ActionIcon, Container, Flex, LoadingOverlay, Modal, Tabs, Text, Title, rem } from "@mantine/core";
+import { IconEdit, IconHistory, IconInfoCircle, IconMap2, IconPhoto } from "@tabler/icons-react";
 
 import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
 
@@ -10,10 +10,13 @@ import { getAverageVisitors, getEventsByLocationId, getLastVisitedDay } from "@/
 import { getAllEventsByLocationIdFromDb, getAllEventsFromDb } from "@/services/eventService";
 import { getLocationByIdFromDb } from "@/services/locationService";
 import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
-import { useMediaQuery } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 import dynamic from "next/dynamic";
 import LocationDetailsHistory from "@/components/LocationDetails/LocationDetailsHistory";
+import LocationForm from "@/components/LocationForm";
+import { LocationDeleteModal } from "@/components/LocationDeleteModal";
+import { deleteLocation } from "@/lib/locationLib";
 const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
   ssr: false,
 });
@@ -32,7 +35,6 @@ export async function getServerSideProps(context: any) {
 
     return {
       props: {
-        locationId,
         averageVisitors,
         lastVisit,
         locationEvents,
@@ -56,14 +58,35 @@ export default function LocationDetails({
   averageVisitors: number;
 }): JSX.Element {
   const [location, setLocation] = useState<Location>(locationData ?? {});
-  const [events, setEvents] = useState(locationEvents ?? []);
+  const [events] = useState<Event[]>(locationEvents ?? []);
+
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>("infos");
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  const [modal, setModal] = useState<Modal>({});
+  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const [editLocationMode, setEditLocationMode] = useState(false);
+
   return (
     <>
       <LoadingOverlay visible={loading} overlayBlur={2} />
+      <Modal opened={modalOpened} onClose={closeModal} title={modal.title} centered>
+        {modal.type === "form" && (
+          <LocationForm
+            closeModal={closeModal}
+            editLocationMode={editLocationMode}
+            preValues={location}
+            setLocation={setLocation}
+          />
+        )}
+        {modal.type === "deleteLocation" && (
+          <LocationDeleteModal
+            deleteLocation={async () => await deleteLocation(location.id, location, setLocation)}
+            closeModal={closeModal}
+          />
+        )}
+      </Modal>
       <Container
         h={"20vh"}
         fluid
@@ -74,8 +97,24 @@ export default function LocationDetails({
           backgroundPosition: "center center",
           backgroundSize: "cover",
           objectFit: "cover",
+          position: "relative",
         }}
       >
+        <ActionIcon
+          variant={"light"}
+          size={"md"}
+          style={{ position: "absolute", top: rem(10), right: rem(10) }}
+          onClick={() => {
+            setEditLocationMode(true);
+            setModal({
+              title: "Location Bearbeiten",
+              type: "form",
+            });
+            openModal();
+          }}
+        >
+          <IconEdit size="1.5rem" />
+        </ActionIcon>
         <Flex
           w={"100%"}
           h={"100%"}

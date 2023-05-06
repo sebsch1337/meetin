@@ -63,18 +63,6 @@ export default function Locations() {
           {modal.type === "form" && (
             <LocationForm closeModal={closeModal} editLocationMode={editLocationMode} preValues={preValues} />
           )}
-          {modal.type === "deleteImage" && (
-            <PictureDeleteModal
-              deleteImage={async () => await deleteImage(modal.imageId, modal.locationId, setLocations)}
-              closeModal={closeModal}
-            />
-          )}
-          {modal.type === "deleteLocation" && (
-            <LocationDeleteModal
-              deleteLocation={async () => await deleteLocation(modal.locationId, locations, setLocations)}
-              closeModal={closeModal}
-            />
-          )}
         </Modal>
 
         <Button

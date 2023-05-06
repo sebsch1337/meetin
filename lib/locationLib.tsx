@@ -50,7 +50,7 @@ export const createLocation = async (values: any, setLocations: any) => {
   }
 };
 
-export const editLocation = async (values: any, locationId: string, setLocations: any) => {
+export const editLocation = async (values: any, locationId: string, setLocation: any) => {
   try {
     const response = await fetch(`/api/locations/${locationId}`, {
       method: "PATCH",
@@ -60,7 +60,7 @@ export const editLocation = async (values: any, locationId: string, setLocations
     if (!response.ok) throw new Error("Failed to update location.");
     const changedLocationData: any = await response.json();
 
-    setLocations(changedLocationData);
+    setLocation(changedLocationData);
 
     notifications.show({
       icon: <IconCheck />,
@@ -78,7 +78,7 @@ export const editLocation = async (values: any, locationId: string, setLocations
   }
 };
 
-export const deleteLocation = async (locationId: string, locations: any, setLocation: any) => {
+export const deleteLocation = async (locationId: any, locations: any, setLocation: any) => {
   const locationToDelete = locations.find((location: any) => location.id === locationId);
 
   try {

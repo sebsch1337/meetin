@@ -68,13 +68,16 @@ export async function updateLocationInDb(id: string, location: Location): Promis
     await validateLocation(sanitizeLocation({ id })),
     await validateLocation(sanitizeLocation(location)),
   ]);
-  const updateLocationState = await Locations.updateOne(
+  const updatedLocation = await Locations.findOneAndUpdate(
     { _id: sanitizedId.id },
-    { $set: sanitizedLocation }
+    { $set: sanitizedLocation },
+    { new: true }
   ).exec();
-  if (!updateLocationState.acknowledged) throw new Error();
+  if (!updatedLocation) throw new Error();
 
-  return updateLocationState;
+  const sanitizedUpdatedLocation = await validateLocation(sanitizeLocation(updatedLocation));
+
+  return sanitizedUpdatedLocation;
 }
 
 /**
