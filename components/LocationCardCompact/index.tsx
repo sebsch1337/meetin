@@ -1,4 +1,15 @@
-import { Flex, Text, Group, Paper, Title, UnstyledButton, rem, Stack, Tooltip } from "@mantine/core";
+import {
+  Flex,
+  Text,
+  Group,
+  Paper,
+  Title,
+  UnstyledButton,
+  rem,
+  Stack,
+  Tooltip,
+  Image as MantineImage,
+} from "@mantine/core";
 import { IconHome, IconUsers, IconCalendarPin, IconSun } from "@tabler/icons-react";
 
 import Image from "next/image";
@@ -16,7 +27,7 @@ export default function LocationCardCompact({
   return (
     <Link href={`/locations/${location.id}`}>
       <UnstyledButton pos={"relative"} w={250} h={250}>
-        {location?.images?.length > 0 && (
+        {location?.images?.length > 0 ? (
           <Image
             src={location?.images[0]?.url}
             width={250}
@@ -25,6 +36,8 @@ export default function LocationCardCompact({
             style={{ objectFit: "cover", borderRadius: rem(15) }}
             placeholder={"empty"}
           />
+        ) : (
+          <MantineImage width={250} height={250} radius={15} withPlaceholder />
         )}
         <Paper
           pos={"absolute"}

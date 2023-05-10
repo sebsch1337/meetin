@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 
 import { useDebouncedValue } from "@mantine/hooks";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { locationsAtom, modalAtom, tagsAtom } from "@/store";
 import { useEffect, useState } from "react";
 import { createLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
@@ -25,16 +25,17 @@ export default function LocationForm({
   closeModal,
   editLocationMode,
   preValues,
+  tags,
   setLocation,
 }: {
   closeModal: any;
   editLocationMode: boolean;
   preValues: any;
+  tags: Tag[];
   setLocation?: any;
 }) {
   const setLocations = useSetAtom(locationsAtom);
   const setModal = useSetAtom(modalAtom);
-  const [tags] = useAtom(tagsAtom);
 
   const [loading, setLoading] = useState(false);
 
@@ -230,7 +231,7 @@ export default function LocationForm({
             placeholder="Beschreibung, Lage, Anreise, Preisklasse, Menü"
             spellCheck={false}
             {...form.getInputProps("description")}
-            maxLength={500}
+            maxLength={1000}
           />
 
           <Textarea
@@ -239,12 +240,12 @@ export default function LocationForm({
             placeholder="Wichtige Hinweise für die Orga"
             spellCheck={false}
             {...form.getInputProps("infos")}
-            maxLength={500}
+            maxLength={1000}
           />
 
           <MultiSelect
             label="Tags"
-            data={tags.map((tag: any) => ({ value: tag.id, label: tag.name }))}
+            data={tags?.map((tag: any) => ({ value: tag.id, label: tag.name })) || []}
             placeholder="Max. 6 Tags hinzufügen"
             searchable
             creatable={false}

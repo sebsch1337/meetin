@@ -1,7 +1,7 @@
-import { getLocalDateLong, getLocalDateTimeShort } from "@/utils/date";
+import { getLocalDateTimeShort } from "@/utils/date";
 import { Table } from "@mantine/core";
 
-export default function LocationDetailsHistory({ locationEvents }: { locationEvents: any }) {
+export default function LocationDetailsHistory({ locationEvents = [] }: { locationEvents: any }) {
   return (
     <Table>
       <thead>

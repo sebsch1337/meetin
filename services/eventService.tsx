@@ -11,7 +11,7 @@ import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";
 export async function getAllEventsFromDb(): Promise<any> {
   await dbConnect();
 
-  const events = await Events.find({});
+  const events = await Events.find({}).exec();
   if (!Array.isArray(events)) throw new Error();
 
   const sanitizedEvents = await Promise.all(
