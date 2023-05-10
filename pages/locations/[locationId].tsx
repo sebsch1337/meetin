@@ -5,9 +5,9 @@ import { IconEdit, IconHistory, IconInfoCircle, IconMap2, IconPhoto } from "@tab
 
 import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
 
-import { getAverageVisitors, getEventsByLocationId, getLastVisitedDay } from "@/lib/visitLib";
+import { getAverageVisitors, getLastVisitedDay } from "@/lib/visitLib";
 
-import { getAllEventsByLocationIdFromDb, getAllEventsFromDb } from "@/services/eventService";
+import { getAllEventsByLocationIdFromDb } from "@/services/eventService";
 import { getLocationByIdFromDb } from "@/services/locationService";
 import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -17,6 +17,7 @@ import LocationDetailsHistory from "@/components/LocationDetails/LocationDetails
 import LocationForm from "@/components/LocationForm";
 import { LocationDeleteModal } from "@/components/LocationDeleteModal";
 import { deleteLocation } from "@/lib/locationLib";
+import { getAllTagsFromDb } from "@/services/tagService";
 const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
   ssr: false,
 });
@@ -24,38 +25,46 @@ const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetai
 export async function getServerSideProps(context: any) {
   const locationId = context.params.locationId;
 
-  const [locationData, locationEvents] = await Promise.all([
-    getLocationByIdFromDb(locationId),
-    getAllEventsByLocationIdFromDb(locationId),
-  ]);
+  try {
+    const [locationData, locationEvents, tags] = await Promise.all([
+      getLocationByIdFromDb(locationId),
+      getAllEventsByLocationIdFromDb(locationId),
+      getAllTagsFromDb(),
+    ]);
 
-  if (locationData.id) {
-    const averageVisitors = getAverageVisitors(locationId, locationEvents);
-    const lastVisit = getLastVisitedDay(locationId, locationEvents);
+    if (locationData.id) {
+      const averageVisitors = getAverageVisitors(locationId, locationEvents);
+      const lastVisit = getLastVisitedDay(locationId, locationEvents);
 
-    return {
-      props: {
-        averageVisitors,
-        lastVisit,
-        locationEvents,
-        locationData,
-      },
-    };
-  } else {
-    return { redirect: { destination: "/404", permanent: false } };
+      return {
+        props: {
+          locationData,
+          locationEvents,
+          tags,
+          averageVisitors,
+          lastVisit,
+        },
+      };
+    } else {
+      return { redirect: { destination: "/404", permanent: false } };
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
 export default function LocationDetails({
   locationData,
   locationEvents,
-  lastVisit,
+  tags,
   averageVisitors,
+  lastVisit,
 }: {
   locationData: Location;
   locationEvents: Event[];
-  lastVisit: string;
+  tags: Tag[];
   averageVisitors: number;
+  lastVisit: string;
 }): JSX.Element {
   const [location, setLocation] = useState<Location>(locationData ?? {});
   const [events] = useState<Event[]>(locationEvents ?? []);
@@ -77,6 +86,7 @@ export default function LocationDetails({
             closeModal={closeModal}
             editLocationMode={editLocationMode}
             preValues={location}
+            tags={tags}
             setLocation={setLocation}
           />
         )}
@@ -172,8 +182,8 @@ export default function LocationDetails({
           {activeTab === "map" && (
             <LocationDetailsMap
               // @ts-ignore
-              latitude={location?.latitude ?? 0}
-              longitude={location?.longitude ?? 0}
+              latitude={location?.latitude}
+              longitude={location?.longitude}
               isMobile={isMobile}
             />
           )}

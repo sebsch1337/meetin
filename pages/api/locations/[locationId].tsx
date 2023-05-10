@@ -1,4 +1,4 @@
-import { deleteLocationFromDb, getAllLocationsFromDb, updateLocationInDb } from "@/services/locationService";
+import { deleteLocationFromDb, updateLocationInDb } from "@/services/locationService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {

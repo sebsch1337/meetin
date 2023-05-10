@@ -6,12 +6,9 @@ import { useDisclosure } from "@mantine/hooks";
 import LocationForm from "@/components/LocationForm";
 import { useEffect, useState } from "react";
 
-import PictureDeleteModal from "@/components/PictureDeleteModal";
-
 import { IconPlus } from "@tabler/icons-react";
-import { deleteImage } from "@/lib/imageLib";
-import { LocationDeleteModal } from "@/components/LocationDeleteModal";
-import { deleteLocation, getAllLocations } from "@/lib/locationLib";
+
+import { getAllLocations } from "@/lib/locationLib";
 
 import { useAtom, useSetAtom } from "jotai";
 import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
