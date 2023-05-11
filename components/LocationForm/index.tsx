@@ -25,13 +25,13 @@ export default function LocationForm({
   closeModal,
   editLocationMode,
   preValues,
-  tags,
+  tags = [],
   setLocation,
 }: {
   closeModal: any;
   editLocationMode: boolean;
   preValues: any;
-  tags: Tag[];
+  tags?: Tag[];
   setLocation?: any;
 }) {
   const setLocations = useSetAtom(locationsAtom);
