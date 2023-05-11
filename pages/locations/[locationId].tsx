@@ -163,6 +163,7 @@ export default function LocationDetails({
               location={location}
               averageVisitors={averageVisitors}
               lastVisit={lastVisit}
+              tags={tags}
             />
           )}
         </Tabs.Panel>
