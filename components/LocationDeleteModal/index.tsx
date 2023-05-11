@@ -1,5 +1,4 @@
 import { Button, LoadingOverlay, Space, Text } from "@mantine/core";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
 import { useState } from "react";
 

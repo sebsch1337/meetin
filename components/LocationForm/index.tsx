@@ -13,15 +13,13 @@ import {
   Textarea,
   LoadingOverlay,
   Space,
-  Modal,
 } from "@mantine/core";
 
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue } from "@mantine/hooks";
 import { useSetAtom } from "jotai";
-import { locationsAtom, modalAtom, tagsAtom } from "@/store";
+import { locationsAtom } from "@/store";
 import { useEffect, useState } from "react";
-import { createLocation, deleteLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
-import { LocationDeleteModal } from "../LocationDeleteModal";
+import { createLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
 
 export default function LocationForm({
   closeModal,

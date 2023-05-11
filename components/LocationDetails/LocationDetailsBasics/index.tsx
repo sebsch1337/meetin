@@ -106,7 +106,7 @@ export default function LocationDetailsBasics({
               <Divider />
               <Group mb={"md"} spacing={"xs"} mih={45}>
                 {location?.tags?.map((tagId) => (
-                  <Badge variant={"outline"} key={tagId} size={"xs"}>
+                  <Badge variant={"outline"} color={"teal"} key={tagId} size={"xs"}>
                     {tags.find((tag: any) => tag.id === tagId)?.name}
                   </Badge>
                 ))}
