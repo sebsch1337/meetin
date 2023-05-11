@@ -88,11 +88,12 @@ export default function LocationDetails({
             preValues={location}
             tags={tags}
             setLocation={setLocation}
+            setModal={setModal}
           />
         )}
         {modal.type === "deleteLocation" && (
           <LocationDeleteModal
-            deleteLocation={async () => await deleteLocation(location.id, location, setLocation)}
+            deleteLocation={async () => await deleteLocation(location)}
             closeModal={closeModal}
           />
         )}

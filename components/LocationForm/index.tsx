@@ -13,13 +13,15 @@ import {
   Textarea,
   LoadingOverlay,
   Space,
+  Modal,
 } from "@mantine/core";
 
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { useSetAtom } from "jotai";
 import { locationsAtom, modalAtom, tagsAtom } from "@/store";
 import { useEffect, useState } from "react";
-import { createLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
+import { createLocation, deleteLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
+import { LocationDeleteModal } from "../LocationDeleteModal";
 
 export default function LocationForm({
   closeModal,
@@ -27,15 +29,16 @@ export default function LocationForm({
   preValues,
   tags = [],
   setLocation,
+  setModal,
 }: {
   closeModal: any;
   editLocationMode: boolean;
   preValues: any;
   tags?: Tag[];
   setLocation?: any;
+  setModal?: any;
 }) {
   const setLocations = useSetAtom(locationsAtom);
-  const setModal = useSetAtom(modalAtom);
 
   const [loading, setLoading] = useState(false);
 
@@ -265,11 +268,10 @@ export default function LocationForm({
                 color={"red"}
                 fullWidth
                 onClick={() => {
-                  setModal((prev) => ({
+                  setModal((prev: any) => ({
                     ...prev,
                     title: "Location löschen",
                     type: "deleteLocation",
-                    locationId: preValues.id,
                   }));
                 }}
               >
