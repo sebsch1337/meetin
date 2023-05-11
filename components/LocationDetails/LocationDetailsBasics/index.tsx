@@ -105,14 +105,11 @@ export default function LocationDetailsBasics({
               </Group>
               <Divider />
               <Group mb={"md"} spacing={"xs"} mih={45}>
-                {tags.map(
-                  (tag: any) =>
-                    location.tags?.includes(tag.id) && (
-                      <Badge variant={"outline"} key={tag.id} size={"xs"}>
-                        {tag.name}
-                      </Badge>
-                    )
-                )}
+                {location?.tags?.map((tagId) => (
+                  <Badge variant={"outline"} key={tagId} size={"xs"}>
+                    {tags.find((tag: any) => tag.id === tagId)?.name}
+                  </Badge>
+                ))}
               </Group>
             </Stack>
           </Stack>
