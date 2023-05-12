@@ -3,6 +3,7 @@ import { createStyles, Header, Group, ActionIcon, Container, Burger, rem, Text }
 import { useDisclosure } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -69,13 +70,16 @@ interface HeaderMiddleProps {
 }
 
 export default function HeaderMiddle({ children }: HeaderMiddleProps) {
+  const router = useRouter();
+
+  console.log(router.pathname);
   const links = [
     { link: "/events", label: "Events" },
     { link: "/locations", label: "Locations" },
   ];
 
   const [opened, { toggle }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0].link);
+  const [active, setActive] = useState(links.find((link) => link.link === router.pathname)?.link);
   const { classes, cx } = useStyles();
 
   const items = links.map((link) => (
