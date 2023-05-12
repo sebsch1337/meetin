@@ -60,14 +60,15 @@ export function LocationDetailsPictures({
         {location?.images?.length > 0 &&
           location?.images?.map((image) => (
             <Carousel.Slide key={image.publicId}>
-              <Link href={image.url} target="_blank">
-                <ActionIcon
-                  variant="light"
-                  style={{ position: "absolute", top: "1rem", right: "2rem", zIndex: 2 }}
-                >
-                  <IconDownload />
-                </ActionIcon>
-              </Link>
+              <ActionIcon
+                component={Link}
+                href={image.url}
+                target={"_blank"}
+                variant={"light"}
+                style={{ position: "absolute", top: "1rem", right: "2rem", zIndex: 2 }}
+              >
+                <IconDownload />
+              </ActionIcon>
               <Image
                 src={image.url}
                 height={isMobile ? 200 : 400}
