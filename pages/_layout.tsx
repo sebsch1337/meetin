@@ -1,7 +1,29 @@
 import { useState } from "react";
-import { createStyles, Header, Group, ActionIcon, Container, Burger, rem, Text } from "@mantine/core";
+import {
+  createStyles,
+  Header,
+  Group,
+  ActionIcon,
+  Container,
+  Burger,
+  rem,
+  Text,
+  Drawer,
+  ScrollArea,
+  Divider,
+  UnstyledButton,
+  Center,
+  Box,
+  Collapse,
+  Button,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
+import {
+  IconBrandInstagram,
+  IconBrandFacebook,
+  IconHeartHandshake,
+  IconChevronDown,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -42,6 +64,12 @@ const useStyles = createStyles((theme) => ({
     },
   },
 
+  hiddenDesktop: {
+    [theme.fn.largerThan("sm")]: {
+      display: "none",
+    },
+  },
+
   link: {
     display: "block",
     lineHeight: 1,
@@ -55,6 +83,11 @@ const useStyles = createStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
     },
+  },
+
+  mobileLink: {
+    padding: `${rem(16)}`,
+    fontSize: theme.fontSizes.md,
   },
 
   linkActive: {
@@ -77,9 +110,9 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
     { link: "/locations", label: "Locations" },
   ];
 
-  const [opened, { toggle }] = useDisclosure(false);
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [active, setActive] = useState(links.find((link) => link.link === router.pathname)?.link);
-  const { classes, cx } = useStyles();
+  const { classes, cx, theme } = useStyles();
 
   const items = links.map((link) => (
     <Link
@@ -98,7 +131,6 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
     <>
       <Header height={56}>
         <Container className={classes.inner}>
-          <Burger opened={opened} onClick={toggle} size="sm" className={classes.burger} />
           <Group className={classes.links} spacing={5}>
             {items}
           </Group>
@@ -108,7 +140,7 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             <Text size={18}>MeetIn</Text>
           </Group>
 
-          <Group spacing={0} className={classes.social} position="right" noWrap>
+          <Group spacing={0} className={classes.social} position="right" noWrap mr={"xl"}>
             <ActionIcon size="lg">
               <IconBrandFacebook size="1.1rem" stroke={1.5} />
             </ActionIcon>
@@ -116,8 +148,38 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
               <IconBrandInstagram size="1.1rem" stroke={1.5} />
             </ActionIcon>
           </Group>
+          <Burger opened={drawerOpened} onClick={toggleDrawer} size="sm" className={classes.burger} />
         </Container>
       </Header>
+      <Drawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        size="100%"
+        padding="md"
+        title="Menü"
+        className={classes.hiddenDesktop}
+      >
+        <ScrollArea h={`calc(100vh - ${rem(60)})`} m="-md">
+          <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
+
+          <Link href="/" className={cx(classes.link, classes.mobileLink)} onClick={closeDrawer}>
+            Home
+          </Link>
+          <Link href="/events" className={cx(classes.link, classes.mobileLink)} onClick={closeDrawer}>
+            Events
+          </Link>
+          <Link href="/locations" className={cx(classes.link, classes.mobileLink)} onClick={closeDrawer}>
+            Locations
+          </Link>
+
+          {/* <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} /> */}
+
+          {/* <Group position="center" grow pb="xl" px="md">
+            <Button variant="default">Log in</Button>
+            <Button>Registrieren</Button>
+          </Group> */}
+        </ScrollArea>
+      </Drawer>
       <main>{children}</main>
     </>
   );
