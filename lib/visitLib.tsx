@@ -1,20 +1,19 @@
+import { getLocalDateLong } from "@/utils/date";
+
 export const getEventsByLocationId = (locationId: string, events: Event[]): any[] =>
   events?.length > 0 ? events?.filter((event) => event.locationId === locationId) : [];
 
 export const getLastVisit = (locationId: string, events: Event[]): any => {
   const locationEvents = getEventsByLocationId(locationId, events);
-  locationEvents?.length > 0
+  return locationEvents?.length > 0
     ? locationEvents.reduce((prev: any, current: any) => (prev.dateTime > current.dateTime ? prev : current))
     : false;
 };
 
 export const getLastVisitedDay = (locationId: string, events: Event[]): string => {
   const lastVisit = getLastVisit(locationId, events);
-  if (lastVisit) {
-    return new Date(lastVisit.dateTime * 1000).toLocaleDateString("de-DE", { dateStyle: "long" });
-  } else {
-    return "Nie";
-  }
+
+  return lastVisit ? getLocalDateLong(lastVisit.dateTime) : "Nie";
 };
 
 export const getAverageVisitors = (locationId: string, events: Event[]): number => {

@@ -45,8 +45,8 @@ export const validateLocation = async (location: any) => {
   let locationSchema = object({
     id: string().length(24),
     name: string().max(50),
-    description: string().max(500),
-    infos: string().max(500),
+    description: string().max(1000),
+    infos: string().max(1000),
     tel: string().max(20),
     tags: array(string().length(24)).max(6).nullable(),
     images: array().max(4).nullable(),

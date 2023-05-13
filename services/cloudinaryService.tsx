@@ -5,7 +5,7 @@ const apiKey = "129367815296377";
 const apiSecret = process.env.CLOUDINARY_SECRET;
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}`;
 
-export const createCloudinarySignature = (publicId: any, timestamp: any, uploadPreset: any) => {
+export const createCloudinarySignature = (publicId: any, timestamp: any, uploadPreset: any): string => {
   const secret = `${publicId ? `public_id=${publicId}&` : ""}${timestamp ? `timestamp=${timestamp}` : ""}${
     uploadPreset ? `&upload_preset=${uploadPreset}` : ""
   }${apiSecret}`;
@@ -13,7 +13,11 @@ export const createCloudinarySignature = (publicId: any, timestamp: any, uploadP
   return crypto.createHash("sha1").update(secret).digest("hex");
 };
 
-export const getCloudinarySignature = async (publicId: any, timestamp: any, uploadPreset: any) => {
+export const getCloudinarySignature = async (
+  publicId: any,
+  timestamp: any,
+  uploadPreset: any
+): Promise<string> => {
   const res = await fetch(
     "/api/images/?" +
       `${publicId ? `public_id=${publicId}&` : ""}${timestamp ? `timestamp=${timestamp}` : ""}${
@@ -21,10 +25,13 @@ export const getCloudinarySignature = async (publicId: any, timestamp: any, uplo
       }`
   );
 
-  return await res.json();
+  const response = await res.json();
+  return response;
 };
 
-export const uploadImageToCloudinary = async (image: any) => {
+export const uploadImageToCloudinary = async (
+  image: any
+): Promise<{ publicId: string; url: string } | [string]> => {
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const uploadPreset = "meetin";
   const signature = await getCloudinarySignature(null, timestamp, uploadPreset);
@@ -49,7 +56,7 @@ export const uploadImageToCloudinary = async (image: any) => {
   }
 };
 
-export const deleteImageFromCloudinary = async (publicId: string) => {
+export const deleteImageFromCloudinary = async (publicId: string): Promise<any> => {
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const signature = createCloudinarySignature(publicId, timestamp, null);
 
@@ -59,14 +66,19 @@ export const deleteImageFromCloudinary = async (publicId: string) => {
   formData.append("api_key", apiKey);
   formData.append("signature", signature);
 
-  const response = await fetch(cloudinaryUrl + "/image/destroy", {
-    method: "DELETE",
-    body: formData,
-  });
+  try {
+    const response = await fetch(cloudinaryUrl + "/image/destroy", {
+      method: "DELETE",
+      body: formData,
+    });
 
-  if (!response.ok) {
-    const error: any = new Error("error deleting image: " + response);
-    error.status = response.status;
-    throw error;
+    if (!response.ok) {
+      const error: any = new Error("error deleting image: " + response);
+      error.status = response.status;
+      throw error;
+    }
+  } catch (e) {
+    console.error(e);
+    return ["Error: " + e];
   }
 };

@@ -1,4 +1,4 @@
-import { Title, Space, Flex, Group, Button, Modal, Loader } from "@mantine/core";
+import { Title, Space, Flex, Group, Button, Modal, Loader, Container } from "@mantine/core";
 
 import EventCard from "@/components/EventCard";
 import { useDisclosure } from "@mantine/hooks";
@@ -36,7 +36,7 @@ export default function Events() {
   }, [setEvents, setLocations]);
 
   return (
-    <>
+    <Container fluid px={"xl"} py={"xs"}>
       <Title order={1}>Events</Title>
       <Space h={"md"} />
       <Group position={"apart"}>
@@ -67,6 +67,6 @@ export default function Events() {
         ))}
       </Flex>
       <Space h={"xl"} />
-    </>
+    </Container>
   );
 }

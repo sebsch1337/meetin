@@ -1,4 +1,4 @@
-import { deleteLocationFromDb, getAllLocationsFromDb, updateLocationInDb } from "@/services/locationService";
+import { deleteLocationFromDb, updateLocationInDb } from "@/services/locationService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
@@ -9,8 +9,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "PATCH":
       try {
-        await updateLocationInDb(locationId, req.body.values);
-        const udpatedLocation = await getAllLocationsFromDb();
+        const udpatedLocation = await updateLocationInDb(locationId, req.body.values);
         res.status(200).json(udpatedLocation);
       } catch (error: any) {
         if (error.status) {

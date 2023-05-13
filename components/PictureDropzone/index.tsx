@@ -3,13 +3,17 @@ import { Text, Flex, createStyles } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconPhotoPlus, IconX } from "@tabler/icons-react";
 
-import { useSetAtom } from "jotai";
-import { locationsAtom } from "@/store";
 import { notifications } from "@mantine/notifications";
 
-export default function PictureDropzone({ preValues, setLoading }: { preValues: any; setLoading: any }) {
-  const setLocations = useSetAtom(locationsAtom);
-
+export default function PictureDropzone({
+  preValues,
+  setLoading,
+  setLocation,
+}: {
+  preValues: any;
+  setLoading: any;
+  setLocation: any;
+}) {
   const useStyles = createStyles((theme) => ({
     disabled: {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
@@ -29,7 +33,8 @@ export default function PictureDropzone({ preValues, setLoading }: { preValues: 
       accept={IMAGE_MIME_TYPE}
       onDrop={async (images) => {
         setLoading(true);
-        await uploadImages(images, preValues, setLocations);
+        const changedLocationData = await uploadImages(images, preValues);
+        setLocation(changedLocationData);
         setLoading(false);
       }}
       onReject={() => {

@@ -50,7 +50,7 @@ export const createLocation = async (values: any, setLocations: any) => {
   }
 };
 
-export const editLocation = async (values: any, locationId: string, setLocations: any) => {
+export const editLocation = async (values: any, locationId: string, setLocation: any) => {
   try {
     const response = await fetch(`/api/locations/${locationId}`, {
       method: "PATCH",
@@ -60,7 +60,7 @@ export const editLocation = async (values: any, locationId: string, setLocations
     if (!response.ok) throw new Error("Failed to update location.");
     const changedLocationData: any = await response.json();
 
-    setLocations(changedLocationData);
+    setLocation(changedLocationData);
 
     notifications.show({
       icon: <IconCheck />,
@@ -78,16 +78,14 @@ export const editLocation = async (values: any, locationId: string, setLocations
   }
 };
 
-export const deleteLocation = async (locationId: string, locations: any, setLocation: any) => {
-  const locationToDelete = locations.find((location: any) => location.id === locationId);
-
+export const deleteLocation = async (location: any) => {
   try {
-    if (locationToDelete?.images?.length > 0) {
+    if (location?.images?.length > 0) {
       await Promise.all(
-        locationToDelete?.images?.map(async (image: any) => await deleteImage(image.publicId, locationId))
+        location?.images?.map(async (image: any) => await deleteImage(image.publicId, location.id))
       );
     }
-    const response = await fetch(`/api/locations/${locationId}`, {
+    const response = await fetch(`/api/locations/${location.id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
@@ -101,10 +99,6 @@ export const deleteLocation = async (locationId: string, locations: any, setLoca
     });
     return error;
   }
-
-  setLocation((prevLocations: any) =>
-    prevLocations.filter((prevLocation: any) => prevLocation.id !== locationId)
-  );
 
   notifications.show({
     icon: <IconCheck />,

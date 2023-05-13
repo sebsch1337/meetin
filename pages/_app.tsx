@@ -5,6 +5,7 @@ import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
 import Layout from "./_layout";
+import { RouterTransition } from "@/components/RouterTransition";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -27,6 +28,7 @@ export default function App(props: AppProps) {
       >
         <Notifications autoClose={2000} />
         <Layout>
+          <RouterTransition />
           <Component {...pageProps} />
         </Layout>
       </MantineProvider>

@@ -11,7 +11,7 @@ import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";
 export async function getAllEventsFromDb(): Promise<any> {
   await dbConnect();
 
-  const events = await Events.find({});
+  const events = await Events.find({}).exec();
   if (!Array.isArray(events)) throw new Error();
 
   const sanitizedEvents = await Promise.all(
@@ -19,6 +19,30 @@ export async function getAllEventsFromDb(): Promise<any> {
   );
 
   return sanitizedEvents;
+}
+
+/**
+ * Gets all events for a location from the database.
+ *
+ * @returns An array of sanitized and validated event objects.
+ * @throws Error if the event array is not found or not an array.
+ */
+export async function getAllEventsByLocationIdFromDb(locationId: string): Promise<any> {
+  await dbConnect();
+
+  const events = await Events.find({ locationId }).sort({ dateTime: -1 }).exec();
+  if (!Array.isArray(events)) throw new Error();
+
+  const sanitizedEvents = await Promise.all(
+    events.map(async (event) => await validateEvent(sanitizeEvent(event)))
+  );
+
+  const newEvents = sanitizedEvents.map((event: any): any[] => ({
+    ...event,
+    dateTime: event.dateTime.toISOString(),
+  }));
+
+  return newEvents;
 }
 
 /**
