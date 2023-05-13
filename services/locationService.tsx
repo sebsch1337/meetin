@@ -104,15 +104,16 @@ export async function deleteLocationFromDb(id: string): Promise<any> {
  * @returns A Promise that resolves to the updated location document in the database.
  * @throws An Error if the update operation did not complete successfully.
  */
-export const deleteImageByIdFromDb = async (publicId: string, locationId: string): Promise<any> => {
+export const deleteImageByIdFromDb = async (publicId: string, locationId: string): Promise<Location> => {
   await dbConnect();
 
   const sanitizedId = await validateLocation(sanitizeLocation({ id: locationId }));
-  const updatedLocation = await Locations.updateOne(
+  const updatedLocation = await Locations.findOneAndUpdate(
     { _id: sanitizedId.id },
-    { $pull: { images: { publicId } } }
+    { $pull: { images: { publicId } } },
+    { new: true }
   ).exec();
-  if (!updatedLocation.acknowledged) throw new Error();
+  if (!updatedLocation) throw new Error();
 
   return updatedLocation;
 };
