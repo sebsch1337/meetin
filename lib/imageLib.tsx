@@ -1,6 +1,6 @@
 import { uploadImageToCloudinary } from "@/services/cloudinaryService";
 
-export const uploadImages = async (uploadedImages: any[], location: any, setLocation: any) => {
+export const uploadImages = async (uploadedImages: any[], location: any): Promise<Location> => {
   try {
     const uploadedImageData: any[] = await Promise.all(
       uploadedImages.map(async (image: any) => uploadImageToCloudinary(image))
@@ -15,10 +15,11 @@ export const uploadImages = async (uploadedImages: any[], location: any, setLoca
     });
     if (!response.ok) throw new Error("Failed to update images in location.");
 
-    const changedLocationData: any = await response.json();
-    setLocation(changedLocationData.find((locationData: Location) => locationData.id === location.id));
+    const changedLocationData: Location = await response.json();
+    return changedLocationData;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
