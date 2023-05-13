@@ -1,23 +1,23 @@
 import { useState } from "react";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 import { ActionIcon, Container, Flex, LoadingOverlay, Modal, Tabs, Text, Title, rem } from "@mantine/core";
 import { IconEdit, IconHistory, IconInfoCircle, IconMap2, IconPhoto } from "@tabler/icons-react";
 
-import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
-
+import { deleteLocation } from "@/lib/locationLib";
 import { getAverageVisitors, getLastVisitedDay } from "@/lib/visitLib";
 
 import { getAllEventsByLocationIdFromDb } from "@/services/eventService";
 import { getLocationByIdFromDb } from "@/services/locationService";
-import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { getAllTagsFromDb } from "@/services/tagService";
+
+import LocationDetailsPictures from "@/components/LocationDetails/LocationDetailsPictures";
+import LocationDetailsHistory from "@/components/LocationDetails/LocationDetailsHistory";
+import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
+import LocationForm from "@/components/LocationForm";
+import LocationDeleteModal from "@/components/LocationDeleteModal";
 
 import dynamic from "next/dynamic";
-import LocationDetailsHistory from "@/components/LocationDetails/LocationDetailsHistory";
-import LocationForm from "@/components/LocationForm";
-import { LocationDeleteModal } from "@/components/LocationDeleteModal";
-import { deleteLocation } from "@/lib/locationLib";
-import { getAllTagsFromDb } from "@/services/tagService";
 const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
   ssr: false,
 });

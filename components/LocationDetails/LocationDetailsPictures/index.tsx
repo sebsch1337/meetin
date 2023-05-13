@@ -3,11 +3,10 @@ import PictureDropzone from "@/components/PictureDropzone";
 import { deleteImage } from "@/lib/imageLib";
 import { Carousel } from "@mantine/carousel";
 import { ActionIcon, Flex, getStylesRef, rem, Image } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { IconDownload } from "@tabler/icons-react";
 import Link from "next/link";
 
-export function LocationDetailsPictures({
+export default function LocationDetailsPictures({
   location,
   setLoading,
   setLocation,

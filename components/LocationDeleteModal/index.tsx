@@ -2,13 +2,13 @@ import { Button, LoadingOverlay, Space, Text } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export const LocationDeleteModal = ({
+export default function LocationDeleteModal({
   deleteLocation,
   closeModal,
 }: {
   deleteLocation: any;
   closeModal: any;
-}) => {
+}) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -34,4 +34,4 @@ export const LocationDeleteModal = ({
       </Button>
     </>
   );
-};
+}
