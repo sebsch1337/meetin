@@ -11,9 +11,11 @@ export default async function handler(req: any, res: any): Promise<any> {
     case "DELETE":
       try {
         const sanitizedPublicId = publicId.replace("-", "/");
-        const deletedImage: any = await deleteImageFromCloudinary(sanitizedPublicId);
-        await deleteImageByIdFromDb(sanitizedPublicId, locationId);
-        res.status(200).json(deletedImage);
+        const [, changedLocation]: [any, Location] = await Promise.all([
+          deleteImageFromCloudinary(sanitizedPublicId),
+          deleteImageByIdFromDb(sanitizedPublicId, locationId),
+        ]);
+        res.status(200).json(changedLocation);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
