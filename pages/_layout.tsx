@@ -72,7 +72,6 @@ interface HeaderMiddleProps {
 export default function HeaderMiddle({ children }: HeaderMiddleProps) {
   const router = useRouter();
 
-  console.log(router.pathname);
   const links = [
     { link: "/events", label: "Events" },
     { link: "/locations", label: "Locations" },
