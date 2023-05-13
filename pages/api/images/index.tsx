@@ -1,4 +1,4 @@
-import { createCloudinarySignature, uploadImageToCloudinary } from "@/services/cloudinaryService";
+import { createCloudinarySignature } from "@/services/cloudinaryService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
@@ -9,7 +9,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "GET":
       try {
-        const signature = createCloudinarySignature(publicId || null, timestamp, uploadPreset || null);
+        const signature = createCloudinarySignature(publicId, timestamp, uploadPreset);
         res.status(200).json(signature);
       } catch (error: any) {
         if (error.status) {
