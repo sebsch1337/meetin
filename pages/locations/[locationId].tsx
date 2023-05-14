@@ -80,24 +80,35 @@ export default function LocationDetails({
   return (
     <>
       <LoadingOverlay visible={loading} overlayBlur={2} />
-      <Modal opened={modalOpened} onClose={closeModal} title={modal.title} centered>
-        {modal.type === "form" && (
-          <LocationForm
-            closeModal={closeModal}
-            editLocationMode={editLocationMode}
-            preValues={location}
-            tags={tags}
-            setLocation={setLocation}
-            setModal={setModal}
-          />
-        )}
-        {modal.type === "deleteLocation" && (
-          <LocationDeleteModal
-            deleteLocation={async () => await deleteLocation(location)}
-            closeModal={closeModal}
-          />
-        )}
-      </Modal>
+
+      <Modal.Root opened={modalOpened} onClose={closeModal}>
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>
+            <Modal.Title>{modal.title}</Modal.Title>
+            <Modal.CloseButton />
+          </Modal.Header>
+          <Modal.Body>
+            {modal.type === "form" && (
+              <LocationForm
+                closeModal={closeModal}
+                editLocationMode={editLocationMode}
+                preValues={location}
+                tags={tags}
+                setLocation={setLocation}
+                setModal={setModal}
+              />
+            )}
+            {modal.type === "deleteLocation" && (
+              <LocationDeleteModal
+                deleteLocation={async () => await deleteLocation(location)}
+                closeModal={closeModal}
+              />
+            )}
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
+
       <Container
         h={"20vh"}
         fluid
@@ -118,7 +129,7 @@ export default function LocationDetails({
           onClick={() => {
             setEditLocationMode(true);
             setModal({
-              title: "Location Bearbeiten",
+              title: "Location bearbeiten",
               type: "form",
             });
             openModal();

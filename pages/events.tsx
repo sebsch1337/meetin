@@ -36,37 +36,48 @@ export default function Events() {
   }, [setEvents, setLocations]);
 
   return (
-    <Container fluid px={"xl"} py={"xs"}>
-      <Title order={1}>Events</Title>
-      <Space h={"md"} />
-      <Group position={"apart"}>
-        <Modal opened={opened} onClose={close} title="Neues Event" centered>
-          <EventForm closeModal={close} />
-        </Modal>
+    <>
+      <Modal.Root opened={opened} onClose={close}>
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>
+            <Modal.Title>{"Neues Event"}</Modal.Title>
+            <Modal.CloseButton />
+          </Modal.Header>
+          <Modal.Body>
+            <EventForm closeModal={close} />
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
 
-        <Button
-          leftIcon={<IconCalendarPlus size="1rem" />}
-          variant={"light"}
-          size={"sm"}
-          color={"cyan"}
-          onClick={open}
-        >
-          Neues Event erstellen
-        </Button>
-      </Group>
-      <Space h={"md"} />
+      <Container fluid px={"xl"} py={"xs"}>
+        <Title order={1}>Events</Title>
+        <Space h={"md"} />
+        <Group position={"apart"}>
+          <Button
+            leftIcon={<IconCalendarPlus size="1rem" />}
+            variant={"light"}
+            size={"sm"}
+            color={"cyan"}
+            onClick={open}
+          >
+            Neues Event erstellen
+          </Button>
+        </Group>
+        <Space h={"md"} />
 
-      <Flex gap={"xs"} wrap={"wrap"}>
-        {isLoading && locations.length === 0 && (
-          <Group position="center" w={"100%"}>
-            <Loader size="xl" color="teal" variant="dots" />
-          </Group>
-        )}
-        {events.map((event: any) => (
-          <EventCard key={event.id} event={event} locations={locations} />
-        ))}
-      </Flex>
-      <Space h={"xl"} />
-    </Container>
+        <Flex gap={"xs"} wrap={"wrap"}>
+          {isLoading && locations.length === 0 && (
+            <Group position="center" w={"100%"}>
+              <Loader size="xl" color="teal" variant="dots" />
+            </Group>
+          )}
+          {events.map((event: any) => (
+            <EventCard key={event.id} event={event} locations={locations} />
+          ))}
+        </Flex>
+        <Space h={"xl"} />
+      </Container>
+    </>
   );
 }
