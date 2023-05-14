@@ -52,64 +52,79 @@ export default function Locations() {
   }, [setLocations, setTags, setEvents]);
 
   return (
-    <Container fluid px={"xl"} py={"xs"}>
-      <Title>Locations</Title>
-      <Space h={"md"} />
-      <Group position={"apart"}>
-        <Modal opened={modalOpened} onClose={closeModal} title={modal.title} centered>
-          {modal.type === "form" && (
-            <LocationForm closeModal={closeModal} editLocationMode={editLocationMode} preValues={preValues} />
-          )}
-        </Modal>
+    <>
+      <Modal.Root opened={modalOpened} onClose={closeModal}>
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>
+            <Modal.Title>{modal.title}</Modal.Title>
+            <Modal.CloseButton />
+          </Modal.Header>
+          <Modal.Body>
+            {modal.type === "form" && (
+              <LocationForm
+                closeModal={closeModal}
+                editLocationMode={editLocationMode}
+                preValues={preValues}
+              />
+            )}
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
 
-        <Button
-          leftIcon={<IconPlus size="1rem" />}
-          variant={"light"}
-          size={"sm"}
-          color={"teal"}
-          onClick={() => {
-            setEditLocationMode(false);
-            setPreValues({});
-            setModal((prev) => ({
-              ...prev,
-              title: "Neue Location",
-              type: "form",
-            }));
-            openModal();
-          }}
-        >
-          Neue Location erstellen
-        </Button>
-      </Group>
-      <Space h={"md"} />
+      <Container fluid px={"xl"} py={"xs"}>
+        <Title>Locations</Title>
+        <Space h={"md"} />
+        <Group position={"apart"}>
+          <Button
+            leftIcon={<IconPlus size="1rem" />}
+            variant={"light"}
+            size={"sm"}
+            color={"teal"}
+            onClick={() => {
+              setEditLocationMode(false);
+              setPreValues({});
+              setModal((prev) => ({
+                ...prev,
+                title: "Neue Location",
+                type: "form",
+              }));
+              openModal();
+            }}
+          >
+            Neue Location erstellen
+          </Button>
+        </Group>
+        <Space h={"md"} />
 
-      <Flex gap={"xs"} wrap={"wrap"}>
-        {isLoading &&
-          locations.length === 0 &&
-          Array.from({ length: 4 }).map((_, count) => (
-            <Flex
-              w={250}
-              h={250}
-              justify={"center"}
-              align={"center"}
-              direction={"column"}
-              style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-              key={count}
-            >
-              <Skeleton w={"90%"} height={32} radius="xl" />
-              <Skeleton w={"50%"} height={18} mt={10} radius="xl" />
-            </Flex>
+        <Flex gap={"xs"} wrap={"wrap"}>
+          {isLoading &&
+            locations.length === 0 &&
+            Array.from({ length: 4 }).map((_, count) => (
+              <Flex
+                w={250}
+                h={250}
+                justify={"center"}
+                align={"center"}
+                direction={"column"}
+                style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                key={count}
+              >
+                <Skeleton w={"90%"} height={32} radius="xl" />
+                <Skeleton w={"50%"} height={18} mt={10} radius="xl" />
+              </Flex>
+            ))}
+          {locations?.map((location: any) => (
+            <LocationCardCompact
+              key={location.id}
+              location={location}
+              lastVisitedDay={getLastVisitedDay(location.id, events)}
+              averageVisitors={getAverageVisitors(location.id, events)}
+            />
           ))}
-        {locations?.map((location: any) => (
-          <LocationCardCompact
-            key={location.id}
-            location={location}
-            lastVisitedDay={getLastVisitedDay(location.id, events)}
-            averageVisitors={getAverageVisitors(location.id, events)}
-          />
-        ))}
-      </Flex>
-      <Space h={"xl"} />
-    </Container>
+        </Flex>
+        <Space h={"xl"} />
+      </Container>
+    </>
   );
 }
