@@ -18,7 +18,12 @@ export async function getAllEventsFromDb(): Promise<any> {
     events.map(async (event) => await validateEvent(sanitizeEvent(event)))
   );
 
-  return sanitizedEvents;
+  const newEvents = sanitizedEvents.map((event: any): any[] => ({
+    ...event,
+    dateTime: event.dateTime.toISOString(),
+  }));
+
+  return newEvents;
 }
 
 /**
