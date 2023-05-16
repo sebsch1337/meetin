@@ -12,7 +12,6 @@ export async function getAllLocationsFromDb(): Promise<any> {
   await dbConnect();
 
   const locations = await Locations.find({}).exec();
-  if (!Array.isArray(locations)) throw new Error();
 
   const sanitizedLocations = await Promise.all(
     locations.map(async (location) => await validateLocation(sanitizeLocation(location)))
