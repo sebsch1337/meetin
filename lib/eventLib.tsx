@@ -19,6 +19,19 @@ export const getAllEvents = async (): Promise<any> => {
 };
 
 /**
+ * Gets all upcoming events from the given event array.
+ * @param {Event} events - An array containing all events.
+ *
+ */
+export const getUpcomingEvents = (events: Event[]): Event[] => {
+  const futureEvents = events
+    .filter((event) => new Date(event.dateTime) > new Date())
+    .sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
+
+  return futureEvents;
+};
+
+/**
  * Creates an event by making a POST request to the "/api/events" endpoint with the given `values`.
  * @param {Event} values - An object containing the values of the event to be created.
  * @param {any} setEvents - A function that sets the state of the events array with the newly created event.
