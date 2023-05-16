@@ -85,6 +85,13 @@ const useStyles = createStyles((theme) => ({
     },
   },
 
+  logoLink: {
+    textDecoration: "none",
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.colors.gray[7],
+    fontSize: theme.fontSizes.sm,
+    fontWeight: 500,
+  },
+
   mobileLink: {
     padding: `${rem(16)}`,
     fontSize: theme.fontSizes.md,
@@ -135,10 +142,18 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             {items}
           </Group>
 
-          <Group spacing={5}>
-            <IconHeartHandshake />
-            <Text size={18}>MeetIn</Text>
-          </Group>
+          <Link
+            href="/"
+            className={classes.logoLink}
+            onClick={() => {
+              setActive("");
+            }}
+          >
+            <Group spacing={5}>
+              <IconHeartHandshake />
+              <Text size={18}>MeetIn</Text>
+            </Group>
+          </Link>
 
           <Group spacing={0} className={classes.social} position="right" noWrap mr={"xl"}>
             <ActionIcon size="lg">
