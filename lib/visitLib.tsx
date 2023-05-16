@@ -10,7 +10,7 @@ export const getLastVisit = (locationId: string, events: Event[]): any => {
     : false;
 };
 
-export const getLastVisitedDay = (locationId: string, events: Event[]): string => {
+export const getLastVisitedDay = (locationId: any, events: Event[]): string => {
   const lastVisit = getLastVisit(locationId, events);
 
   return lastVisit ? getLocalDateLong(lastVisit.dateTime) : "Nie";
