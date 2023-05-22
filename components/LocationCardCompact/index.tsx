@@ -79,7 +79,7 @@ export default function LocationCardCompact({
           <Tooltip label="Max. Besucher (Besucherdurchschnitt)">
             <Group pos={"absolute"} align={"center"} spacing={5} style={{ justifyContent: "center" }}>
               <IconUsers
-                size={20}
+                size={16}
                 color="white"
                 style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
               />
@@ -93,7 +93,7 @@ export default function LocationCardCompact({
             <Group pos={"absolute"} align={"center"} spacing={5} top={10} right={10}>
               {location?.indoor && (
                 <IconHome
-                  size={20}
+                  size={16}
                   color="white"
                   style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
                 />
@@ -101,7 +101,7 @@ export default function LocationCardCompact({
               {location?.indoor && location?.outdoor && "|"}
               {location?.outdoor && (
                 <IconSun
-                  size={20}
+                  size={16}
                   color="white"
                   style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
                 />
@@ -112,16 +112,18 @@ export default function LocationCardCompact({
           <Stack style={{ alignSelf: "center" }} w={"100%"} spacing={0}>
             <Title
               order={2}
-              size={20}
+              size={"h4"}
               align="center"
               color="white"
-              style={{ textShadow: "0px 0px 4px #000000", overflow: "hidden", textOverflow: "ellipsis" }}
+              truncate
+              style={{ textShadow: "0px 0px 4px #000000" }}
             >
               {location?.name}
             </Title>
             <Title
               order={3}
-              size={14}
+              size={"h6"}
+              weight={600}
               align="center"
               color="white"
               style={{ textShadow: "0px 0px 4px #000000" }}
@@ -138,7 +140,7 @@ export default function LocationCardCompact({
               style={{ alignSelf: "flex-end", justifyContent: "center" }}
             >
               <IconCalendarPin
-                size={20}
+                size={16}
                 color="white"
                 style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
               />
