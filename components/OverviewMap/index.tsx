@@ -1,7 +1,12 @@
 import { Button, Space, Text, Title } from "@mantine/core";
 import Link from "next/link";
 
-import { getFiveLeastVisitedLocations, getLastVisit, getLastVisitedDay } from "@/lib/visitLib";
+import {
+  getFiveLeastVisitedLocations,
+  getLastVisit,
+  getLastVisitedDay,
+  getSixMonthsNotVisitedLocations,
+} from "@/lib/visitLib";
 
 import { IconListDetails, IconMapPinFilled } from "@tabler/icons-react";
 
@@ -46,7 +51,9 @@ export default function OverviewMap({
   });
 
   const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
-
+  const sixMonthsNotVisitedLocations = getSixMonthsNotVisitedLocations(locations, events);
+  console.log("5 least", fiveLeastVisitedLocations);
+  console.log("6 months", sixMonthsNotVisitedLocations);
   return (
     <MapContainer
       center={[51.51360649415908, 7.46530746959316]}
@@ -59,12 +66,17 @@ export default function OverviewMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {locations?.map((location: any) => {
-        console.log(getLastVisit(location.id, events).dateTime);
         return (
           <Marker
             key={location.id}
             position={{ lat: Number(location.latitude), lng: Number(location.longitude) }}
-            icon={fiveLeastVisitedLocations.includes(location.id) ? pinRedIcon : pinBlueIcon}
+            icon={
+              fiveLeastVisitedLocations.includes(location.id)
+                ? pinRedIcon
+                : sixMonthsNotVisitedLocations.includes(location.id)
+                ? pinYellowIcon
+                : pinBlueIcon
+            }
           >
             <Popup>
               <Title order={3} size={14}>
