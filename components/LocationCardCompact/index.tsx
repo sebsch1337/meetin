@@ -9,13 +9,13 @@ import {
   Stack,
   Tooltip,
   Image as MantineImage,
-  px,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery, useWindowEvent } from "@mantine/hooks";
 import { IconHome, IconUsers, IconCalendarPin, IconSun } from "@tabler/icons-react";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function LocationCardCompact({
   location,
@@ -27,8 +27,22 @@ export default function LocationCardCompact({
   averageVisitors: number;
 }) {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const mobileSize = 160;
-  const desktopSize = 250;
+  const vwValue = 40;
+  const desktopSize = 200;
+
+  const [mobileSize, setMobileSize] = useState<number>(0);
+
+  useWindowEvent("resize", () => {
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    const calculatedPixels = (vwValue / 100) * viewportWidth;
+    setMobileSize(calculatedPixels);
+  });
+
+  useEffect(() => {
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    const calculatedPixels = (vwValue / 100) * viewportWidth;
+    setMobileSize(calculatedPixels);
+  }, [vwValue]);
 
   return (
     <Link href={`/locations/${location.id}`}>
@@ -98,7 +112,7 @@ export default function LocationCardCompact({
           <Stack style={{ alignSelf: "center" }} w={"100%"} spacing={0}>
             <Title
               order={2}
-              size={isMobile ? 20 : 24}
+              size={20}
               align="center"
               color="white"
               style={{ textShadow: "0px 0px 4px #000000", overflow: "hidden", textOverflow: "ellipsis" }}
@@ -107,7 +121,7 @@ export default function LocationCardCompact({
             </Title>
             <Title
               order={3}
-              size={isMobile ? 14 : 16}
+              size={14}
               align="center"
               color="white"
               style={{ textShadow: "0px 0px 4px #000000" }}
