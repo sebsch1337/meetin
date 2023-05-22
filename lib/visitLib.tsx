@@ -4,7 +4,6 @@ export const getEventsByLocationId = (locationId: string, events: Event[]): any[
   events?.length > 0 ? events?.filter((event) => event.locationId === locationId) : [];
 
 export const getLastVisit = (locationId: string, events: Event[]): any => {
-  // console.log(events)
   const locationEvents = getEventsByLocationId(locationId, events);
   return locationEvents?.length > 0
     ? locationEvents.reduce((prev: any, current: any) => (prev.dateTime > current.dateTime ? prev : current))
@@ -33,6 +32,18 @@ export const getFiveLeastVisitedLocations = (locations: Location[], events: Even
     )
     .slice(0, 5)
     .map((location: any) => location.id);
+};
+
+export const getSixMonthsNotVisitedLocations = (locations: Location[], events: Event[]): string[] => {
+  const sixMonthsAgo = new Date().setMonth(new Date().getMonth() - 6);
+
+  return locations?.length > 0
+    ? locations
+        .filter(
+          (location: any) => new Date(getLastVisit(location.id, events).dateTime) < new Date(sixMonthsAgo)
+        )
+        .map((location: any) => location.id)
+    : [];
 };
 
 export const getAverageVisitors = (locationId: string, events: Event[]): number => {
