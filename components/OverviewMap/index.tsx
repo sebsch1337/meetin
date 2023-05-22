@@ -3,12 +3,11 @@ import Link from "next/link";
 
 import {
   getFiveLeastVisitedLocations,
-  getLastVisit,
   getLastVisitedDay,
   getSixMonthsNotVisitedLocations,
 } from "@/lib/visitLib";
 
-import { IconListDetails, IconMapPinFilled } from "@tabler/icons-react";
+import { IconListDetails } from "@tabler/icons-react";
 
 import PinBlueIcon from "../../assets/icons/pin-blue.png";
 import PinYellowIcon from "../../assets/icons/pin-yellow.png";
@@ -52,8 +51,7 @@ export default function OverviewMap({
 
   const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
   const sixMonthsNotVisitedLocations = getSixMonthsNotVisitedLocations(locations, events);
-  console.log("5 least", fiveLeastVisitedLocations);
-  console.log("6 months", sixMonthsNotVisitedLocations);
+
   return (
     <MapContainer
       center={[51.51360649415908, 7.46530746959316]}
