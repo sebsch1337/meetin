@@ -1,11 +1,19 @@
+import { Button, Space, Text, Title } from "@mantine/core";
+import Link from "next/link";
+
+import { getLastVisitedDay } from "@/lib/visitLib";
+
+import { IconListDetails, IconMapPinFilled } from "@tabler/icons-react";
+
+import PinBlueIcon from "../../assets/icons/pin-blue.png";
+import PinYellowIcon from "../../assets/icons/pin-yellow.png";
+import PinRedIcon from "../../assets/icons/pin-red.png";
+
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
-import { Button, Space, Text, Title } from "@mantine/core";
-import { getLastVisitedDay } from "@/lib/visitLib";
-import Link from "next/link";
-import { IconFileDescription, IconListDetails } from "@tabler/icons-react";
 
 export default function OverviewMap({
   locations,
@@ -16,11 +24,32 @@ export default function OverviewMap({
   events: Event[];
   isMobile: boolean;
 }) {
+  const pinBlueIcon = L.icon({
+    iconUrl: PinBlueIcon.src,
+    iconRetinaUrl: PinBlueIcon.src,
+    iconSize: [24, 35],
+    iconAnchor: [12, 35],
+  });
+
+  const pinYellowIcon = L.icon({
+    iconUrl: PinYellowIcon.src,
+    iconRetinaUrl: PinYellowIcon.src,
+    iconSize: [24, 35],
+    iconAnchor: [12, 35],
+  });
+
+  const pinRedIcon = L.icon({
+    iconUrl: PinRedIcon.src,
+    iconRetinaUrl: PinRedIcon.src,
+    iconSize: [24, 35],
+    iconAnchor: [12, 35],
+  });
+
   return (
     <MapContainer
       center={[51.51360649415908, 7.46530746959316]}
       zoom={13}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
       style={{ height: `${isMobile ? "50vh" : "60vh"}`, width: "100%" }}
     >
       <TileLayer
@@ -31,6 +60,7 @@ export default function OverviewMap({
         <Marker
           key={location.id}
           position={{ lat: Number(location.latitude), lng: Number(location.longitude) }}
+          icon={pinBlueIcon}
         >
           <Popup>
             <Title order={3} size={14}>
