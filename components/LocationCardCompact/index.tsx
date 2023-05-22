@@ -9,7 +9,9 @@ import {
   Stack,
   Tooltip,
   Image as MantineImage,
+  px,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconHome, IconUsers, IconCalendarPin, IconSun } from "@tabler/icons-react";
 
 import Image from "next/image";
@@ -24,20 +26,33 @@ export default function LocationCardCompact({
   lastVisitedDay: string;
   averageVisitors: number;
 }) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const mobileSize = 160;
+  const desktopSize = 250;
+
   return (
     <Link href={`/locations/${location.id}`}>
-      <UnstyledButton pos={"relative"} w={250} h={250}>
+      <UnstyledButton
+        pos={"relative"}
+        w={isMobile ? mobileSize : desktopSize}
+        h={isMobile ? mobileSize : desktopSize}
+      >
         {location?.images?.length > 0 ? (
           <Image
             src={location?.images[0]?.url}
-            width={250}
-            height={250}
+            width={isMobile ? mobileSize : desktopSize}
+            height={isMobile ? mobileSize : desktopSize}
             alt={"Picture"}
             style={{ objectFit: "cover", borderRadius: rem(15) }}
             placeholder={"empty"}
           />
         ) : (
-          <MantineImage width={250} height={250} radius={15} withPlaceholder />
+          <MantineImage
+            width={isMobile ? mobileSize : desktopSize}
+            height={isMobile ? mobileSize : desktopSize}
+            radius={15}
+            withPlaceholder
+          />
         )}
         <Paper
           pos={"absolute"}
@@ -55,7 +70,7 @@ export default function LocationCardCompact({
                 style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
               />
               <Text size={"sm"} color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
-                {`${location?.maxCapacity} (${averageVisitors})`}
+                {`${location?.maxCapacity ?? 0} (${averageVisitors})`}
               </Text>
             </Group>
           </Tooltip>
@@ -83,16 +98,16 @@ export default function LocationCardCompact({
           <Stack style={{ alignSelf: "center" }} w={"100%"} spacing={0}>
             <Title
               order={2}
-              size={24}
+              size={isMobile ? 20 : 24}
               align="center"
               color="white"
-              style={{ textShadow: "0px 0px 4px #000000" }}
+              style={{ textShadow: "0px 0px 4px #000000", overflow: "hidden", textOverflow: "ellipsis" }}
             >
               {location?.name}
             </Title>
             <Title
               order={3}
-              size={16}
+              size={isMobile ? 14 : 16}
               align="center"
               color="white"
               style={{ textShadow: "0px 0px 4px #000000" }}

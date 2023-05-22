@@ -1,7 +1,7 @@
 import { Button, Container, Flex, Group, Modal, Skeleton, Space, Title } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 import LocationForm from "@/components/LocationForm";
 import { useEffect, useState } from "react";
@@ -27,6 +27,7 @@ export default function Locations() {
   const [editLocationMode, setEditLocationMode] = useState(false);
   const [preValues, setPreValues] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const loadData = async () => {
@@ -97,7 +98,7 @@ export default function Locations() {
         </Group>
         <Space h={"md"} />
 
-        <Flex gap={"xs"} wrap={"wrap"}>
+        <Flex gap={"xs"} wrap={"wrap"} justify={isMobile ? "center" : "flex-start"}>
           {isLoading &&
             locations.length === 0 &&
             Array.from({ length: 4 }).map((_, count) => (
