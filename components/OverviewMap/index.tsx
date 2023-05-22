@@ -1,7 +1,7 @@
 import { Button, Space, Text, Title } from "@mantine/core";
 import Link from "next/link";
 
-import { getLastVisitedDay } from "@/lib/visitLib";
+import { getFiveLeastVisitedLocations, getLastVisit, getLastVisitedDay } from "@/lib/visitLib";
 
 import { IconListDetails, IconMapPinFilled } from "@tabler/icons-react";
 
@@ -45,6 +45,8 @@ export default function OverviewMap({
     iconAnchor: [12, 35],
   });
 
+  const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
+
   return (
     <MapContainer
       center={[51.51360649415908, 7.46530746959316]}
@@ -56,26 +58,29 @@ export default function OverviewMap({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {locations?.map((location: Location) => (
-        <Marker
-          key={location.id}
-          position={{ lat: Number(location.latitude), lng: Number(location.longitude) }}
-          icon={pinBlueIcon}
-        >
-          <Popup>
-            <Title order={3} size={14}>
-              {location.name}
-            </Title>
-            <Text>Letzter Besuch: {getLastVisitedDay(location.id, events)}</Text>
-            <Space h={"md"} />
-            <Link href={`/locations/${location.id}`}>
-              <Button leftIcon={<IconListDetails size={"1rem"} />} size={"xs"} w={"100%"}>
-                Location anzeigen
-              </Button>
-            </Link>
-          </Popup>
-        </Marker>
-      ))}
+      {locations?.map((location: any) => {
+        console.log(getLastVisit(location.id, events).dateTime);
+        return (
+          <Marker
+            key={location.id}
+            position={{ lat: Number(location.latitude), lng: Number(location.longitude) }}
+            icon={fiveLeastVisitedLocations.includes(location.id) ? pinRedIcon : pinBlueIcon}
+          >
+            <Popup>
+              <Title order={3} size={14}>
+                {location.name}
+              </Title>
+              <Text>Letzter Besuch: {getLastVisitedDay(location.id, events)}</Text>
+              <Space h={"md"} />
+              <Link href={`/locations/${location.id}`}>
+                <Button leftIcon={<IconListDetails size={"1rem"} />} size={"xs"} w={"100%"}>
+                  Location anzeigen
+                </Button>
+              </Link>
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   );
 }
