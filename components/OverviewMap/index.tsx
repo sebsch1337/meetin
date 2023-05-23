@@ -9,9 +9,10 @@ import {
 
 import { IconListDetails } from "@tabler/icons-react";
 
-import PinBlueIcon from "../../assets/icons/pin-blue.png";
-import PinYellowIcon from "../../assets/icons/pin-yellow.png";
-import PinRedIcon from "../../assets/icons/pin-red.png";
+import PinBlueImg from "../../assets/icons/pin-blue.png";
+import PinYellowImg from "../../assets/icons/pin-yellow.png";
+import PinRedImg from "../../assets/icons/pin-red.png";
+import PinGreyImg from "../../assets/icons/pin-grey.png";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -29,22 +30,29 @@ export default function OverviewMap({
   isMobile: boolean;
 }) {
   const pinBlueIcon = L.icon({
-    iconUrl: PinBlueIcon.src,
-    iconRetinaUrl: PinBlueIcon.src,
+    iconUrl: PinBlueImg.src,
+    iconRetinaUrl: PinBlueImg.src,
     iconSize: [24, 35],
     iconAnchor: [12, 35],
   });
 
   const pinYellowIcon = L.icon({
-    iconUrl: PinYellowIcon.src,
-    iconRetinaUrl: PinYellowIcon.src,
+    iconUrl: PinYellowImg.src,
+    iconRetinaUrl: PinYellowImg.src,
     iconSize: [24, 35],
     iconAnchor: [12, 35],
   });
 
   const pinRedIcon = L.icon({
-    iconUrl: PinRedIcon.src,
-    iconRetinaUrl: PinRedIcon.src,
+    iconUrl: PinRedImg.src,
+    iconRetinaUrl: PinRedImg.src,
+    iconSize: [24, 35],
+    iconAnchor: [12, 35],
+  });
+
+  const pinGreyIcon = L.icon({
+    iconUrl: PinGreyImg.src,
+    iconRetinaUrl: PinGreyImg.src,
     iconSize: [24, 35],
     iconAnchor: [12, 35],
   });
@@ -73,6 +81,8 @@ export default function OverviewMap({
                 ? pinRedIcon
                 : sixMonthsNotVisitedLocations.includes(location.id)
                 ? pinYellowIcon
+                : location.noGo
+                ? pinGreyIcon
                 : pinBlueIcon
             }
           >
