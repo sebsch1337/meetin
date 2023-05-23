@@ -1,7 +1,7 @@
-import { Button, Container, Flex, Group, Modal, Skeleton, Space, Title } from "@mantine/core";
+import { Button, Container, Flex, Group, Loader, Modal, Skeleton, Space, Title } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 import LocationForm from "@/components/LocationForm";
 import { useEffect, useState } from "react";
@@ -27,6 +27,7 @@ export default function Locations() {
   const [editLocationMode, setEditLocationMode] = useState(false);
   const [preValues, setPreValues] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const loadData = async () => {
@@ -97,23 +98,8 @@ export default function Locations() {
         </Group>
         <Space h={"md"} />
 
-        <Flex gap={"xs"} wrap={"wrap"}>
-          {isLoading &&
-            locations.length === 0 &&
-            Array.from({ length: 4 }).map((_, count) => (
-              <Flex
-                w={250}
-                h={250}
-                justify={"center"}
-                align={"center"}
-                direction={"column"}
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-                key={count}
-              >
-                <Skeleton w={"90%"} height={32} radius="xl" />
-                <Skeleton w={"50%"} height={18} mt={10} radius="xl" />
-              </Flex>
-            ))}
+        <Flex gap={"xs"} wrap={"wrap"} justify={isMobile ? "center" : "flex-start"}>
+          {isLoading && locations.length === 0 && <Loader size="xl" variant="dots" color="teal" />}
           {locations?.map((location: any) => (
             <LocationCardCompact
               key={location.id}

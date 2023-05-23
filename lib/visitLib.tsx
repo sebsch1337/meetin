@@ -16,6 +16,36 @@ export const getLastVisitedDay = (locationId: any, events: Event[]): string => {
   return lastVisit ? getLocalDateLong(lastVisit.dateTime) : "Nie";
 };
 
+export const getFiveLeastVisitedLocations = (locations: Location[], events: Event[]): string[] => {
+  const locationLastDates: any[] =
+    locations?.length > 0
+      ? locations.map((location: any) => ({
+          id: location.id,
+          lastVisited: getLastVisit(location.id, events).dateTime ?? null,
+        }))
+      : [];
+
+  return locationLastDates
+    .sort(
+      (prev: any, current: any) =>
+        new Date(prev.lastVisited).getTime() - new Date(current.lastVisited).getTime()
+    )
+    .slice(0, 5)
+    .map((location: any) => location.id);
+};
+
+export const getSixMonthsNotVisitedLocations = (locations: Location[], events: Event[]): string[] => {
+  const sixMonthsAgo = new Date().setMonth(new Date().getMonth() - 6);
+
+  return locations?.length > 0
+    ? locations
+        .filter(
+          (location: any) => new Date(getLastVisit(location.id, events).dateTime) < new Date(sixMonthsAgo)
+        )
+        .map((location: any) => location.id)
+    : [];
+};
+
 export const getAverageVisitors = (locationId: string, events: Event[]): number => {
   const visitedEvents = getEventsByLocationId(locationId, events).filter(
     (event: any) => event.visitors !== undefined
