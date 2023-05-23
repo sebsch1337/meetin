@@ -83,7 +83,7 @@ export default function LocationCardCompact({
                 color="white"
                 style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
               />
-              <Text size={"sm"} color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
+              <Text size={"xs"} color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
                 {`${location?.maxCapacity ?? 0} (${averageVisitors})`}
               </Text>
             </Group>
@@ -144,7 +144,7 @@ export default function LocationCardCompact({
                 color="white"
                 style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
               />
-              <Text size={"sm"} color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
+              <Text size={"xs"} color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
                 {lastVisitedDay}
               </Text>
             </Group>
