@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import {
   getFiveLeastVisitedLocations,
+  getLastVisit,
   getLastVisitedDay,
   getSixMonthsNotVisitedLocations,
 } from "@/lib/visitLib";
@@ -13,6 +14,8 @@ import PinBlueImg from "../../assets/icons/pin-blue.png";
 import PinYellowImg from "../../assets/icons/pin-yellow.png";
 import PinRedImg from "../../assets/icons/pin-red.png";
 import PinGreyImg from "../../assets/icons/pin-grey.png";
+import PinGreenImg from "../../assets/icons/pin-green.png";
+import PinPinkImg from "../../assets/icons/pin-pink.png";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -57,6 +60,20 @@ export default function OverviewMap({
     iconAnchor: [12, 35],
   });
 
+  const pinGreenIcon = L.icon({
+    iconUrl: PinGreenImg.src,
+    iconRetinaUrl: PinGreenImg.src,
+    iconSize: [24, 35],
+    iconAnchor: [12, 35],
+  });
+
+  const pinPinkIcon = L.icon({
+    iconUrl: PinPinkImg.src,
+    iconRetinaUrl: PinPinkImg.src,
+    iconSize: [24, 35],
+    iconAnchor: [12, 35],
+  });
+
   const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
   const sixMonthsNotVisitedLocations = getSixMonthsNotVisitedLocations(locations, events);
 
@@ -77,12 +94,17 @@ export default function OverviewMap({
             key={location.id}
             position={{ lat: Number(location.latitude), lng: Number(location.longitude) }}
             icon={
-              fiveLeastVisitedLocations.includes(location.id)
+              location.noGo
+                ? pinGreyIcon
+                : !getLastVisit(location.id, events)
+                ? pinPinkIcon
+                : !location.indoor && location.outdoor
+                ? pinGreenIcon
+                : fiveLeastVisitedLocations.includes(location.id) &&
+                  sixMonthsNotVisitedLocations.includes(location.id)
                 ? pinRedIcon
                 : sixMonthsNotVisitedLocations.includes(location.id)
                 ? pinYellowIcon
-                : location.noGo
-                ? pinGreyIcon
                 : pinBlueIcon
             }
           >
