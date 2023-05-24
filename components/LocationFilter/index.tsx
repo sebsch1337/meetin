@@ -7,7 +7,7 @@ export default function LocationFilter({
 }: {
   tags: Tag[];
   filteredTagIds: string[];
-  setFilteredTagIds: any;
+  setFilteredTagIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   return (
     <>
