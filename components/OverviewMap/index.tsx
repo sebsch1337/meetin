@@ -10,18 +10,19 @@ import {
 
 import { IconListDetails } from "@tabler/icons-react";
 
-import PinBlueImg from "../../assets/icons/pin-blue.png";
-import PinYellowImg from "../../assets/icons/pin-yellow.png";
-import PinRedImg from "../../assets/icons/pin-red.png";
-import PinGreyImg from "../../assets/icons/pin-grey.png";
-import PinGreenImg from "../../assets/icons/pin-green.png";
-import PinPinkImg from "../../assets/icons/pin-pink.png";
-
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
+
+import {
+  pinBlueIcon,
+  pinGreenIcon,
+  pinGreyIcon,
+  pinPinkIcon,
+  pinRedIcon,
+  pinYellowIcon,
+} from "@/lib/iconLib";
 
 export default function OverviewMap({
   locations,
@@ -32,48 +33,6 @@ export default function OverviewMap({
   events: Event[];
   isMobile: boolean;
 }) {
-  const pinBlueIcon = L.icon({
-    iconUrl: PinBlueImg.src,
-    iconRetinaUrl: PinBlueImg.src,
-    iconSize: [24, 35],
-    iconAnchor: [12, 35],
-  });
-
-  const pinYellowIcon = L.icon({
-    iconUrl: PinYellowImg.src,
-    iconRetinaUrl: PinYellowImg.src,
-    iconSize: [24, 35],
-    iconAnchor: [12, 35],
-  });
-
-  const pinRedIcon = L.icon({
-    iconUrl: PinRedImg.src,
-    iconRetinaUrl: PinRedImg.src,
-    iconSize: [24, 35],
-    iconAnchor: [12, 35],
-  });
-
-  const pinGreyIcon = L.icon({
-    iconUrl: PinGreyImg.src,
-    iconRetinaUrl: PinGreyImg.src,
-    iconSize: [24, 35],
-    iconAnchor: [12, 35],
-  });
-
-  const pinGreenIcon = L.icon({
-    iconUrl: PinGreenImg.src,
-    iconRetinaUrl: PinGreenImg.src,
-    iconSize: [24, 35],
-    iconAnchor: [12, 35],
-  });
-
-  const pinPinkIcon = L.icon({
-    iconUrl: PinPinkImg.src,
-    iconRetinaUrl: PinPinkImg.src,
-    iconSize: [24, 35],
-    iconAnchor: [12, 35],
-  });
-
   const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
   const sixMonthsNotVisitedLocations = getSixMonthsNotVisitedLocations(locations, events);
 

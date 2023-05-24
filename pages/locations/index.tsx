@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Group, Loader, Modal, Skeleton, Space, Title } from "@mantine/core";
+import { Button, Container, Flex, Loader, Modal, Space } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -73,32 +73,29 @@ export default function Locations() {
         </Modal.Content>
       </Modal.Root>
 
-      <Container fluid px={"xl"} py={"xs"}>
-        <Title>Locations</Title>
-        <Space h={"md"} />
-        <Group position={"apart"}>
-          <Button
-            leftIcon={<IconPlus size="1rem" />}
-            variant={"light"}
-            size={"sm"}
-            color={"teal"}
-            onClick={() => {
-              setEditLocationMode(false);
-              setPreValues({});
-              setModal((prev) => ({
-                ...prev,
-                title: "Neue Location",
-                type: "form",
-              }));
-              openModal();
-            }}
-          >
-            Neue Location erstellen
-          </Button>
-        </Group>
+      <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
+        <Button
+          leftIcon={<IconPlus size="1rem" />}
+          variant={"light"}
+          size={"sm"}
+          color={"teal"}
+          onClick={() => {
+            setEditLocationMode(false);
+            setPreValues({});
+            setModal((prev) => ({
+              ...prev,
+              title: "Neue Location",
+              type: "form",
+            }));
+            openModal();
+          }}
+        >
+          Neue Location
+        </Button>
+
         <Space h={"md"} />
 
-        <Flex gap={"xs"} wrap={"wrap"} justify={isMobile ? "center" : "flex-start"}>
+        <Flex gap={"xs"} wrap={"wrap"} justify={isMobile ? "space-evenly" : "flex-start"}>
           {isLoading && locations.length === 0 && <Loader size="xl" variant="dots" color="teal" />}
           {locations?.map((location: any) => (
             <LocationCardCompact

@@ -1,8 +1,8 @@
-import { Title, Space, Flex, Group, Button, Modal, Loader, Container } from "@mantine/core";
+import { Space, Flex, Group, Button, Modal, Loader, Container } from "@mantine/core";
 
 import EventCard from "@/components/EventCard";
-import { useDisclosure } from "@mantine/hooks";
-import { IconCalendarPlus } from "@tabler/icons-react";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { IconCalendarPlus, IconPlus } from "@tabler/icons-react";
 import EventForm from "@/components/EventForm";
 
 import { eventsAtom, locationsAtom } from "@/store";
@@ -16,6 +16,7 @@ export default function Events() {
   const [events, setEvents] = useAtom(eventsAtom);
   const [locations, setLocations] = useAtom(locationsAtom);
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const loadData = async () => {
@@ -50,20 +51,17 @@ export default function Events() {
         </Modal.Content>
       </Modal.Root>
 
-      <Container fluid px={"xl"} py={"xs"}>
-        <Title order={1}>Events</Title>
-        <Space h={"md"} />
-        <Group position={"apart"}>
-          <Button
-            leftIcon={<IconCalendarPlus size="1rem" />}
-            variant={"light"}
-            size={"sm"}
-            color={"cyan"}
-            onClick={open}
-          >
-            Neues Event erstellen
-          </Button>
-        </Group>
+      <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
+        <Button
+          leftIcon={<IconPlus size="1rem" />}
+          variant={"light"}
+          size={"sm"}
+          color={"cyan"}
+          onClick={open}
+        >
+          Neues Event
+        </Button>
+
         <Space h={"md"} />
 
         <Flex gap={"xs"} wrap={"wrap"}>
