@@ -73,9 +73,7 @@ export default function Locations() {
         </Modal.Content>
       </Modal.Root>
 
-      <Container fluid px={"xl"} py={"xs"}>
-        <Title>Locations</Title>
-        <Space h={"md"} />
+      <Container fluid px={isMobile ? "xs" : "xl"} py={"xs"}>
         <Group position={"apart"}>
           <Button
             leftIcon={<IconPlus size="1rem" />}

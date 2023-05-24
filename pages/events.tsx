@@ -51,8 +51,6 @@ export default function Events() {
       </Modal.Root>
 
       <Container fluid px={"xl"} py={"xs"}>
-        <Title order={1}>Events</Title>
-        <Space h={"md"} />
         <Group position={"apart"}>
           <Button
             leftIcon={<IconCalendarPlus size="1rem" />}

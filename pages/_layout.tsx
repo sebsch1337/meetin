@@ -11,19 +11,9 @@ import {
   Drawer,
   ScrollArea,
   Divider,
-  UnstyledButton,
-  Center,
-  Box,
-  Collapse,
-  Button,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import {
-  IconBrandInstagram,
-  IconBrandFacebook,
-  IconHeartHandshake,
-  IconChevronDown,
-} from "@tabler/icons-react";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -120,6 +110,7 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [active, setActive] = useState(links.find((link) => link.link === router.pathname)?.link);
   const { classes, cx, theme } = useStyles();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const items = links.map((link) => (
     <Link
@@ -152,6 +143,7 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             <Group spacing={5}>
               <IconHeartHandshake />
               <Text size={18}>MeetIn</Text>
+              {isMobile && <Text size={14}>{active?.substring(1)}</Text>}
             </Group>
           </Link>
 
@@ -177,13 +169,34 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
         <ScrollArea h={`calc(100vh - ${rem(60)})`} m="-md">
           <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
 
-          <Link href="/" className={cx(classes.link, classes.mobileLink)} onClick={closeDrawer}>
+          <Link
+            href="/"
+            className={cx(classes.link, classes.mobileLink)}
+            onClick={() => {
+              setActive("/");
+              closeDrawer();
+            }}
+          >
             Home
           </Link>
-          <Link href="/events" className={cx(classes.link, classes.mobileLink)} onClick={closeDrawer}>
+          <Link
+            href="/events"
+            className={cx(classes.link, classes.mobileLink)}
+            onClick={() => {
+              setActive("/events");
+              closeDrawer();
+            }}
+          >
             Events
           </Link>
-          <Link href="/locations" className={cx(classes.link, classes.mobileLink)} onClick={closeDrawer}>
+          <Link
+            href="/locations"
+            className={cx(classes.link, classes.mobileLink)}
+            onClick={() => {
+              setActive("/locations");
+              closeDrawer();
+            }}
+          >
             Locations
           </Link>
 
