@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Container, Divider, Flex, Group, Loader, Modal, Space } from "@mantine/core";
-import { getLastVisitedDay, getAverageVisitors, getLastVisit } from "@/lib/visitLib";
+import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
@@ -18,7 +18,6 @@ import LocationCardCompact from "@/components/LocationCardCompact";
 import { getAllEvents } from "@/lib/eventLib";
 import LocationFilter from "@/components/LocationFilter";
 import LocationSort from "@/components/LocationSort";
-import { isNull } from "util";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -57,6 +56,7 @@ export default function Locations() {
               ...location,
               lastVisit:
                 allEvents?.find((event: any) => event?.locationId === location?.id)?.dateTime || null,
+              averageVisitors: getAverageVisitors(location.id, allEvents),
             }))
         );
       } catch (e) {
@@ -104,7 +104,12 @@ export default function Locations() {
 
       case "maxVisitors":
         setLocations((location) => [...location].sort((a: any, b: any) => b.maxCapacity - a.maxCapacity));
-        console.log("maxVisitors");
+        break;
+
+      case "averageVisitors":
+        setLocations((location) =>
+          [...location].sort((a: any, b: any) => b.averageVisitors - a.averageVisitors)
+        );
         break;
     }
   }, [sortBy, setLocations]);

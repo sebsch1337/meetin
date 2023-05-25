@@ -21,6 +21,9 @@ export default function LocationSort({ sortBy, setSortBy }: { sortBy: string; se
             <Chip value={"maxVisitors"} color="teal">
               Max. Besucher
             </Chip>
+            <Chip value={"averageVisitors"} color="teal">
+              Beliebt
+            </Chip>
           </Chip.Group>
         </Flex>
       </ScrollArea>
