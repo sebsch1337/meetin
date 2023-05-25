@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Container, Divider, Flex, Group, Loader, Modal, Space } from "@mantine/core";
-import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
+import { getLastVisitedDay, getAverageVisitors, getLastVisit } from "@/lib/visitLib";
 
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
@@ -18,6 +18,7 @@ import LocationCardCompact from "@/components/LocationCardCompact";
 import { getAllEvents } from "@/lib/eventLib";
 import LocationFilter from "@/components/LocationFilter";
 import LocationSort from "@/components/LocationSort";
+import { isNull } from "util";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -29,10 +30,11 @@ export default function Locations() {
   const [editLocationMode, setEditLocationMode] = useState(false);
   const [preValues, setPreValues] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [filterOpened, setFilterOpened] = useState(false);
-  const [filteredTagIds, setFilteredTagIds] = useState<string[]>([]);
-  const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
 
+  const [filterOpened, setFilterOpened] = useState(false);
+  const [filteredTagIds, setFilteredTagIds] = useState([]);
+  const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
+  const [sortBy, setSortBy] = useState("");
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
@@ -44,9 +46,16 @@ export default function Locations() {
           getAllTags(),
           getAllEvents(),
         ]);
-        setLocations(allLocations);
-        setTags(allTags.sort((a, b) => a.name.localeCompare(b.name)));
-        setEvents(allEvents);
+        setTags([...allTags].sort((a, b) => a.name.localeCompare(b.name)));
+        setEvents(
+          [...allEvents].sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
+        );
+        setLocations(
+          [...allLocations].map((location: any) => ({
+            ...location,
+            lastVisit: allEvents?.find((event: any) => event?.locationId === location?.id)?.dateTime || null,
+          }))
+        );
       } catch (e) {
         console.error(e);
         return e;
@@ -56,7 +65,7 @@ export default function Locations() {
     };
 
     loadData();
-  }, [setLocations, setTags, setEvents]);
+  }, [setEvents, setLocations, setTags]);
 
   useEffect(() => {
     if (filteredTagIds?.length > 0) {
@@ -66,8 +75,32 @@ export default function Locations() {
     } else {
       setFilteredLocations(locations);
     }
-    console.log("filtered tags", filteredTagIds);
   }, [filteredTagIds, locations]);
+
+  useEffect(() => {
+    switch (sortBy) {
+      case "leastVisited":
+        setLocations((location) =>
+          [...location].sort(
+            (a: any, b: any) => new Date(a.lastVisit).getTime() - new Date(b.lastVisit).getTime()
+          )
+        );
+        break;
+
+      case "recentlyVisited":
+        setLocations((location) =>
+          [...location].sort(
+            (a: any, b: any) => new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime()
+          )
+        );
+        break;
+
+      case "maxVisitors":
+        setLocations((location) => [...location].sort((a: any, b: any) => b.maxCapacity - a.maxCapacity));
+        console.log("maxVisitors");
+        break;
+    }
+  }, [sortBy, setLocations]);
 
   return (
     <>
@@ -126,7 +159,7 @@ export default function Locations() {
         {filterOpened && (
           <>
             <Divider my={"md"} />
-            <LocationSort />
+            <LocationSort sortBy={sortBy} setSortBy={setSortBy} />
             <LocationFilter
               tags={tags}
               setFilteredTagIds={setFilteredTagIds}
