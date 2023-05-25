@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Loader, Modal, Space } from "@mantine/core";
+import { ActionIcon, Button, Container, Divider, Flex, Group, Loader, Modal, Space } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -6,20 +6,22 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import LocationForm from "@/components/LocationForm";
 import { useEffect, useState } from "react";
 
-import { IconPlus } from "@tabler/icons-react";
+import { IconFilter, IconPlus } from "@tabler/icons-react";
 
 import { getAllLocations } from "@/lib/locationLib";
 
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
 import { getAllTags } from "@/lib/tagLib";
 
 import LocationCardCompact from "@/components/LocationCardCompact";
 import { getAllEvents } from "@/lib/eventLib";
+import LocationFilter from "@/components/LocationFilter";
+import LocationSort from "@/components/LocationSort";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
-  const setTags = useSetAtom(tagsAtom);
+  const [tags, setTags] = useAtom(tagsAtom);
   const [events, setEvents] = useAtom(eventsAtom);
   const [modal, setModal] = useAtom(modalAtom);
 
@@ -27,20 +29,36 @@ export default function Locations() {
   const [editLocationMode, setEditLocationMode] = useState(false);
   const [preValues, setPreValues] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const [filterOpened, setFilterOpened] = useState(false);
+  const [filteredTagIds, setFilteredTagIds] = useState([]);
+  const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
+  const [sortBy, setSortBy] = useState("aToZ");
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const [allLocations, allTags, allEvents] = await Promise.all([
+        const [allLocations, allTags, allEvents]: [Location[], Tag[], Event[]] = await Promise.all([
           getAllLocations(),
           getAllTags(),
           getAllEvents(),
         ]);
-        setLocations(allLocations);
-        setTags(allTags);
-        setEvents(allEvents);
+        setTags([...allTags].sort((a, b) => a.name.localeCompare(b.name)));
+        setEvents(
+          [...allEvents].sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
+        );
+        setLocations(
+          [...allLocations]
+            .sort((a: any, b: any) => a.name.localeCompare(b.name))
+            .map((location: any) => ({
+              ...location,
+              lastVisit:
+                allEvents?.find((event: any) => event?.locationId === location?.id)?.dateTime || null,
+              averageVisitors: getAverageVisitors(location.id, allEvents),
+            }))
+        );
       } catch (e) {
         console.error(e);
         return e;
@@ -50,7 +68,51 @@ export default function Locations() {
     };
 
     loadData();
-  }, [setLocations, setTags, setEvents]);
+  }, [setEvents, setLocations, setTags]);
+
+  useEffect(() => {
+    if (filteredTagIds?.length > 0) {
+      setFilteredLocations(
+        locations?.filter((location: any) => filteredTagIds?.every((tagId) => location?.tags.includes(tagId)))
+      );
+    } else {
+      setFilteredLocations(locations);
+    }
+  }, [filteredTagIds, locations]);
+
+  useEffect(() => {
+    switch (sortBy) {
+      case "aToZ":
+        setLocations((location) => [...location].sort((a: any, b: any) => a.name.localeCompare(b.name)));
+        break;
+
+      case "leastVisited":
+        setLocations((location) =>
+          [...location].sort(
+            (a: any, b: any) => new Date(a.lastVisit).getTime() - new Date(b.lastVisit).getTime()
+          )
+        );
+        break;
+
+      case "recentlyVisited":
+        setLocations((location) =>
+          [...location].sort(
+            (a: any, b: any) => new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime()
+          )
+        );
+        break;
+
+      case "maxVisitors":
+        setLocations((location) => [...location].sort((a: any, b: any) => b.maxCapacity - a.maxCapacity));
+        break;
+
+      case "averageVisitors":
+        setLocations((location) =>
+          [...location].sort((a: any, b: any) => b.averageVisitors - a.averageVisitors)
+        );
+        break;
+    }
+  }, [sortBy, setLocations]);
 
   return (
     <>
@@ -74,30 +136,55 @@ export default function Locations() {
       </Modal.Root>
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
-        <Button
-          leftIcon={<IconPlus size="1rem" />}
-          variant={"light"}
-          size={"sm"}
-          color={"teal"}
-          onClick={() => {
-            setEditLocationMode(false);
-            setPreValues({});
-            setModal((prev) => ({
-              ...prev,
-              title: "Neue Location",
-              type: "form",
-            }));
-            openModal();
-          }}
-        >
-          Neue Location
-        </Button>
+        <Group position={"apart"}>
+          <Button
+            leftIcon={<IconPlus size="1rem" />}
+            variant={"light"}
+            size={"sm"}
+            color={"teal"}
+            onClick={() => {
+              setEditLocationMode(false);
+              setPreValues({});
+              setModal((prev) => ({
+                ...prev,
+                title: "Neue Location",
+                type: "form",
+              }));
+              openModal();
+            }}
+          >
+            Neue Location
+          </Button>
 
-        <Space h={"md"} />
+          <ActionIcon
+            variant={"light"}
+            size={"md"}
+            color={"teal"}
+            onClick={() => {
+              setFilterOpened((isOpened) => !isOpened);
+            }}
+          >
+            <IconFilter size="1rem" />
+          </ActionIcon>
+        </Group>
+
+        {filterOpened && (
+          <>
+            <Divider my={"md"} />
+            <LocationSort sortBy={sortBy} setSortBy={setSortBy} />
+            <LocationFilter
+              tags={tags}
+              setFilteredTagIds={setFilteredTagIds}
+              filteredTagIds={filteredTagIds}
+            />
+          </>
+        )}
+
+        <Divider my={"md"} />
 
         <Flex gap={"xs"} wrap={"wrap"} justify={isMobile ? "space-evenly" : "flex-start"}>
           {isLoading && locations.length === 0 && <Loader size="xl" variant="dots" color="teal" />}
-          {locations?.map((location: any) => (
+          {filteredLocations?.map((location: any) => (
             <LocationCardCompact
               key={location.id}
               location={location}

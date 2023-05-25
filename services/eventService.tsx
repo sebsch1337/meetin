@@ -8,10 +8,10 @@ import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";
  * @returns An array of sanitized and validated event objects.
  * @throws Error if the event array is not found or not an array.
  */
-export async function getAllEventsFromDb(): Promise<any> {
+export async function getAllEventsFromDb(): Promise<any[]> {
   await dbConnect();
 
-  const events = await Events.find({}).exec();
+  const events = await Events.find({}).sort({ dateTime: -1 }).exec();
   if (!Array.isArray(events)) throw new Error();
 
   const sanitizedEvents = await Promise.all(
