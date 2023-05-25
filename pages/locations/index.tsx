@@ -34,7 +34,7 @@ export default function Locations() {
   const [filterOpened, setFilterOpened] = useState(false);
   const [filteredTagIds, setFilteredTagIds] = useState([]);
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState("aToZ");
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
@@ -51,10 +51,13 @@ export default function Locations() {
           [...allEvents].sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
         );
         setLocations(
-          [...allLocations].map((location: any) => ({
-            ...location,
-            lastVisit: allEvents?.find((event: any) => event?.locationId === location?.id)?.dateTime || null,
-          }))
+          [...allLocations]
+            .sort((a: any, b: any) => a.name.localeCompare(b.name))
+            .map((location: any) => ({
+              ...location,
+              lastVisit:
+                allEvents?.find((event: any) => event?.locationId === location?.id)?.dateTime || null,
+            }))
         );
       } catch (e) {
         console.error(e);
@@ -79,6 +82,10 @@ export default function Locations() {
 
   useEffect(() => {
     switch (sortBy) {
+      case "aToZ":
+        setLocations((location) => [...location].sort((a: any, b: any) => a.name.localeCompare(b.name)));
+        break;
+
       case "leastVisited":
         setLocations((location) =>
           [...location].sort(

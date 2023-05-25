@@ -9,6 +9,9 @@ export default function LocationSort({ sortBy, setSortBy }: { sortBy: string; se
       <ScrollArea type={"never"} style={{ overflow: "auto", whiteSpace: "nowrap" }}>
         <Flex gap={5} wrap={"nowrap"}>
           <Chip.Group value={sortBy} onChange={setSortBy}>
+            <Chip value={"aToZ"} color="teal">
+              A-Z
+            </Chip>
             <Chip value={"leastVisited"} color="teal">
               Lange nicht besucht
             </Chip>
