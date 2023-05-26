@@ -2,7 +2,7 @@ import { Space, Flex, Group, Button, Modal, Loader, Container } from "@mantine/c
 
 import EventCard from "@/components/EventCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { IconCalendarPlus, IconPlus } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import EventForm from "@/components/EventForm";
 
 import { eventsAtom, locationsAtom } from "@/store";
@@ -10,6 +10,7 @@ import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { getAllEvents } from "@/lib/eventLib";
 import { getAllLocations } from "@/lib/locationLib";
+import FormModal from "@/components/FormModal";
 
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -38,18 +39,9 @@ export default function Events() {
 
   return (
     <>
-      <Modal.Root opened={opened} onClose={close}>
-        <Modal.Overlay />
-        <Modal.Content>
-          <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>
-            <Modal.Title>{"Neues Event"}</Modal.Title>
-            <Modal.CloseButton />
-          </Modal.Header>
-          <Modal.Body>
-            <EventForm closeModal={close} />
-          </Modal.Body>
-        </Modal.Content>
-      </Modal.Root>
+      <FormModal title={"Neues Event"} opened={opened} close={close}>
+        <EventForm closeModal={close} />
+      </FormModal>
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
         <Button
