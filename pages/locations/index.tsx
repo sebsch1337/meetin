@@ -47,9 +47,7 @@ export default function Locations() {
           getAllEvents(),
         ]);
         setTags([...allTags].sort((a, b) => a.name.localeCompare(b.name)));
-        setEvents(
-          [...allEvents].sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
-        );
+        setEvents(allEvents);
         setLocations(
           [...allLocations]
             .sort((a: any, b: any) => a.name.localeCompare(b.name))
