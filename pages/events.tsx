@@ -1,4 +1,4 @@
-import { Space, Flex, Group, Button, Modal, Loader, Container } from "@mantine/core";
+import { Space, Flex, Group, Button, Modal, Loader, Container, Grid, SimpleGrid } from "@mantine/core";
 
 import EventCard from "@/components/EventCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -56,7 +56,7 @@ export default function Events() {
 
         <Space h={"md"} />
 
-        <Flex gap={"xs"} wrap={"wrap"}>
+        <SimpleGrid cols={isMobile ? 1 : 3}>
           {isLoading && locations.length === 0 && (
             <Group position="center" w={"100%"}>
               <Loader size="xl" color="teal" variant="dots" />
@@ -65,7 +65,7 @@ export default function Events() {
           {events.map((event: any) => (
             <EventCard key={event.id} event={event} locations={locations} />
           ))}
-        </Flex>
+        </SimpleGrid>
         <Space h={"xl"} />
       </Container>
     </>
