@@ -18,6 +18,7 @@ import LocationCardCompact from "@/components/LocationCardCompact";
 import { getAllEvents } from "@/lib/eventLib";
 import LocationFilter from "@/components/LocationFilter";
 import LocationSort from "@/components/LocationSort";
+import FormModal from "@/components/FormModal";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -46,9 +47,7 @@ export default function Locations() {
           getAllEvents(),
         ]);
         setTags([...allTags].sort((a, b) => a.name.localeCompare(b.name)));
-        setEvents(
-          [...allEvents].sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
-        );
+        setEvents(allEvents);
         setLocations(
           [...allLocations]
             .sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -116,24 +115,11 @@ export default function Locations() {
 
   return (
     <>
-      <Modal.Root opened={modalOpened} onClose={closeModal}>
-        <Modal.Overlay />
-        <Modal.Content>
-          <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>
-            <Modal.Title>{modal.title}</Modal.Title>
-            <Modal.CloseButton />
-          </Modal.Header>
-          <Modal.Body>
-            {modal.type === "form" && (
-              <LocationForm
-                closeModal={closeModal}
-                editLocationMode={editLocationMode}
-                preValues={preValues}
-              />
-            )}
-          </Modal.Body>
-        </Modal.Content>
-      </Modal.Root>
+      <FormModal title={modal.title} opened={modalOpened} close={closeModal}>
+        {modal.type === "form" && (
+          <LocationForm closeModal={closeModal} editLocationMode={editLocationMode} preValues={preValues} />
+        )}
+      </FormModal>
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
         <Group position={"apart"}>

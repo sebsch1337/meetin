@@ -1,8 +1,8 @@
-import { Space, Flex, Group, Button, Modal, Loader, Container } from "@mantine/core";
+import { Space, Flex, Group, Button, Modal, Loader, Container, Grid, SimpleGrid } from "@mantine/core";
 
 import EventCard from "@/components/EventCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { IconCalendarPlus, IconPlus } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import EventForm from "@/components/EventForm";
 
 import { eventsAtom, locationsAtom } from "@/store";
@@ -10,6 +10,7 @@ import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { getAllEvents } from "@/lib/eventLib";
 import { getAllLocations } from "@/lib/locationLib";
+import FormModal from "@/components/FormModal";
 
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -38,18 +39,9 @@ export default function Events() {
 
   return (
     <>
-      <Modal.Root opened={opened} onClose={close}>
-        <Modal.Overlay />
-        <Modal.Content>
-          <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>
-            <Modal.Title>{"Neues Event"}</Modal.Title>
-            <Modal.CloseButton />
-          </Modal.Header>
-          <Modal.Body>
-            <EventForm closeModal={close} />
-          </Modal.Body>
-        </Modal.Content>
-      </Modal.Root>
+      <FormModal title={"Neues Event"} opened={opened} close={close}>
+        <EventForm closeModal={close} />
+      </FormModal>
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
         <Button
@@ -64,7 +56,7 @@ export default function Events() {
 
         <Space h={"md"} />
 
-        <Flex gap={"xs"} wrap={"wrap"}>
+        <SimpleGrid cols={isMobile ? 1 : 3}>
           {isLoading && locations.length === 0 && (
             <Group position="center" w={"100%"}>
               <Loader size="xl" color="teal" variant="dots" />
@@ -73,7 +65,7 @@ export default function Events() {
           {events.map((event: any) => (
             <EventCard key={event.id} event={event} locations={locations} />
           ))}
-        </Flex>
+        </SimpleGrid>
         <Space h={"xl"} />
       </Container>
     </>

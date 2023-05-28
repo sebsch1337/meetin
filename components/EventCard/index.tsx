@@ -1,31 +1,10 @@
-import {
-  Text,
-  Card,
-  Flex,
-  Group,
-  Title,
-  Tooltip,
-  ActionIcon,
-  Modal,
-  Button,
-  Image as MantineImage,
-  Stack,
-} from "@mantine/core";
-
+import { Text, Card, Group, Title, Tooltip, Stack, Center, Paper } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-
 import Image from "next/image";
 
 import { getLocalDateTimeLong } from "@/utils/date";
 
-import {
-  IconSpeakerphone,
-  IconUsers,
-  IconInfoCircle,
-  IconEdit,
-  IconExternalLink,
-  IconPhotoOff,
-} from "@tabler/icons-react";
+import { IconSpeakerphone, IconUsers, IconPhotoOff } from "@tabler/icons-react";
 import NoGoIcon from "../NoGoIcon";
 
 export default function EventCard({ event, locations }: { event: Event; locations: Location[] }) {
@@ -35,8 +14,8 @@ export default function EventCard({ event, locations }: { event: Event; location
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Infos" centered>
-        <Flex direction={"column"} gap={"xs"}>
+      {/* <Modal opened={opened} onClose={close} title="Infos" centered>
+        <Stack spacing={"xs"}>
           {event?.preNotes && (
             <div>
               <Title order={4} size={"sm"}>
@@ -71,10 +50,10 @@ export default function EventCard({ event, locations }: { event: Event; location
               FB Event
             </Button>
           </div>
-        </Flex>
-      </Modal>
+        </Stack>
+      </Modal> */}
 
-      <Card maw={350} shadow="sm">
+      <Card shadow="sm">
         <Group noWrap>
           {location?.images?.length > 0 ? (
             <Image
@@ -85,35 +64,28 @@ export default function EventCard({ event, locations }: { event: Event; location
               style={{ objectFit: "cover", borderRadius: 5 }}
             />
           ) : (
-            <MantineImage
-              width={100}
-              height={100}
-              src={null}
-              alt="Kein Bild vorhanden"
-              radius={"xs"}
-              withPlaceholder
-              placeholder={<IconPhotoOff size={40} />}
-            />
+            <Paper w={100} h={100} radius={5}>
+              <Center w={100} h={100} mx={"auto"}>
+                <IconPhotoOff size={50} />
+              </Center>
+            </Paper>
           )}
 
-          <Group w={"100%"}>
-            <Stack spacing={0} maw={"100%"}>
-              <Text size={"xs"} w={"100%"}>
-                {getLocalDateTimeLong(event?.dateTime)}
-              </Text>
-              <Title order={3} size={16} truncate maw={180}>
+          <Stack>
+            <Stack spacing={0} align={"strech"}>
+              <Text size={"xs"}>{getLocalDateTimeLong(event?.dateTime)}</Text>
+              <Title order={3} size={16} truncate>
                 {event.name}
               </Title>
-
               <Group spacing={5} align="center">
-                <Text size={"sm"} truncate w={"100%"}>
+                <Text size={"sm"} truncate>
                   {location?.name}
                 </Text>
                 {location?.noGo && <NoGoIcon />}
               </Group>
             </Stack>
 
-            <Group position="apart" noWrap w={"100%"}>
+            <Group>
               <Group spacing={5} noWrap>
                 <Tooltip label="Angekündigt">
                   <IconSpeakerphone size={16} />
@@ -127,15 +99,8 @@ export default function EventCard({ event, locations }: { event: Event; location
                 </Tooltip>
                 <Text size={"xs"}>{event?.visitors ?? "-"}</Text>
               </Group>
-
-              <ActionIcon variant={"light"} size={"md"} color={"cyan"} onClick={open}>
-                <IconInfoCircle size={14} />
-              </ActionIcon>
-              <ActionIcon variant={"light"} size={"md"} color={"cyan"}>
-                <IconEdit size={14} />
-              </ActionIcon>
             </Group>
-          </Group>
+          </Stack>
         </Group>
       </Card>
     </>
