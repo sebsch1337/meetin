@@ -1,9 +1,10 @@
+import EventCardCompact from "@/components/EventCardCompact";
 import { getPastEvents, getUpcomingEvents } from "@/lib/eventLib";
 import { getAllEventsFromDb } from "@/services/eventService";
 import { getAllLocationsFromDb } from "@/services/locationService";
 import { getLocalDateLong, getLocalDateTimeLong, getLocalDateTimeShort } from "@/utils/date";
 
-import { Title, Container, Group, Table, Stack, Grid, Space, Text } from "@mantine/core";
+import { Title, Container, Group, Table, Stack, Grid, Space, Text, SimpleGrid } from "@mantine/core";
 
 import dynamic from "next/dynamic";
 const OverviewMap = dynamic((): any => import("@/components/OverviewMap"), {
@@ -30,30 +31,22 @@ export default function Home({ locations, events }: { locations: Location[]; eve
     <Container fluid px={"xl"} py={"xs"}>
       <Grid grow>
         <Grid.Col xs={1}>
-          <Stack spacing={"xs"}>
+          <Stack spacing={0}>
             <Title order={2} size={18}>
-              Bevorstehende Events
+              Bevorstehend
             </Title>
+
             <Table>
-              <thead>
-                <tr>
-                  <th>Datum</th>
-                  <th>Event</th>
-                </tr>
-              </thead>
               <tbody>
                 {events?.length > 0 ? (
                   getUpcomingEvents(events)
                     .slice(0, 5)
                     .map((event: Event) => (
                       <tr key={event.id}>
-                        <td>{`${getLocalDateTimeShort(event.dateTime)}`}</td>
-                        <td>
-                          <Text>{event.name}</Text>
-                          <Text size={"xs"}>
-                            {locations.find((location: Location) => location.id === event.locationId)?.name}
-                          </Text>
-                        </td>
+                        <EventCardCompact
+                          event={event}
+                          location={locations.find((location) => location.id === event.locationId)}
+                        />
                       </tr>
                     ))
                 ) : (
@@ -67,11 +60,31 @@ export default function Home({ locations, events }: { locations: Location[]; eve
         </Grid.Col>
 
         <Grid.Col xs={1}>
-          <Stack spacing={"xs"}>
-            <Title order={2} size={18}>
-              Vergangene Events
+          <Stack spacing={0}>
+            <Title order={2} size={"h4"}>
+              Vergangen
             </Title>
             <Table>
+              <tbody>
+                {events?.length > 0 ? (
+                  getPastEvents(events)
+                    .slice(0, 5)
+                    .map((event: Event) => (
+                      <tr key={event.id}>
+                        <EventCardCompact
+                          event={event}
+                          location={locations.find((location) => location.id === event.locationId)}
+                        />
+                      </tr>
+                    ))
+                ) : (
+                  <tr>
+                    <td>Keine Daten</td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+            {/* <Table>
               <thead>
                 <tr>
                   <th>Datum</th>
@@ -99,7 +112,7 @@ export default function Home({ locations, events }: { locations: Location[]; eve
                   </tr>
                 )}
               </tbody>
-            </Table>
+            </Table> */}
           </Stack>
         </Grid.Col>
       </Grid>
