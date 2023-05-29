@@ -24,9 +24,11 @@ export default function EventCardCompact({ event, location }: { event: Event; lo
           </Flex>
         )}
 
-        <Group grow noWrap>
-          <Stack spacing={0} align={"strech"}>
-            <Text size={"xs"}>{getLocalDateTimeLong(event?.dateTime)}</Text>
+        <Group noWrap>
+          <Stack spacing={0} w={"100%"}>
+            <Text size={"xs"} truncate>
+              {getLocalDateTimeLong(event?.dateTime)}
+            </Text>
             <Title order={3} size={"h6"} truncate>
               {event.name}
             </Title>
