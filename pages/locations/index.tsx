@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Container, Divider, Flex, Group, Loader, Modal, Space } from "@mantine/core";
+import { ActionIcon, Button, Container, Divider, Flex, Group, Loader, Space } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -19,7 +19,7 @@ import { getAllEvents } from "@/lib/eventLib";
 import LocationFilter from "@/components/LocationFilter";
 import LocationSort from "@/components/LocationSort";
 import FormModal from "@/components/FormModal";
-import LocationSearch from "@/components/LocationSearch";
+import SearchInput from "@/components/SearchInput";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -145,7 +145,7 @@ export default function Locations() {
           </Button>
 
           <Group noWrap>
-            <LocationSearch searchLocation={searchLocation} setSearchLocation={setSearchLocation} />
+            <SearchInput searchString={searchLocation} setSearchString={setSearchLocation} />
 
             <ActionIcon
               variant={"light"}
