@@ -27,8 +27,32 @@ export async function getAllEventsFromDb(): Promise<any[]> {
 }
 
 /**
+ * Retrieves an event from the database based on the provided event ID.
+ * @param eventId - The ID of the event to retrieve.
+ * @returns A promise that resolves to the retrieved event.
+ * @throws If the event is not found in the database.
+ */
+export async function getEventByIdFromDb(eventId: string): Promise<any> {
+  await dbConnect();
+
+  const sanitizedInput = await validateEvent(sanitizeEvent({ id: eventId }));
+
+  const event = await Events.findById(sanitizedInput.id).exec();
+  if (!event) throw new Error("Event not found");
+
+  const sanitizedEvent = await validateEvent(sanitizeEvent(event));
+  const newEvent = {
+    ...sanitizedEvent,
+    dateTime: sanitizedEvent?.dateTime?.toISOString(),
+  };
+
+  return newEvent;
+}
+
+/**
  * Gets all events for a location from the database.
  *
+ * @param locationId - The ID of the location to search for.
  * @returns An array of sanitized and validated event objects.
  * @throws Error if the event array is not found or not an array.
  */
