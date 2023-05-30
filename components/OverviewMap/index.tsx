@@ -7,6 +7,17 @@ import {
   getLastVisitedDay,
   getSixMonthsNotVisitedLocations,
 } from "@/lib/visitLib";
+import { getPastEvents, getUpcomingEvents } from "@/lib/eventLib";
+
+import {
+  pinBlueIcon,
+  pinBlueHighlightedIcon,
+  pinGreenIcon,
+  pinGreyIcon,
+  pinPinkIcon,
+  pinRedIcon,
+  pinYellowIcon,
+} from "@/lib/iconLib";
 
 import { IconListDetails } from "@tabler/icons-react";
 
@@ -14,15 +25,6 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
-
-import {
-  pinBlueIcon,
-  pinGreenIcon,
-  pinGreyIcon,
-  pinPinkIcon,
-  pinRedIcon,
-  pinYellowIcon,
-} from "@/lib/iconLib";
 
 export default function OverviewMap({
   locations,
@@ -64,6 +66,10 @@ export default function OverviewMap({
                 ? pinRedIcon
                 : sixMonthsNotVisitedLocations.includes(location.id)
                 ? pinYellowIcon
+                : [...getUpcomingEvents(events), ...getPastEvents(events)]
+                    .slice(0, 3)
+                    .find((event) => event.locationId === location.id)
+                ? pinBlueHighlightedIcon
                 : pinBlueIcon
             }
           >

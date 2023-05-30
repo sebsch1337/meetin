@@ -1,4 +1,5 @@
 import PinBlueImg from "../assets/icons/pin-blue.png";
+import PinBlueHighlightedImg from "../assets/icons/pin-blue-highlighted.png";
 import PinYellowImg from "../assets/icons/pin-yellow.png";
 import PinRedImg from "../assets/icons/pin-red.png";
 import PinGreyImg from "../assets/icons/pin-grey.png";
@@ -10,6 +11,13 @@ import L from "leaflet";
 export const pinBlueIcon = L.icon({
   iconUrl: PinBlueImg.src,
   iconRetinaUrl: PinBlueImg.src,
+  iconSize: [24, 35],
+  iconAnchor: [12, 35],
+});
+
+export const pinBlueHighlightedIcon = L.icon({
+  iconUrl: PinBlueHighlightedImg.src,
+  iconRetinaUrl: PinBlueHighlightedImg.src,
   iconSize: [24, 35],
   iconAnchor: [12, 35],
 });
