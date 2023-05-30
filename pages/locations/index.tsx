@@ -19,6 +19,7 @@ import { getAllEvents } from "@/lib/eventLib";
 import LocationFilter from "@/components/LocationFilter";
 import LocationSort from "@/components/LocationSort";
 import FormModal from "@/components/FormModal";
+import LocationSearch from "@/components/LocationSearch";
 
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -35,6 +36,7 @@ export default function Locations() {
   const [filteredTagIds, setFilteredTagIds] = useState([]);
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [sortBy, setSortBy] = useState("aToZ");
+  const [searchLocation, setSearchLocation] = useState("");
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
@@ -122,7 +124,7 @@ export default function Locations() {
       </FormModal>
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
-        <Group position={"apart"}>
+        <Group position={"apart"} noWrap>
           <Button
             leftIcon={<IconPlus size="1rem" />}
             variant={"light"}
@@ -142,16 +144,20 @@ export default function Locations() {
             Neue Location
           </Button>
 
-          <ActionIcon
-            variant={"light"}
-            size={"md"}
-            color={"teal"}
-            onClick={() => {
-              setFilterOpened((isOpened) => !isOpened);
-            }}
-          >
-            <IconFilter size="1rem" />
-          </ActionIcon>
+          <Group noWrap>
+            <LocationSearch searchLocation={searchLocation} setSearchLocation={setSearchLocation} />
+
+            <ActionIcon
+              variant={"light"}
+              size={"md"}
+              color={"teal"}
+              onClick={() => {
+                setFilterOpened((isOpened) => !isOpened);
+              }}
+            >
+              <IconFilter size="1rem" />
+            </ActionIcon>
+          </Group>
         </Group>
 
         {filterOpened && (
@@ -170,14 +176,16 @@ export default function Locations() {
 
         <Flex gap={"xs"} wrap={"wrap"} justify={isMobile ? "space-evenly" : "flex-start"}>
           {isLoading && locations.length === 0 && <Loader size="xl" variant="dots" color="teal" />}
-          {filteredLocations?.map((location: any) => (
-            <LocationCardCompact
-              key={location.id}
-              location={location}
-              lastVisitedDay={getLastVisitedDay(location.id, events)}
-              averageVisitors={getAverageVisitors(location.id, events)}
-            />
-          ))}
+          {filteredLocations
+            ?.filter((location) => location.name?.toLowerCase().includes(searchLocation.toLowerCase()))
+            .map((location: any) => (
+              <LocationCardCompact
+                key={location.id}
+                location={location}
+                lastVisitedDay={getLastVisitedDay(location.id, events)}
+                averageVisitors={getAverageVisitors(location.id, events)}
+              />
+            ))}
         </Flex>
         <Space h={"xl"} />
       </Container>
