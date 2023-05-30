@@ -1,16 +1,26 @@
 import { createEvent } from "@/lib/eventLib";
-import { TextInput, Button, Group, Select, Flex, Textarea, NumberInput } from "@mantine/core";
+import { TextInput, Button, Select, Flex, Textarea, NumberInput, Divider } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
 import { useForm } from "@mantine/form";
 
-import { eventsAtom, locationsAtom } from "@/store";
-import { useAtom, useSetAtom } from "jotai";
-
-export default function EventForm({ closeModal }: { closeModal: any }) {
-  const [locations] = useAtom(locationsAtom);
-  const setEvents = useSetAtom(eventsAtom);
-
+export default function EventForm({
+  event,
+  setEvent,
+  setEvents,
+  locations,
+  modal,
+  setModal,
+  closeModal,
+}: {
+  event: Event;
+  setEvent: any;
+  setEvents: any;
+  locations: Location[];
+  modal: Modal;
+  setModal: any;
+  closeModal: any;
+}) {
   const locationData = locations.map((location): { value: string; label: string } => ({
     value: location?.id || "",
     label: location?.name || "",
@@ -18,14 +28,15 @@ export default function EventForm({ closeModal }: { closeModal: any }) {
 
   const form = useForm({
     initialValues: {
-      name: "Stammtisch ",
-      locationId: "",
-      dateTime: null,
-      announced: null,
-      visitors: null,
-      preNotes: "",
-      postNotes: "",
-      fbLink: "",
+      name: event?.name ?? "Stammtisch ",
+      locationId: event?.locationId ?? "",
+      dateTime: new Date(event?.dateTime) ?? null,
+      announced: event?.announced ?? null,
+      visitors: event?.visitors ?? null,
+      description: event?.description ?? "",
+      preNotes: event?.preNotes ?? "",
+      postNotes: event?.postNotes ?? "",
+      fbLink: event?.fbLink ?? "",
     },
 
     validate: {
@@ -38,7 +49,10 @@ export default function EventForm({ closeModal }: { closeModal: any }) {
   return (
     <form
       onSubmit={form.onSubmit((values: any) => {
-        createEvent(values, setEvents);
+        if (modal.editMode) {
+        } else {
+          createEvent(values, setEvents);
+        }
         closeModal();
       })}
     >
@@ -97,9 +111,29 @@ export default function EventForm({ closeModal }: { closeModal: any }) {
           {...form.getInputProps("fbLink")}
         />
 
-        <Group position="right">
-          <Button type="submit">Erstellen</Button>
-        </Group>
+        <Button type="submit" variant={"light"} size={"sm"} color={"teal"} fullWidth>
+          {modal?.editMode ? "Änderungen speichern" : "Event erstellen"}
+        </Button>
+        {modal?.editMode && (
+          <>
+            <Divider />
+            <Button
+              variant={"light"}
+              size={"sm"}
+              color={"red"}
+              fullWidth
+              onClick={() => {
+                setModal((prev: any) => ({
+                  ...prev,
+                  title: "Event löschen",
+                  type: "delete",
+                }));
+              }}
+            >
+              Location löschen
+            </Button>{" "}
+          </>
+        )}
       </Flex>
     </form>
   );
