@@ -5,6 +5,7 @@ interface Event {
   dateTime: date | string;
   announced?: number;
   visitors?: number;
+  description?: string;
   preNotes?: string;
   postNotes?: string;
   fbLink?: string;
