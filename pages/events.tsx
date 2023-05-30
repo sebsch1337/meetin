@@ -1,4 +1,4 @@
-import { Space, Flex, Group, Button, Modal, Loader, Container, Grid, SimpleGrid } from "@mantine/core";
+import { Space, Group, Button, Loader, Container, SimpleGrid } from "@mantine/core";
 
 import EventCard from "@/components/EventCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -11,12 +11,15 @@ import { useEffect, useState } from "react";
 import { getAllEvents } from "@/lib/eventLib";
 import { getAllLocations } from "@/lib/locationLib";
 import FormModal from "@/components/FormModal";
+import SearchInput from "@/components/SearchInput";
 
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
   const [events, setEvents] = useAtom(eventsAtom);
   const [locations, setLocations] = useAtom(locationsAtom);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchEvent, setSearchEvent] = useState("");
+
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
@@ -44,16 +47,18 @@ export default function Events() {
       </FormModal>
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
-        <Button
-          leftIcon={<IconPlus size="1rem" />}
-          variant={"light"}
-          size={"sm"}
-          color={"cyan"}
-          onClick={open}
-        >
-          Neues Event
-        </Button>
-
+        <Group position={"apart"} noWrap>
+          <Button
+            leftIcon={<IconPlus size="1rem" />}
+            variant={"light"}
+            size={"sm"}
+            color={"cyan"}
+            onClick={open}
+          >
+            Neues Event
+          </Button>
+          <SearchInput searchString={searchEvent} setSearchString={setSearchEvent} />
+        </Group>
         <Space h={"md"} />
 
         <SimpleGrid cols={isMobile ? 1 : 3}>
@@ -62,9 +67,11 @@ export default function Events() {
               <Loader size="xl" color="teal" variant="dots" />
             </Group>
           )}
-          {events.map((event: any) => (
-            <EventCard key={event.id} event={event} locations={locations} />
-          ))}
+          {events
+            ?.filter((event) => event.name?.toLowerCase().includes(searchEvent.toLowerCase()))
+            .map((event: any) => (
+              <EventCard key={event.id} event={event} locations={locations} />
+            ))}
         </SimpleGrid>
         <Space h={"xl"} />
       </Container>
