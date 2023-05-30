@@ -3,4 +3,5 @@ interface Modal {
   type?: string;
   imageId?: string;
   locationId?: string;
+  editMode?: boolean;
 }
