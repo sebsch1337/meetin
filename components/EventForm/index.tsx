@@ -49,7 +49,7 @@ export default function EventForm({
   return (
     <form
       onSubmit={form.onSubmit((values: any) => {
-        if (modal.editMode) {
+        if (modal?.editMode) {
         } else {
           createEvent(values, setEvents);
         }
