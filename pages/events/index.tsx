@@ -43,7 +43,7 @@ export default function Events() {
   return (
     <>
       <FormModal title={"Neues Event"} opened={opened} close={close}>
-        <EventForm closeModal={close} />
+        <EventForm locations={locations} setEvents={setEvents} closeModal={close} />
       </FormModal>
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>

@@ -13,12 +13,12 @@ export default function EventForm({
   setModal,
   closeModal,
 }: {
-  event: Event;
-  setEvent: any;
-  setEvents: any;
+  event?: Event;
+  setEvent?: any;
+  setEvents?: any;
   locations: Location[];
-  modal: Modal;
-  setModal: any;
+  modal?: Modal;
+  setModal?: any;
   closeModal: any;
 }) {
   const locationData = locations.map((location): { value: string; label: string } => ({
@@ -30,7 +30,7 @@ export default function EventForm({
     initialValues: {
       name: event?.name ?? "Stammtisch ",
       locationId: event?.locationId ?? "",
-      dateTime: new Date(event?.dateTime) ?? null,
+      dateTime: event?.dateTime ? new Date(event?.dateTime) : null,
       announced: event?.announced ?? null,
       visitors: event?.visitors ?? null,
       description: event?.description ?? "",
