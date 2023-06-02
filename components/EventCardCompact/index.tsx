@@ -5,10 +5,11 @@ import { getLocalDateTimeLong } from "@/utils/date";
 
 import { IconPhotoOff } from "@tabler/icons-react";
 import NoGoIcon from "../NoGoIcon";
+import Link from "next/link";
 
 export default function EventCardCompact({ event, location }: { event: Event; location: any }) {
   return (
-    <Card style={{ background: "transparent" }} p={"xs"}>
+    <Card component={Link} href={`/events/${event.id}`} style={{ background: "transparent" }} p={"xs"}>
       <Group noWrap>
         {location?.images?.length > 0 ? (
           <Image

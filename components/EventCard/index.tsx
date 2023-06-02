@@ -1,4 +1,4 @@
-import { Text, Card, Group, Title, Tooltip, Stack, Center, Paper } from "@mantine/core";
+import { Text, Card, Group, Title, Tooltip, Stack, Center, Paper, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Image from "next/image";
 
@@ -6,6 +6,7 @@ import { getLocalDateTimeLong } from "@/utils/date";
 
 import { IconSpeakerphone, IconUsers, IconPhotoOff } from "@tabler/icons-react";
 import NoGoIcon from "../NoGoIcon";
+import Link from "next/link";
 
 export default function EventCard({ event, locations }: { event: Event; locations: Location[] }) {
   const [opened, { open, close }] = useDisclosure(false);
@@ -53,7 +54,7 @@ export default function EventCard({ event, locations }: { event: Event; location
         </Stack>
       </Modal> */}
 
-      <Card shadow="sm">
+      <Card component={Link} href={`/events/${event.id}`}>
         <Group noWrap>
           {location?.images?.length > 0 ? (
             <Image

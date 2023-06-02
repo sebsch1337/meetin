@@ -18,6 +18,7 @@ import LocationForm from "@/components/LocationForm";
 import LocationDeleteModal from "@/components/LocationDeleteModal";
 
 import dynamic from "next/dynamic";
+import DetailsModal from "@/components/DetailsModal";
 const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
   ssr: false,
 });
@@ -81,33 +82,24 @@ export default function LocationDetails({
     <>
       <LoadingOverlay visible={loading} overlayBlur={2} />
 
-      <Modal.Root opened={modalOpened} onClose={closeModal}>
-        <Modal.Overlay />
-        <Modal.Content>
-          <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>
-            <Modal.Title>{modal.title}</Modal.Title>
-            <Modal.CloseButton />
-          </Modal.Header>
-          <Modal.Body>
-            {modal.type === "form" && (
-              <LocationForm
-                closeModal={closeModal}
-                editLocationMode={editLocationMode}
-                preValues={location}
-                tags={tags}
-                setLocation={setLocation}
-                setModal={setModal}
-              />
-            )}
-            {modal.type === "deleteLocation" && (
-              <LocationDeleteModal
-                deleteLocation={async () => await deleteLocation(location)}
-                closeModal={closeModal}
-              />
-            )}
-          </Modal.Body>
-        </Modal.Content>
-      </Modal.Root>
+      <DetailsModal opened={modalOpened} onClose={closeModal} modal={modal}>
+        {modal.type === "form" && (
+          <LocationForm
+            closeModal={closeModal}
+            editLocationMode={editLocationMode}
+            preValues={location}
+            tags={tags}
+            setLocation={setLocation}
+            setModal={setModal}
+          />
+        )}
+        {modal.type === "deleteLocation" && (
+          <LocationDeleteModal
+            deleteLocation={async () => await deleteLocation(location)}
+            closeModal={closeModal}
+          />
+        )}
+      </DetailsModal>
 
       <Container
         h={"20vh"}
