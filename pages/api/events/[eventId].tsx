@@ -15,7 +15,10 @@ export default async function handler(req: any, res: any): Promise<any> {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
         }
-        console.error(error.message);
+        if (error.errors) {
+          console.error(error.errors);
+          return res.status(500).json({ errors: error.errors });
+        }
         return res.status(500).json({ message: "internal server error" });
       }
       break;
