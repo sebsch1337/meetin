@@ -1,24 +1,20 @@
 import { object, string, number, date } from "yup";
 
-export const sanitizeEvent = (event: any) => {
-  const sanitizedEvent = {
-    id: event?._id?.toString().trim() || event?.id?.toString().trim() || undefined,
-    name: event?.name?.toString().trim() || "",
-    dateTime: event?.dateTime ? new Date(event.dateTime) : undefined,
-    locationId: event?.locationId?.toString().trim() || undefined,
-    announced: event?.announced || null,
-    visitors: event?.visitors || null,
-    description: event?.description || "",
-    preNotes: event?.preNotes?.toString().trim() || "",
-    postNotes: event?.postNotes?.toString().trim() || "",
-    fbLink: event?.fbLink?.toString().trim() || "",
-  };
-
-  return sanitizedEvent;
-};
+export const sanitizeEvent = (event: any) => ({
+  id: event?._id?.toString().trim() || event?.id?.toString().trim() || undefined,
+  name: event?.name?.toString().trim() || "",
+  dateTime: event?.dateTime ? new Date(event.dateTime) : undefined,
+  locationId: event?.locationId?.toString().trim() || undefined,
+  announced: event?.announced || null,
+  visitors: event?.visitors || null,
+  description: event?.description || "",
+  preNotes: event?.preNotes?.toString().trim() || "",
+  postNotes: event?.postNotes?.toString().trim() || "",
+  fbLink: event?.fbLink?.toString().trim() || "",
+});
 
 export const validateEvent = async (event: any) => {
-  let eventSchema = object({
+  const eventSchema = object({
     id: string().length(24),
     name: string().max(50),
     dateTime: date(),

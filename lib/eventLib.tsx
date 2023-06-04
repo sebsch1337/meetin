@@ -84,23 +84,26 @@ export const createEvent = async (values: Event, setEvents: any) => {
  * @param setEvents A function to update the state of events.
  * @returns If an error occurs during the update process, it is returned.
  */
-export const editEvent = async (values: any, eventId: string, setEvents: any) => {
+export const editEvent = async (values: any, eventId: string) => {
   try {
     const response = await fetch(`/api/events/${eventId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ values: values }),
     });
-    if (!response.ok) throw new Error("Failed to update event.");
-    const changedEventData: any = await response.json();
 
-    setEvents(changedEventData);
+    if (!response.ok) throw new Error("Failed to update event.");
+    const newEvent: any = await response.json();
+
+    console.log("newEvent", newEvent);
 
     notifications.show({
       icon: <IconCheck />,
       title: values.name,
       message: `Event erfolgreich bearbeitet.`,
     });
+
+    return newEvent;
   } catch (error) {
     console.error(error);
     notifications.show({
