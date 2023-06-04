@@ -140,7 +140,7 @@ export default function EventForm({
           {...form.getInputProps("fbLink")}
         />
 
-        <Button type="submit" variant={"light"} size={"sm"} color={"teal"} fullWidth>
+        <Button type="submit" variant={"light"} color={"cyan"} size={"sm"} fullWidth>
           {modal?.editMode ? "Änderungen speichern" : "Event erstellen"}
         </Button>
         {modal?.editMode && (
