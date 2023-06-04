@@ -120,7 +120,7 @@ export const editEvent = async (values: any, eventId: string) => {
  * @param setEvent A function to update the state of events.
  * @returns If an error occurs during the deletion process, it is returned.
  */
-export const deleteEvent = async (eventId: string, events: any, setEvent: any) => {
+export const deleteEvent = async (eventId: any) => {
   try {
     const response = await fetch(`/api/events/${eventId}`, {
       method: "DELETE",
@@ -136,8 +136,6 @@ export const deleteEvent = async (eventId: string, events: any, setEvent: any) =
     });
     return error;
   }
-
-  setEvent((prevEvents: any) => prevEvents.filter((prevEvent: any) => prevEvent.id !== eventId));
 
   notifications.show({
     icon: <IconCheck />,
