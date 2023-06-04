@@ -53,6 +53,12 @@ export default function EventForm({
       name: (value) => (value.length === 0 ? "Bitte gib der Veranstaltung einen Namen" : null),
       locationId: (value) => (value.length === 0 ? "Bitte wähle eine Location" : null),
       dateTime: (value) => (value === null ? "Bitte wähle einen Zeitpunkt" : null),
+      announced: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
+      visitors: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
+      description: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
+      preNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
+      postNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
+      fbLink: (value) => (value.length > 100 ? "Zu viele Zeichen (Max. 100)" : null),
     },
   });
 
@@ -66,7 +72,7 @@ export default function EventForm({
           if (event?.id) {
             try {
               const editedEvent = await editEvent(values, event.id);
-              setEvent(editedEvent);
+              if (editedEvent.id) setEvent(editedEvent);
             } catch (e) {
               console.error(`Error while updating event`);
             }
