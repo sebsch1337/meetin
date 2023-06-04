@@ -53,7 +53,6 @@ export default function EventDetails({
   const [location, setLocation] = useState<Location>();
   const [modal, setModal] = useState<Modal>({});
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const location = locationData.find((location) => location.id === event?.locationId);
@@ -62,8 +61,6 @@ export default function EventDetails({
 
   return (
     <>
-      <LoadingOverlay visible={loading} overlayBlur={2} />
-
       <DetailsModal opened={modalOpened} onClose={closeModal} modal={modal}>
         {modal.type === "form" && (
           <EventForm
