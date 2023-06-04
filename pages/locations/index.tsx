@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Container, Divider, Flex, Group, Loader, Space } from "@mantine/core";
+import { ActionIcon, Button, Center, Container, Divider, Flex, Group, Loader, Space } from "@mantine/core";
 import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -162,7 +162,6 @@ export default function Locations() {
 
         {filterOpened && (
           <>
-            <Divider my={"md"} />
             <LocationSort sortBy={sortBy} setSortBy={setSortBy} />
             <LocationFilter
               tags={tags}
@@ -172,10 +171,15 @@ export default function Locations() {
           </>
         )}
 
-        <Divider my={"md"} />
+        <Space h={"md"} />
+
+        {isLoading && locations.length === 0 && (
+          <Center>
+            <Loader size="xl" color="teal" variant="dots" />
+          </Center>
+        )}
 
         <Flex gap={"xs"} wrap={"wrap"} justify={isMobile ? "space-evenly" : "flex-start"}>
-          {isLoading && locations.length === 0 && <Loader size="xl" variant="dots" color="teal" />}
           {filteredLocations
             ?.filter((location) => location.name?.toLowerCase().includes(searchLocation.toLowerCase()))
             .map((location: any) => (

@@ -10,11 +10,11 @@ import {
   Title,
   rem,
 } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { getEventByIdFromDb } from "@/services/eventService";
-import { getAllLocationsFromDb, getLocationByIdFromDb } from "@/services/locationService";
+import { getAllLocationsFromDb } from "@/services/locationService";
 
 import { getLocalDateTimeLong } from "@/utils/date";
 
@@ -50,16 +50,17 @@ export default function EventDetails({
   locationData: Location[];
 }) {
   const [event, setEvent] = useState(eventData ?? {});
+  const [location, setLocation] = useState<Location>();
   const [modal, setModal] = useState<Modal>({});
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
-  const [loading, setLoading] = useState(false);
 
-  const location = locationData.find((location) => location.id === event?.locationId);
+  useEffect(() => {
+    const location = locationData.find((location) => location.id === event?.locationId);
+    setLocation(location);
+  }, [event, locationData]);
 
   return (
     <>
-      <LoadingOverlay visible={loading} overlayBlur={2} />
-
       <DetailsModal opened={modalOpened} onClose={closeModal} modal={modal}>
         {modal.type === "form" && (
           <EventForm
@@ -84,7 +85,7 @@ export default function EventDetails({
         fluid
         p={0}
         style={{
-          backgroundImage: `${location?.images[0]?.url ? `url(${location?.images[0]?.url})` : "none"}`,
+          backgroundImage: `${location?.images?.length ? `url(${location?.images[0]?.url})` : "none"}`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
           backgroundSize: "cover",

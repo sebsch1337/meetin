@@ -1,4 +1,4 @@
-import { Space, Group, Button, Loader, Container, SimpleGrid } from "@mantine/core";
+import { Space, Group, Button, Loader, Container, SimpleGrid, Flex, Center } from "@mantine/core";
 
 import EventCard from "@/components/EventCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -60,13 +60,12 @@ export default function Events() {
           <SearchInput searchString={searchEvent} setSearchString={setSearchEvent} />
         </Group>
         <Space h={"md"} />
-
+        {isLoading && locations.length === 0 && (
+          <Center>
+            <Loader size="xl" color={"cyan"} variant="dots" />
+          </Center>
+        )}
         <SimpleGrid cols={isMobile ? 1 : 3}>
-          {isLoading && locations.length === 0 && (
-            <Group position="center" w={"100%"}>
-              <Loader size="xl" color="teal" variant="dots" />
-            </Group>
-          )}
           {events
             ?.filter((event) => event.name?.toLowerCase().includes(searchEvent.toLowerCase()))
             .map((event: any) => (

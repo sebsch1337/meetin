@@ -1,3 +1,4 @@
+import { CONTROL_SIZES } from "@mantine/core/lib/NumberInput/NumberInput.styles";
 import dbConnect from "../lib/dbConnect";
 import Events from "../models/eventsModel";
 import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";
@@ -100,14 +101,18 @@ export async function postEventToDb(event: any): Promise<any> {
 export async function updateEventInDb(id: string, event: Event): Promise<any> {
   await dbConnect();
 
-  const [sanitizedId, sanitizedEvent] = await Promise.all([
-    await validateEvent(sanitizeEvent({ id })),
-    await validateEvent(sanitizeEvent(event)),
-  ]);
-  const updateEventState = await Events.updateOne({ _id: sanitizedId.id }, { $set: sanitizedEvent }).exec();
-  if (!updateEventState.acknowledged) throw new Error();
+  const eventData = { ...event, id };
+  const sanitizedEvent = await validateEvent(sanitizeEvent(eventData));
 
-  return updateEventState;
+  const updatedEvent = await Events.findOneAndUpdate(
+    { _id: sanitizedEvent.id },
+    { $set: sanitizedEvent },
+    { new: true }
+  ).exec();
+  if (!updatedEvent) throw new Error();
+
+  const sanitizedNewEvent = await validateEvent(sanitizeEvent(updatedEvent));
+  return sanitizedNewEvent;
 }
 
 /**

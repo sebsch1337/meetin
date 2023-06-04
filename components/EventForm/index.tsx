@@ -1,8 +1,18 @@
-import { createEvent } from "@/lib/eventLib";
-import { TextInput, Button, Select, Flex, Textarea, NumberInput, Divider } from "@mantine/core";
+import { createEvent, editEvent } from "@/lib/eventLib";
+import {
+  TextInput,
+  Button,
+  Select,
+  Flex,
+  Textarea,
+  NumberInput,
+  Divider,
+  LoadingOverlay,
+} from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
 import { useForm } from "@mantine/form";
+import { useState } from "react";
 
 export default function EventForm({
   event,
@@ -43,13 +53,32 @@ export default function EventForm({
       name: (value) => (value.length === 0 ? "Bitte gib der Veranstaltung einen Namen" : null),
       locationId: (value) => (value.length === 0 ? "Bitte wähle eine Location" : null),
       dateTime: (value) => (value === null ? "Bitte wähle einen Zeitpunkt" : null),
+      announced: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
+      visitors: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
+      description: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
+      preNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
+      postNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
+      fbLink: (value) => (value.length > 100 ? "Zu viele Zeichen (Max. 100)" : null),
     },
   });
 
+  const [loading, setLoading] = useState(false);
+
   return (
     <form
-      onSubmit={form.onSubmit((values: any) => {
+      onSubmit={form.onSubmit(async (values: any) => {
+        setLoading(true);
         if (modal?.editMode) {
+          if (event?.id) {
+            try {
+              const editedEvent = await editEvent(values, event.id);
+              if (editedEvent.id) setEvent(editedEvent);
+            } catch (e) {
+              console.error(`Error while updating event`);
+            }
+          } else {
+            console.error(`Can't find ID`);
+          }
         } else {
           createEvent(values, setEvents);
         }
@@ -57,8 +86,8 @@ export default function EventForm({
       })}
     >
       <Flex direction={"column"} gap={"md"}>
+        <LoadingOverlay visible={loading} overlayBlur={2} />
         <TextInput
-          data-autofocus
           withAsterisk
           label="Name"
           maxLength={50}
@@ -111,7 +140,7 @@ export default function EventForm({
           {...form.getInputProps("fbLink")}
         />
 
-        <Button type="submit" variant={"light"} size={"sm"} color={"teal"} fullWidth>
+        <Button type="submit" variant={"light"} color={"cyan"} size={"sm"} fullWidth>
           {modal?.editMode ? "Änderungen speichern" : "Event erstellen"}
         </Button>
         {modal?.editMode && (
@@ -131,7 +160,7 @@ export default function EventForm({
               }}
             >
               Location löschen
-            </Button>{" "}
+            </Button>
           </>
         )}
       </Flex>

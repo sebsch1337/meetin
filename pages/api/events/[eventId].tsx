@@ -1,4 +1,4 @@
-import { deleteEventFromDb, getAllEventsFromDb, updateEventInDb } from "@/services/eventService";
+import { deleteEventFromDb, updateEventInDb } from "@/services/eventService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
@@ -9,14 +9,16 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "PATCH":
       try {
-        await updateEventInDb(eventId, req.body.values);
-        const updatedEvent = await getAllEventsFromDb();
+        const updatedEvent = await updateEventInDb(eventId, req.body.values);
         res.status(200).json(updatedEvent);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
         }
-        console.error(error.message);
+        if (error.errors) {
+          console.error(error.errors);
+          return res.status(500).json({ errors: error.errors });
+        }
         return res.status(500).json({ message: "internal server error" });
       }
       break;
