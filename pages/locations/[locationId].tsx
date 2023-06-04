@@ -15,10 +15,10 @@ import LocationDetailsPictures from "@/components/LocationDetails/LocationDetail
 import LocationDetailsHistory from "@/components/LocationDetails/LocationDetailsHistory";
 import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
 import LocationForm from "@/components/LocationForm";
-import LocationDeleteModal from "@/components/LocationDeleteModal";
+import DetailsModal from "@/components/DetailsModal";
+import DeleteModal from "@/components/DeleteModal";
 
 import dynamic from "next/dynamic";
-import DetailsModal from "@/components/DetailsModal";
 const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
   ssr: false,
 });
@@ -94,8 +94,9 @@ export default function LocationDetails({
           />
         )}
         {modal.type === "deleteLocation" && (
-          <LocationDeleteModal
-            deleteLocation={async () => await deleteLocation(location)}
+          <DeleteModal
+            type={"location"}
+            deleteData={async () => await deleteLocation(location)}
             closeModal={closeModal}
           />
         )}

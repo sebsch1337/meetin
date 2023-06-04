@@ -2,11 +2,13 @@ import { Button, LoadingOverlay, Space, Text } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function LocationDeleteModal({
-  deleteLocation,
+export default function DeleteModal({
+  type,
+  deleteData,
   closeModal,
 }: {
-  deleteLocation: any;
+  type: string;
+  deleteData: any;
   closeModal: any;
 }) {
   const [loading, setLoading] = useState(false);
@@ -15,7 +17,11 @@ export default function LocationDeleteModal({
   return (
     <>
       <LoadingOverlay visible={loading} overlayBlur={2} />
-      <Text size={"sm"}>Möchtest du diese Location wirklich löschen?</Text>
+      <Text size={"sm"}>{`${
+        type === "event"
+          ? "Möchtest du dieses Event wirklich löschen?"
+          : "Möchtest du diese Location wirklich löschen?"
+      }`}</Text>
       <Space mt={"xl"} />
       <Button
         variant={"light"}
@@ -24,10 +30,8 @@ export default function LocationDeleteModal({
         fullWidth
         onClick={async () => {
           setLoading(true);
-          await deleteLocation();
-          setLoading(false);
-          closeModal();
-          router.push("/locations");
+          await deleteData();
+          router.push(type === "event" ? "/events" : "/locations");
         }}
       >
         Löschen
