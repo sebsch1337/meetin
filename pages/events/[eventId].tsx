@@ -22,6 +22,8 @@ import { IconBrandFacebook, IconEdit } from "@tabler/icons-react";
 import DetailsModal from "@/components/DetailsModal";
 import { useDisclosure } from "@mantine/hooks";
 import EventForm from "@/components/EventForm";
+import DeleteModal from "@/components/DeleteModal";
+import { deleteEvent } from "@/lib/eventLib";
 
 export async function getServerSideProps(context: any) {
   const eventId = context.params.eventId;
@@ -72,12 +74,13 @@ export default function EventDetails({
             setModal={setModal}
           />
         )}
-        {/* {modal.type === "delete" && (
-          <LocationDeleteModal
-            deleteLocation={async () => await deleteLocation(location)}
+        {modal.type === "delete" && (
+          <DeleteModal
+            type={"event"}
+            deleteData={async () => await deleteEvent(event.id)}
             closeModal={closeModal}
           />
-        )} */}
+        )}
       </DetailsModal>
 
       <Container
