@@ -95,8 +95,6 @@ export const editEvent = async (values: any, eventId: string) => {
     if (!response.ok) throw new Error("Failed to update event.");
     const newEvent: any = await response.json();
 
-    console.log("newEvent", newEvent);
-
     notifications.show({
       icon: <IconCheck />,
       title: values.name,

@@ -1,8 +1,18 @@
-import { createEvent } from "@/lib/eventLib";
-import { TextInput, Button, Select, Flex, Textarea, NumberInput, Divider } from "@mantine/core";
+import { createEvent, editEvent } from "@/lib/eventLib";
+import {
+  TextInput,
+  Button,
+  Select,
+  Flex,
+  Textarea,
+  NumberInput,
+  Divider,
+  LoadingOverlay,
+} from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
 import { useForm } from "@mantine/form";
+import { useState } from "react";
 
 export default function EventForm({
   event,
@@ -46,10 +56,23 @@ export default function EventForm({
     },
   });
 
+  const [loading, setLoading] = useState(false);
+
   return (
     <form
-      onSubmit={form.onSubmit((values: any) => {
+      onSubmit={form.onSubmit(async (values: any) => {
+        setLoading(true);
         if (modal?.editMode) {
+          if (event?.id) {
+            try {
+              const editedEvent = await editEvent(values, event.id);
+              setEvent(editedEvent);
+            } catch (e) {
+              console.error(`Error while updating event`);
+            }
+          } else {
+            console.error(`Can't find ID`);
+          }
         } else {
           createEvent(values, setEvents);
         }
@@ -57,8 +80,8 @@ export default function EventForm({
       })}
     >
       <Flex direction={"column"} gap={"md"}>
+        <LoadingOverlay visible={loading} overlayBlur={2} />
         <TextInput
-          data-autofocus
           withAsterisk
           label="Name"
           maxLength={50}
@@ -131,7 +154,7 @@ export default function EventForm({
               }}
             >
               Location löschen
-            </Button>{" "}
+            </Button>
           </>
         )}
       </Flex>
