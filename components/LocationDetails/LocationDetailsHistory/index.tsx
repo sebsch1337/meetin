@@ -1,5 +1,6 @@
 import { getLocalDateTimeShort } from "@/utils/date";
-import { Table } from "@mantine/core";
+import { Table, Text } from "@mantine/core";
+import Link from "next/link";
 
 export default function LocationDetailsHistory({ locationEvents = [] }: { locationEvents: any }) {
   return (
@@ -15,7 +16,11 @@ export default function LocationDetailsHistory({ locationEvents = [] }: { locati
           locationEvents?.map((event: Event): any => (
             <tr key={event?.id}>
               <td style={{ whiteSpace: "nowrap" }}>{getLocalDateTimeShort(event?.dateTime)}</td>
-              <td>{event?.name}</td>
+              <td>
+                <Text component={Link} href={`/events/${event.id}`}>
+                  {event?.name}
+                </Text>
+              </td>
             </tr>
           ))}
       </tbody>
