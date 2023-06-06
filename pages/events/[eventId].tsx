@@ -138,7 +138,13 @@ export default function EventDetails({
           <Title order={1} color={"white"} style={{ textShadow: "0px 0px 4px #000000" }}>
             {event.name}
           </Title>
-          <Text size={"lg"} color={"white"} style={{ textShadow: "0px 0px 4px #000000" }}>
+          <Text
+            component={Link}
+            href={`/locations/${location?.id}`}
+            size={"lg"}
+            color={"white"}
+            style={{ textShadow: "0px 0px 4px #000000" }}
+          >
             {location?.name}
           </Text>
         </Flex>
