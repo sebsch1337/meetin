@@ -156,20 +156,29 @@ export default function EventDetails({
                   <Text size={"sm"}>Angekündigt</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
-                  <Text size={"sm"}>{event?.announced ?? "N/A"}</Text>
+                  <Text size={"sm"} c={!event?.announced ? "dimmed" : ""}>
+                    {event?.announced ?? "-"}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Erschienen</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
-                  <Text size={"sm"}>{event?.visitors ?? "N/A"}</Text>
+                  <Text size={"sm"} c={!event?.visitors ? "dimmed" : ""}>
+                    {event?.visitors ?? "-"}
+                  </Text>
                 </Grid.Col>
               </Grid>
               <Title order={2} size={18} mt={"lg"}>
                 Beschreibung
               </Title>
               <Divider />
-              <Text size={"sm"} mt={"xs"} fs={!event?.description ? "italic" : ""}>
+              <Text
+                size={"sm"}
+                mt={"xs"}
+                fs={!event?.description ? "italic" : ""}
+                c={!event?.description ? "dimmed" : ""}
+              >
                 {event?.description || "Keine Beschreibung vorhanden."}
               </Text>
             </Stack>
@@ -180,14 +189,25 @@ export default function EventDetails({
                 Planungsnotizen
               </Title>
               <Divider />
-              <Text size={"sm"} mt={"xs"} fs={!event?.preNotes ? "italic" : ""}>
+              <Text
+                size={"sm"}
+                mt={"xs"}
+                fs={!event?.preNotes ? "italic" : ""}
+                c={!event?.preNotes ? "dimmed" : ""}
+              >
                 {event?.preNotes || "Keine Notizen vorhanden."}
               </Text>
+
               <Title order={2} size={18} mt={"lg"}>
                 Fazit
               </Title>
               <Divider />
-              <Text size={"sm"} mt={"xs"} fs={!event?.postNotes ? "italic" : ""}>
+              <Text
+                size={"sm"}
+                mt={"xs"}
+                fs={!event?.postNotes ? "italic" : ""}
+                c={!event?.postNotes ? "dimmed" : ""}
+              >
                 {event?.postNotes || "Keine Notizen vorhanden."}
               </Text>
             </Stack>
