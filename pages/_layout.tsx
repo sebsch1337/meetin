@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createStyles,
   Header,
@@ -117,13 +117,33 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
       key={link.label}
       href={link.link}
       className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-      onClick={() => {
-        setActive(link.link);
-      }}
     >
       {link.label}
     </Link>
   ));
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      switch (url.split("/")[1]) {
+        case "events":
+          setActive("/events");
+          break;
+
+        case "locations":
+          setActive("/locations");
+          break;
+
+        default:
+          setActive("/");
+      }
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router]);
 
   return (
     <>
@@ -133,13 +153,7 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             {items}
           </Group>
 
-          <Link
-            href="/"
-            className={classes.logoLink}
-            onClick={() => {
-              setActive("");
-            }}
-          >
+          <Link href="/" className={classes.logoLink}>
             <Group spacing={5}>
               <IconHeartHandshake />
               <Text size={18}>MeetIn</Text>
@@ -173,7 +187,6 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             href="/"
             className={cx(classes.link, classes.mobileLink)}
             onClick={() => {
-              setActive("/");
               closeDrawer();
             }}
           >
@@ -183,7 +196,6 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             href="/events"
             className={cx(classes.link, classes.mobileLink)}
             onClick={() => {
-              setActive("/events");
               closeDrawer();
             }}
           >
@@ -193,7 +205,6 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             href="/locations"
             className={cx(classes.link, classes.mobileLink)}
             onClick={() => {
-              setActive("/locations");
               closeDrawer();
             }}
           >

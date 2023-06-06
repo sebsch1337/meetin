@@ -1,4 +1,4 @@
-import { getLocalDateLong } from "@/utils/date";
+import { getLocalDateLong, getLocalDateTimeLong, getLocalDateTimeShort } from "@/utils/date";
 
 /**
  * Returns an array of events filtered by the specified location ID.
@@ -30,7 +30,7 @@ export const getLastVisit = (locationId: string, events: Event[]): any => {
  */
 export const getLastVisitedDay = (locationId: any, events: Event[]): string => {
   const lastVisit = getLastVisit(locationId, events);
-  return lastVisit ? getLocalDateLong(lastVisit.dateTime) : "Nie";
+  return lastVisit ? getLocalDateTimeShort(lastVisit.dateTime) : "Nie";
 };
 
 /**

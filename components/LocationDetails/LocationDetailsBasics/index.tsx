@@ -45,13 +45,13 @@ export default function LocationDetailsBasics({
                   <Text size={"sm"}>Max. Besucherzahl</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
-                  <Text size={"sm"}>{location?.maxCapacity}</Text>
+                  <Text size={"sm"}>{location?.maxCapacity ?? "-"}</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Besucherdurchschnitt</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
-                  <Text size={"sm"}>{averageVisitors}</Text>
+                  <Text size={"sm"}>{averageVisitors ?? "-"}</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Letzter Besuch</Text>
@@ -76,12 +76,18 @@ export default function LocationDetailsBasics({
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <Group spacing={"xs"}>
-                    <Text size={"sm"}>{location?.tel}</Text>
-                    <Link href={`tel://${location?.tel}`}>
-                      <ActionIcon size={"sm"} color="teal" variant="light">
+                    <Text size={"sm"}>{location?.tel || "-"}</Text>
+                    {location?.tel && (
+                      <ActionIcon
+                        component={Link}
+                        href={`tel://${location?.tel}`}
+                        size={"sm"}
+                        color="teal"
+                        variant="light"
+                      >
                         <IconPhone size={"0.9rem"} />
                       </ActionIcon>
-                    </Link>
+                    )}
                   </Group>
                 </Grid.Col>
                 <Grid.Col span={6}>
@@ -105,11 +111,22 @@ export default function LocationDetailsBasics({
               </Group>
               <Divider />
               <Group mb={"md"} spacing={"xs"} mih={45}>
-                {location?.tags?.map((tagId) => (
-                  <Badge variant={"outline"} color={"teal"} key={tagId} size={"xs"}>
-                    {tags.find((tag: any) => tag.id === tagId)?.name}
-                  </Badge>
-                ))}
+                {location?.tags?.length ? (
+                  location?.tags?.map((tagId) => (
+                    <Badge variant={"outline"} color={"teal"} key={tagId} size={"xs"}>
+                      {tags.find((tag: any) => tag.id === tagId)?.name}
+                    </Badge>
+                  ))
+                ) : (
+                  <Text
+                    size={"sm"}
+                    mt={"xs"}
+                    fs={!location?.description ? "italic" : ""}
+                    c={!location?.description ? "dimmed" : ""}
+                  >
+                    {location?.description || "Keine Tags vorhanden."}
+                  </Text>
+                )}
               </Group>
             </Stack>
           </Stack>
@@ -126,7 +143,12 @@ export default function LocationDetailsBasics({
                 </ActionIcon> */}
               </Group>
               <Divider />
-              <Text size={"sm"} mt={"xs"}>
+              <Text
+                size={"sm"}
+                mt={"xs"}
+                fs={!location?.description ? "italic" : ""}
+                c={!location?.description ? "dimmed" : ""}
+              >
                 {location?.description || "Keine Beschreibung vorhanden."}
               </Text>
             </Stack>
@@ -140,7 +162,12 @@ export default function LocationDetailsBasics({
                 </ActionIcon> */}
               </Group>
               <Divider />
-              <Text size={"sm"} mt={"xs"}>
+              <Text
+                size={"sm"}
+                mt={"xs"}
+                fs={!location?.infos ? "italic" : ""}
+                c={!location?.infos ? "dimmed" : ""}
+              >
                 {location?.infos || "Keine Informationen vorhanden."}
               </Text>
             </Stack>

@@ -26,6 +26,9 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ locations, events }: { locations: Location[]; events: Event[] }) {
+  const lastFiveEvents = getPastEvents(events).slice(0, 5);
+  const nextFiveEvents = getUpcomingEvents(events).slice(0, 5);
+
   return (
     <Container fluid px={"xl"} py={"xs"}>
       <Grid grow style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -35,20 +38,18 @@ export default function Home({ locations, events }: { locations: Location[]; eve
               Bevorstehend
             </Title>
 
-            {events?.length > 0 ? (
-              getUpcomingEvents(events)
-                .slice(0, 5)
-                .map((event: Event) => (
-                  <EventCardCompact
-                    key={event.id}
-                    event={event}
-                    location={locations.find((location) => location.id === event.locationId)}
-                  />
-                ))
+            {nextFiveEvents.length > 0 ? (
+              nextFiveEvents.map((event: Event) => (
+                <EventCardCompact
+                  key={event.id}
+                  event={event}
+                  location={locations.find((location) => location.id === event.locationId)}
+                />
+              ))
             ) : (
-              <tr>
-                <td>Keine Daten</td>
-              </tr>
+              <Text c={"dimmed"} fs={"italic"} size={"sm"}>
+                Keine bevorstehenden Events
+              </Text>
             )}
           </Stack>
         </Grid.Col>
@@ -58,18 +59,18 @@ export default function Home({ locations, events }: { locations: Location[]; eve
             <Title order={2} size={"h4"}>
               Vergangen
             </Title>
-            {events?.length > 0 ? (
-              getPastEvents(events)
-                .slice(0, 5)
-                .map((event: Event) => (
-                  <EventCardCompact
-                    key={event.id}
-                    event={event}
-                    location={locations.find((location) => location.id === event.locationId)}
-                  />
-                ))
+            {lastFiveEvents.length > 0 ? (
+              lastFiveEvents.map((event: Event) => (
+                <EventCardCompact
+                  key={event.id}
+                  event={event}
+                  location={locations.find((location) => location.id === event.locationId)}
+                />
+              ))
             ) : (
-              <Text>Keine Daten</Text>
+              <Text c={"dimmed"} fs={"italic"} size={"sm"}>
+                Keine vergangenen Events
+              </Text>
             )}
           </Stack>
         </Grid.Col>
