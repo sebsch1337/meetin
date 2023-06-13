@@ -125,6 +125,7 @@ export default function EventForm({
             placeholder="Anzahl"
             max={999}
             maxLength={3}
+            hideControls
             {...form.getInputProps("going")}
           />
 
@@ -134,6 +135,7 @@ export default function EventForm({
             placeholder="Anzahl"
             max={999}
             maxLength={3}
+            hideControls
             {...form.getInputProps("announced")}
           />
 
@@ -143,6 +145,7 @@ export default function EventForm({
             placeholder="Anzahl"
             max={999}
             maxLength={3}
+            hideControls
             {...form.getInputProps("visitors")}
           />
         </Flex>
