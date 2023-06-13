@@ -187,7 +187,7 @@ export default function EventForm({
                 }));
               }}
             >
-              Location löschen
+              Event löschen
             </Button>
           </>
         )}
