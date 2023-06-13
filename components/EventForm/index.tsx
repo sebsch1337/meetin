@@ -1,4 +1,8 @@
+import { useState } from "react";
+import { useForm } from "@mantine/form";
+
 import { createEvent, editEvent } from "@/lib/eventLib";
+
 import {
   TextInput,
   Button,
@@ -11,8 +15,7 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
-import { useForm } from "@mantine/form";
-import { useState } from "react";
+import { IconChecks, IconSpeakerphone, IconUsers } from "@tabler/icons-react";
 
 export default function EventForm({
   event,
@@ -41,6 +44,7 @@ export default function EventForm({
       name: event?.name ?? "Stammtisch ",
       locationId: event?.locationId ?? "",
       dateTime: event?.dateTime ? new Date(event?.dateTime) : null,
+      going: event?.going ?? null,
       announced: event?.announced ?? null,
       visitors: event?.visitors ?? null,
       description: event?.description ?? "",
@@ -53,8 +57,9 @@ export default function EventForm({
       name: (value) => (value.length === 0 ? "Bitte gib der Veranstaltung einen Namen" : null),
       locationId: (value) => (value.length === 0 ? "Bitte wähle eine Location" : null),
       dateTime: (value) => (value === null ? "Bitte wähle einen Zeitpunkt" : null),
-      announced: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
-      visitors: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
+      going: (value) => (Number(value) > 999 ? "Max 999 Besucher erlaubt" : null),
+      announced: (value) => (Number(value) > 999 ? "Max 999 Besucher erlaubt" : null),
+      visitors: (value) => (Number(value) > 999 ? "Max 999 Besucher erlaubt" : null),
       description: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
       preNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
       postNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
@@ -114,9 +119,38 @@ export default function EventForm({
           {...form.getInputProps("dateTime")}
         />
         <Flex gap={"xs"}>
-          <NumberInput label="Angekündigt" placeholder="Anzahl" {...form.getInputProps("announced")} />
+          <NumberInput
+            icon={<IconChecks size={16} />}
+            iconWidth={28}
+            label="Zugesagt"
+            placeholder="Anzahl"
+            max={999}
+            maxLength={3}
+            hideControls
+            {...form.getInputProps("going")}
+          />
 
-          <NumberInput label="Erschienen" placeholder="Anzahl" {...form.getInputProps("visitors")} />
+          <NumberInput
+            icon={<IconSpeakerphone size={16} />}
+            iconWidth={28}
+            label="Angekündigt"
+            placeholder="Anzahl"
+            max={999}
+            maxLength={3}
+            hideControls
+            {...form.getInputProps("announced")}
+          />
+
+          <NumberInput
+            icon={<IconUsers size={16} />}
+            iconWidth={28}
+            label="Erschienen"
+            placeholder="Anzahl"
+            max={999}
+            maxLength={3}
+            hideControls
+            {...form.getInputProps("visitors")}
+          />
         </Flex>
 
         <Textarea
@@ -127,8 +161,8 @@ export default function EventForm({
         />
 
         <Textarea
-          placeholder="Hinweise zum Stammtisch"
-          label="Hinweise"
+          placeholder="Fazit nach dem Stammtisch"
+          label="Fazit"
           maxLength={1000}
           {...form.getInputProps("postNotes")}
         />
@@ -159,7 +193,7 @@ export default function EventForm({
                 }));
               }}
             >
-              Location löschen
+              Event löschen
             </Button>
           </>
         )}

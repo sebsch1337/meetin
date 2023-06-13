@@ -6,6 +6,7 @@ const eventsSchema = new Schema({
   name: { type: String, required: true, maxLength: 50 },
   dateTime: { type: Date, required: true },
   locationId: { type: String, required: true, length: 24 },
+  going: { type: Number, max: 999 },
   announced: { type: Number, max: 999 },
   visitors: { type: Number, max: 999 },
   description: { type: String, maxLength: 1000 },

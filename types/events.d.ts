@@ -3,6 +3,7 @@ interface Event {
   name: string;
   locationId: string;
   dateTime: date | string;
+  going?: number;
   announced?: number;
   visitors?: number;
   description?: string;

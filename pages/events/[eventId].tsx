@@ -1,15 +1,4 @@
-import {
-  ActionIcon,
-  Container,
-  Divider,
-  Flex,
-  Grid,
-  LoadingOverlay,
-  Stack,
-  Text,
-  Title,
-  rem,
-} from "@mantine/core";
+import { ActionIcon, Container, Divider, Flex, Grid, Stack, Text, Title, rem } from "@mantine/core";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
@@ -159,6 +148,15 @@ export default function EventDetails({
               <Divider />
               <Grid grow mt={"xs"} gutter={"xs"}>
                 <Grid.Col span={6}>
+                  <Text size={"sm"}>Zugesagt</Text>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Text size={"sm"} c={!event?.going ? "dimmed" : ""}>
+                    {event?.going ?? "-"}
+                  </Text>
+                </Grid.Col>
+
+                <Grid.Col span={6}>
                   <Text size={"sm"}>Angekündigt</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
@@ -166,6 +164,7 @@ export default function EventDetails({
                     {event?.announced ?? "-"}
                   </Text>
                 </Grid.Col>
+
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Erschienen</Text>
                 </Grid.Col>
