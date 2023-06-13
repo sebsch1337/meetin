@@ -81,7 +81,12 @@ export default function LocationForm({
     },
 
     validate: {
-      name: (value) => (value?.length > 0 ? null : "Bitte gib der Location einen Namen"),
+      name: (value) =>
+        value?.length > 0
+          ? value?.length > 50
+            ? "Zu viele Zeichen (max. 50)"
+            : null
+          : "Bitte gib der Location einen Namen",
       road: (value) => (value?.length > 100 ? "Zu viele Zeichen (max. 100)" : null),
       houseNo: (value) => (value?.length > 5 ? "Zu viele Zeichen (max. 5)" : null),
       postcode: (value) => (value?.length > 7 ? "Zu viele Zeichen (max. 7)" : null),
