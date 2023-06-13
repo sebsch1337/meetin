@@ -121,10 +121,10 @@ export default function LocationDetailsBasics({
                   <Text
                     size={"sm"}
                     mt={"xs"}
-                    fs={!location?.description ? "italic" : ""}
-                    c={!location?.description ? "dimmed" : ""}
+                    fs={!location?.tags ? "italic" : ""}
+                    c={!location?.tags ? "dimmed" : ""}
                   >
-                    {location?.description || "Keine Tags vorhanden."}
+                    {location?.tags || "Keine Tags vorhanden."}
                   </Text>
                 )}
               </Group>
@@ -148,6 +148,7 @@ export default function LocationDetailsBasics({
                 mt={"xs"}
                 fs={!location?.description ? "italic" : ""}
                 c={!location?.description ? "dimmed" : ""}
+                style={{ whiteSpace: "pre-line" }}
               >
                 {location?.description || "Keine Beschreibung vorhanden."}
               </Text>
@@ -167,6 +168,7 @@ export default function LocationDetailsBasics({
                 mt={"xs"}
                 fs={!location?.infos ? "italic" : ""}
                 c={!location?.infos ? "dimmed" : ""}
+                style={{ whiteSpace: "pre-line" }}
               >
                 {location?.infos || "Keine Informationen vorhanden."}
               </Text>
