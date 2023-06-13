@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { getLocalDateTimeLong } from "@/utils/date";
 
-import { IconSpeakerphone, IconUsers, IconPhotoOff } from "@tabler/icons-react";
+import { IconSpeakerphone, IconUsers, IconPhotoOff, IconChecks } from "@tabler/icons-react";
 import NoGoIcon from "../NoGoIcon";
 import Link from "next/link";
 
@@ -87,6 +87,13 @@ export default function EventCard({ event, locations }: { event: Event; location
             </Stack>
 
             <Group>
+              <Group spacing={5} noWrap>
+                <Tooltip label="Zugesagt">
+                  <IconChecks size={16} />
+                </Tooltip>
+                <Text size={"xs"}>{event?.going ?? "-"}</Text>
+              </Group>
+
               <Group spacing={5} noWrap>
                 <Tooltip label="Angekündigt">
                   <IconSpeakerphone size={16} />

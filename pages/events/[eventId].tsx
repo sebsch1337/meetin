@@ -159,6 +159,15 @@ export default function EventDetails({
               <Divider />
               <Grid grow mt={"xs"} gutter={"xs"}>
                 <Grid.Col span={6}>
+                  <Text size={"sm"}>Zugesagt</Text>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Text size={"sm"} c={!event?.going ? "dimmed" : ""}>
+                    {event?.going ?? "-"}
+                  </Text>
+                </Grid.Col>
+
+                <Grid.Col span={6}>
                   <Text size={"sm"}>Angekündigt</Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
@@ -166,6 +175,7 @@ export default function EventDetails({
                     {event?.announced ?? "-"}
                   </Text>
                 </Grid.Col>
+
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Erschienen</Text>
                 </Grid.Col>
