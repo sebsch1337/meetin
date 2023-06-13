@@ -146,7 +146,7 @@ export default function EventDetails({
                 Details
               </Title>
               <Divider />
-              <Grid grow mt={"xs"} gutter={"xs"}>
+              <Grid grow mt={"xs"} gutter={"sm"}>
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Zugesagt</Text>
                 </Grid.Col>
