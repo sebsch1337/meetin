@@ -1,4 +1,8 @@
+import { useState } from "react";
+import { useForm } from "@mantine/form";
+
 import { createEvent, editEvent } from "@/lib/eventLib";
+
 import {
   TextInput,
   Button,
@@ -11,9 +15,7 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
-import { useForm } from "@mantine/form";
 import { IconChecks, IconSpeakerphone, IconUsers } from "@tabler/icons-react";
-import { useState } from "react";
 
 export default function EventForm({
   event,
