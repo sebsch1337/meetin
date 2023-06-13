@@ -168,6 +168,7 @@ export default function LocationDetailsBasics({
                 mt={"xs"}
                 fs={!location?.infos ? "italic" : ""}
                 c={!location?.infos ? "dimmed" : ""}
+                style={{ whiteSpace: "pre-line" }}
               >
                 {location?.infos || "Keine Informationen vorhanden."}
               </Text>

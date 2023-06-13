@@ -199,6 +199,7 @@ export default function EventDetails({
                 mt={"xs"}
                 fs={!event?.preNotes ? "italic" : ""}
                 c={!event?.preNotes ? "dimmed" : ""}
+                style={{ whiteSpace: "pre-line" }}
               >
                 {event?.preNotes || "Keine Notizen vorhanden."}
               </Text>
@@ -212,8 +213,9 @@ export default function EventDetails({
                 mt={"xs"}
                 fs={!event?.postNotes ? "italic" : ""}
                 c={!event?.postNotes ? "dimmed" : ""}
+                style={{ whiteSpace: "pre-line" }}
               >
-                {event?.postNotes || "Keine Notizen vorhanden."}
+                {event?.postNotes || "Kein Fazit vorhanden."}
               </Text>
             </Stack>
           </Grid.Col>
