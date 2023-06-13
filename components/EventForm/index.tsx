@@ -41,6 +41,7 @@ export default function EventForm({
       name: event?.name ?? "Stammtisch ",
       locationId: event?.locationId ?? "",
       dateTime: event?.dateTime ? new Date(event?.dateTime) : null,
+      going: event?.going ?? null,
       announced: event?.announced ?? null,
       visitors: event?.visitors ?? null,
       description: event?.description ?? "",
@@ -53,8 +54,9 @@ export default function EventForm({
       name: (value) => (value.length === 0 ? "Bitte gib der Veranstaltung einen Namen" : null),
       locationId: (value) => (value.length === 0 ? "Bitte wähle eine Location" : null),
       dateTime: (value) => (value === null ? "Bitte wähle einen Zeitpunkt" : null),
-      announced: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
-      visitors: (value) => (Number(value) > 999 ? "Max 999 besucher erlaubt" : null),
+      going: (value) => (Number(value) > 999 ? "Max 999 Besucher erlaubt" : null),
+      announced: (value) => (Number(value) > 999 ? "Max 999 Besucher erlaubt" : null),
+      visitors: (value) => (Number(value) > 999 ? "Max 999 Besucher erlaubt" : null),
       description: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
       preNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
       postNotes: (value) => (value.length > 1000 ? "Zu viele Zeichen (Max. 1000)" : null),
@@ -114,6 +116,8 @@ export default function EventForm({
           {...form.getInputProps("dateTime")}
         />
         <Flex gap={"xs"}>
+          <NumberInput label="Zugesagt" placeholder="Anzahl" {...form.getInputProps("going")} />
+
           <NumberInput label="Angekündigt" placeholder="Anzahl" {...form.getInputProps("announced")} />
 
           <NumberInput label="Erschienen" placeholder="Anzahl" {...form.getInputProps("visitors")} />
