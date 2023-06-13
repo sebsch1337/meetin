@@ -121,6 +121,7 @@ export default function EventForm({
         <Flex gap={"xs"}>
           <NumberInput
             icon={<IconChecks size={16} />}
+            iconWidth={28}
             label="Zugesagt"
             placeholder="Anzahl"
             max={999}
@@ -131,6 +132,7 @@ export default function EventForm({
 
           <NumberInput
             icon={<IconSpeakerphone size={16} />}
+            iconWidth={28}
             label="Angekündigt"
             placeholder="Anzahl"
             max={999}
@@ -141,6 +143,7 @@ export default function EventForm({
 
           <NumberInput
             icon={<IconUsers size={16} />}
+            iconWidth={28}
             label="Erschienen"
             placeholder="Anzahl"
             max={999}
