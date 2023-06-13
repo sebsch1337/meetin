@@ -82,6 +82,18 @@ export default function LocationForm({
 
     validate: {
       name: (value) => (value?.length > 0 ? null : "Bitte gib der Location einen Namen"),
+      road: (value) => (value?.length > 100 ? "Zu viele Zeichen (max. 100)" : null),
+      houseNo: (value) => (value?.length > 5 ? "Zu viele Zeichen (max. 5)" : null),
+      postcode: (value) => (value?.length > 7 ? "Zu viele Zeichen (max. 7)" : null),
+      city: (value) => (value?.length > 100 ? "Zu viele Zeichen (max. 100)" : null),
+      suburb: (value) => (value?.length > 100 ? "Zu viele Zeichen (max. 100)" : null),
+      tel: (value) => (value?.length > 20 ? "Zu viele Zeichen (max. 100)" : null),
+      latitude: (value) => (value?.length > 22 ? "Zu viele Zeichen (max. 22)" : null),
+      longitude: (value) => (value?.length > 22 ? "Zu viele Zeichen (max. 22)" : null),
+      maxCapacity: (value) => (Number(value) > 999 ? "Zu viele Besucher (max. 999)" : null),
+      description: (value) => (value?.length > 1000 ? "Zu viele Zeichen (max. 1000)" : null),
+      infos: (value) => (value?.length > 1000 ? "Zu viele Zeichen (max. 1000)" : null),
+      tags: (value) => (value?.length > 6 ? "Zu viele Tags" : null),
     },
   });
 
@@ -197,8 +209,18 @@ export default function LocationForm({
             />
           </Group>
           <Group grow>
-            <TextInput label="Breitengrad" placeholder="10.2931062" {...form.getInputProps("latitude")} />
-            <TextInput label="Längengrad" placeholder="123.9020773" {...form.getInputProps("longitude")} />
+            <TextInput
+              maxLength={22}
+              label="Breitengrad"
+              placeholder="10.2931062"
+              {...form.getInputProps("latitude")}
+            />
+            <TextInput
+              maxLength={22}
+              label="Längengrad"
+              placeholder="123.9020773"
+              {...form.getInputProps("longitude")}
+            />
           </Group>
 
           <Divider />
@@ -220,6 +242,7 @@ export default function LocationForm({
               spellCheck={false}
               {...form.getInputProps("maxCapacity")}
               max={999}
+              maxLength={999}
               min={0}
             />
           </Group>
