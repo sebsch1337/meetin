@@ -12,6 +12,7 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 
 import { useForm } from "@mantine/form";
+import { IconChecks, IconSpeakerphone, IconUsers } from "@tabler/icons-react";
 import { useState } from "react";
 
 export default function EventForm({
@@ -116,11 +117,32 @@ export default function EventForm({
           {...form.getInputProps("dateTime")}
         />
         <Flex gap={"xs"}>
-          <NumberInput label="Zugesagt" placeholder="Anzahl" {...form.getInputProps("going")} />
+          <NumberInput
+            icon={<IconChecks size={16} />}
+            label="Zugesagt"
+            placeholder="Anzahl"
+            max={999}
+            maxLength={3}
+            {...form.getInputProps("going")}
+          />
 
-          <NumberInput label="Angekündigt" placeholder="Anzahl" {...form.getInputProps("announced")} />
+          <NumberInput
+            icon={<IconSpeakerphone size={16} />}
+            label="Angekündigt"
+            placeholder="Anzahl"
+            max={999}
+            maxLength={3}
+            {...form.getInputProps("announced")}
+          />
 
-          <NumberInput label="Erschienen" placeholder="Anzahl" {...form.getInputProps("visitors")} />
+          <NumberInput
+            icon={<IconUsers size={16} />}
+            label="Erschienen"
+            placeholder="Anzahl"
+            max={999}
+            maxLength={3}
+            {...form.getInputProps("visitors")}
+          />
         </Flex>
 
         <Textarea
@@ -131,8 +153,8 @@ export default function EventForm({
         />
 
         <Textarea
-          placeholder="Hinweise zum Stammtisch"
-          label="Hinweise"
+          placeholder="Fazit nach dem Stammtisch"
+          label="Fazit"
           maxLength={1000}
           {...form.getInputProps("postNotes")}
         />
