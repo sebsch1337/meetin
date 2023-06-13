@@ -147,10 +147,10 @@ export default function EventDetails({
               </Title>
               <Divider />
               <Grid grow mt={"xs"} gutter={"sm"}>
-                <Grid.Col span={6}>
+                <Grid.Col span={6} pt={0}>
                   <Text size={"sm"}>Zugesagt</Text>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={6} pt={0}>
                   <Text size={"sm"} c={!event?.going ? "dimmed" : ""}>
                     {event?.going ?? "-"}
                   </Text>
