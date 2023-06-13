@@ -183,6 +183,7 @@ export default function EventDetails({
                 mt={"xs"}
                 fs={!event?.description ? "italic" : ""}
                 c={!event?.description ? "dimmed" : ""}
+                style={{ whiteSpace: "pre-line" }}
               >
                 {event?.description || "Keine Beschreibung vorhanden."}
               </Text>

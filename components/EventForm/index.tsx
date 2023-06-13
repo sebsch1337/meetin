@@ -154,6 +154,13 @@ export default function EventForm({
         </Flex>
 
         <Textarea
+          placeholder="Text für FB Event"
+          label="Beschreibung"
+          maxLength={1000}
+          {...form.getInputProps("description")}
+        />
+
+        <Textarea
           placeholder="Informationen zur Planung"
           label="Notizen"
           maxLength={1000}
