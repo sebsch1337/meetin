@@ -31,16 +31,11 @@ export default function LocationDetailsBasics({
         <Grid.Col xs={1}>
           <Stack>
             <Stack spacing={0}>
-              <Group position={"apart"} w={"100%"}>
-                <Title order={2} size={18}>
-                  Allgemein
-                </Title>
-                {/* <ActionIcon color="teal" size={"sm"}>
-                <IconEdit size="0.9rem" />
-              </ActionIcon> */}
-              </Group>
+              <Title order={2} size={18}>
+                Allgemein
+              </Title>
               <Divider />
-              <Grid grow mt={"xs"}>
+              <Grid grow mt={"xs"} gutter={"sm"}>
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Max. Besucherzahl</Text>
                 </Grid.Col>
@@ -71,6 +66,7 @@ export default function LocationDetailsBasics({
                     <IconSun color={location?.outdoor ? "yellow" : "grey"} size={18} />
                   </Center>
                 </Grid.Col>
+
                 <Grid.Col span={6}>
                   <Text size={"sm"}>Telefon</Text>
                 </Grid.Col>
@@ -103,14 +99,13 @@ export default function LocationDetailsBasics({
                 </Grid.Col>
               </Grid>
             </Stack>
+
             <Stack spacing={0}>
-              <Group position={"apart"} w={"100%"}>
-                <Title order={2} size={18}>
-                  Tags
-                </Title>
-              </Group>
+              <Title order={2} size={18}>
+                Tags
+              </Title>
               <Divider />
-              <Group mb={"md"} spacing={"xs"} mih={45}>
+              <Group spacing={"xs"} mt={"xs"}>
                 {location?.tags?.length ? (
                   location?.tags?.map((tagId) => (
                     <Badge variant={"outline"} color={"teal"} key={tagId} size={"xs"}>
@@ -131,17 +126,13 @@ export default function LocationDetailsBasics({
             </Stack>
           </Stack>
         </Grid.Col>
+
         <Grid.Col xs={1}>
           <Stack>
             <Stack spacing={0}>
-              <Group position={"apart"} w={"100%"}>
-                <Title order={2} size={18}>
-                  Beschreibung
-                </Title>
-                {/* <ActionIcon color="teal" size={"sm"}>
-                  <IconEdit size="0.9rem" />
-                </ActionIcon> */}
-              </Group>
+              <Title order={2} size={18}>
+                Beschreibung
+              </Title>
               <Divider />
               <Text
                 size={"sm"}
@@ -153,15 +144,11 @@ export default function LocationDetailsBasics({
                 {location?.description || "Keine Beschreibung vorhanden."}
               </Text>
             </Stack>
+
             <Stack spacing={0}>
-              <Group position={"apart"} w={"100%"}>
-                <Title order={2} size={18}>
-                  Hinweise
-                </Title>
-                {/* <ActionIcon color="teal" size={"sm"}>
-                  <IconEdit size="0.9rem" />
-                </ActionIcon> */}
-              </Group>
+              <Title order={2} size={18}>
+                Hinweise
+              </Title>
               <Divider />
               <Text
                 size={"sm"}
