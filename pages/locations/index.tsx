@@ -119,7 +119,12 @@ export default function Locations() {
     <>
       <FormModal title={modal.title} opened={modalOpened} close={closeModal}>
         {modal.type === "form" && (
-          <LocationForm closeModal={closeModal} editLocationMode={editLocationMode} preValues={preValues} />
+          <LocationForm
+            closeModal={closeModal}
+            editLocationMode={editLocationMode}
+            preValues={preValues}
+            tags={tags}
+          />
         )}
       </FormModal>
 
