@@ -16,7 +16,7 @@ export default function App(props: AppProps) {
   } = props;
 
   return (
-    <SessionProvider session={session}>
+    <>
       <Head>
         <title>MeetIn</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -34,9 +34,11 @@ export default function App(props: AppProps) {
         <Notifications autoClose={2000} />
         <Layout>
           <RouterTransition />
-          <Component {...pageProps} />
+          <SessionProvider session={session}>
+            <Component {...pageProps} />
+          </SessionProvider>
         </Layout>
       </MantineProvider>
-    </SessionProvider>
+    </>
   );
 }
