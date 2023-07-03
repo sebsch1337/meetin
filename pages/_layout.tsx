@@ -11,11 +11,13 @@ import {
   Drawer,
   ScrollArea,
   Divider,
+  Button,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -211,12 +213,13 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             Locations
           </Link>
 
-          {/* <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} /> */}
+          <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
 
-          {/* <Group position="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Registrieren</Button>
-          </Group> */}
+          <Group position="center" grow pb="xl" px="md">
+            <Button variant="default" onClick={() => signOut()}>
+              Ausloggen
+            </Button>
+          </Group>
         </ScrollArea>
       </Drawer>
       <main>{children}</main>
