@@ -164,10 +164,20 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
           </Link>
 
           <Group spacing={0} className={classes.social} position="right" noWrap mr={"xl"}>
-            <ActionIcon size="lg">
+            <ActionIcon
+              size="lg"
+              component={Link}
+              href={"https://facebook.com/groups/NeuInDo"}
+              target={"_blank"}
+            >
               <IconBrandFacebook size="1.1rem" stroke={1.5} />
             </ActionIcon>
-            <ActionIcon size="lg">
+            <ActionIcon
+              size="lg"
+              component={Link}
+              href={"https://www.instagram.com/neuindortmund/"}
+              target={"_blank"}
+            >
               <IconBrandInstagram size="1.1rem" stroke={1.5} />
             </ActionIcon>
           </Group>
