@@ -11,11 +11,15 @@ import {
   Drawer,
   ScrollArea,
   Divider,
+  Button,
+  Avatar,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSession, signOut } from "next-auth/react";
+import UserMenu from "@/components/UserMenu";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -101,6 +105,7 @@ interface HeaderMiddleProps {
 
 export default function HeaderMiddle({ children }: HeaderMiddleProps) {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const links = [
     { link: "/events", label: "Events" },
@@ -162,13 +167,24 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
           </Link>
 
           <Group spacing={0} className={classes.social} position="right" noWrap mr={"xl"}>
-            <ActionIcon size="lg">
+            <ActionIcon
+              size="lg"
+              component={Link}
+              href={"https://facebook.com/groups/NeuInDo"}
+              target={"_blank"}
+            >
               <IconBrandFacebook size="1.1rem" stroke={1.5} />
             </ActionIcon>
-            <ActionIcon size="lg">
+            <ActionIcon
+              size="lg"
+              component={Link}
+              href={"https://www.instagram.com/neuindortmund/"}
+              target={"_blank"}
+            >
               <IconBrandInstagram size="1.1rem" stroke={1.5} />
             </ActionIcon>
           </Group>
+          {!isMobile && <UserMenu session={session} signOut={signOut} />}
           <Burger opened={drawerOpened} onClick={toggleDrawer} size="sm" className={classes.burger} />
         </Container>
       </Header>
@@ -211,12 +227,13 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             Locations
           </Link>
 
-          {/* <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} /> */}
+          <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
 
-          {/* <Group position="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Registrieren</Button>
-          </Group> */}
+          <Group position="center" grow pb="xl" px="md">
+            <Button variant="default" onClick={() => signOut()}>
+              Ausloggen
+            </Button>
+          </Group>
         </ScrollArea>
       </Drawer>
       <main>{children}</main>

@@ -1,14 +1,19 @@
 import Head from "next/head";
 
 import { AppProps } from "next/app";
-import { MantineProvider } from "@mantine/core";
+import { LoadingOverlay, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
 import Layout from "./_layout";
 import { RouterTransition } from "@/components/RouterTransition";
 
+import { SessionProvider, useSession } from "next-auth/react";
+
 export default function App(props: AppProps) {
-  const { Component, pageProps } = props;
+  const {
+    Component,
+    pageProps: { session, ...pageProps },
+  } = props;
 
   return (
     <>
@@ -27,11 +32,27 @@ export default function App(props: AppProps) {
         }}
       >
         <Notifications autoClose={2000} />
-        <Layout>
-          <RouterTransition />
-          <Component {...pageProps} />
-        </Layout>
+        <RouterTransition />
+        <SessionProvider session={session}>
+          {Component.name === "Login" ? (
+            <Component {...pageProps} />
+          ) : (
+            <Auth>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </Auth>
+          )}
+        </SessionProvider>
       </MantineProvider>
     </>
   );
+}
+
+function Auth({ children }: { children: any }) {
+  const { status } = useSession({ required: true });
+
+  if (status === "loading") return <LoadingOverlay visible={true} />;
+
+  return children;
 }
