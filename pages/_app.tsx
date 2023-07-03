@@ -7,7 +7,7 @@ import { Notifications } from "@mantine/notifications";
 import Layout from "./_layout";
 import { RouterTransition } from "@/components/RouterTransition";
 
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 
 export default function App(props: AppProps) {
   const {
@@ -32,13 +32,29 @@ export default function App(props: AppProps) {
         }}
       >
         <Notifications autoClose={2000} />
-        <Layout>
-          <RouterTransition />
-          <SessionProvider session={session}>
+        <RouterTransition />
+        <SessionProvider session={session}>
+          {Component.name === "Login" ? (
             <Component {...pageProps} />
-          </SessionProvider>
-        </Layout>
+          ) : (
+            <Auth>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </Auth>
+          )}
+        </SessionProvider>
       </MantineProvider>
     </>
   );
+}
+
+function Auth({ children }: { children: any }) {
+  const { status } = useSession({ required: true });
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  return children;
 }
