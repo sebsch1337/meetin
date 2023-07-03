@@ -1,7 +1,7 @@
 import Head from "next/head";
 
 import { AppProps } from "next/app";
-import { MantineProvider } from "@mantine/core";
+import { LoadingOverlay, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
 import Layout from "./_layout";
@@ -52,9 +52,7 @@ export default function App(props: AppProps) {
 function Auth({ children }: { children: any }) {
   const { status } = useSession({ required: true });
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  if (status === "loading") return <LoadingOverlay visible={true} />;
 
   return children;
 }
