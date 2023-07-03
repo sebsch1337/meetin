@@ -12,12 +12,14 @@ import {
   ScrollArea,
   Divider,
   Button,
+  Avatar,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import UserMenu from "@/components/UserMenu";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -103,6 +105,7 @@ interface HeaderMiddleProps {
 
 export default function HeaderMiddle({ children }: HeaderMiddleProps) {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const links = [
     { link: "/events", label: "Events" },
@@ -181,6 +184,7 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
               <IconBrandInstagram size="1.1rem" stroke={1.5} />
             </ActionIcon>
           </Group>
+          {!isMobile && <UserMenu session={session} signOut={signOut} />}
           <Burger opened={drawerOpened} onClick={toggleDrawer} size="sm" className={classes.burger} />
         </Container>
       </Header>
