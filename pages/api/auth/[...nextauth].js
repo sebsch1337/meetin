@@ -4,7 +4,7 @@ import FacebookProvider from "next-auth/providers/facebook";
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/login", // Replace '/auth/signin' with the actual path to your signIn page
+    signIn: "/login",
   },
   providers: [
     FacebookProvider({

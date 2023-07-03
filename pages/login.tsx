@@ -1,7 +1,6 @@
-import { Button, Center, Container, Group, LoadingOverlay, Stack, Text } from "@mantine/core";
+import { Button, Center, Group, LoadingOverlay, Stack, Text } from "@mantine/core";
 import { IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import Image from "next/image";
 import { useState } from "react";
 
 export default function Login() {
