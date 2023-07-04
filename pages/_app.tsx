@@ -34,20 +34,23 @@ export default function App(props: AppProps) {
         <Notifications autoClose={2000} />
         <RouterTransition />
         <SessionProvider session={session}>
-          {Component.auth === "Login" ? (
-            <>
-              {console.log(Component.name)}
-              <Component {...pageProps} />
-            </>
-          ) : (
-            <Auth>
-              <Layout>
+          {
+            // @ts-ignore
+            Component.auth === "Login" ? (
+              <>
                 {console.log(Component.name)}
-
                 <Component {...pageProps} />
-              </Layout>
-            </Auth>
-          )}
+              </>
+            ) : (
+              <Auth>
+                <Layout>
+                  {console.log(Component.name)}
+
+                  <Component {...pageProps} />
+                </Layout>
+              </Auth>
+            )
+          }
         </SessionProvider>
       </MantineProvider>
     </>
