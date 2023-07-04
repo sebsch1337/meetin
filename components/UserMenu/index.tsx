@@ -9,7 +9,7 @@ export default function UserMenu({ session, signOut }: { session: any; signOut: 
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>Benutzer</Menu.Label>
+        <Menu.Label>{session?.user?.name}</Menu.Label>
         <Menu.Item icon={<IconSettings size={14} />} disabled>
           Einstellungen
         </Menu.Item>

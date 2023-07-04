@@ -12,7 +12,6 @@ import {
   ScrollArea,
   Divider,
   Button,
-  Avatar,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
