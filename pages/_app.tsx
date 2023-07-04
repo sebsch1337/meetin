@@ -37,15 +37,10 @@ export default function App(props: AppProps) {
           {
             // @ts-ignore
             Component.auth === "Login" ? (
-              <>
-                {console.log(Component.name)}
-                <Component {...pageProps} />
-              </>
+              <Component {...pageProps} />
             ) : (
               <Auth>
                 <Layout>
-                  {console.log(Component.name)}
-
                   <Component {...pageProps} />
                 </Layout>
               </Auth>
