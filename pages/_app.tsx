@@ -35,10 +35,15 @@ export default function App(props: AppProps) {
         <RouterTransition />
         <SessionProvider session={session}>
           {Component.name === "Login" ? (
-            <Component {...pageProps} />
+            <>
+              {console.log(Component.name)}
+              <Component {...pageProps} />
+            </>
           ) : (
             <Auth>
               <Layout>
+                {console.log(Component.name)}
+
                 <Component {...pageProps} />
               </Layout>
             </Auth>
