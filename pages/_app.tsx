@@ -34,7 +34,7 @@ export default function App(props: AppProps) {
         <Notifications autoClose={2000} />
         <RouterTransition />
         <SessionProvider session={session}>
-          {Component.name === "Login" ? (
+          {Component.auth === "Login" ? (
             <>
               {console.log(Component.name)}
               <Component {...pageProps} />

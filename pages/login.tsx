@@ -43,3 +43,5 @@ export default function Login() {
     </Center>
   );
 }
+
+Login.auth = "Login";
