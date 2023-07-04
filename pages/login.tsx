@@ -1,5 +1,5 @@
 import { Button, Center, Group, LoadingOverlay, Stack, Text } from "@mantine/core";
-import { IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
+import { IconBrandGoogle, IconHeartHandshake } from "@tabler/icons-react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
 
@@ -19,17 +19,18 @@ export default function Login() {
         </Group>
         {!session ? (
           <Button
-            leftIcon={<IconBrandFacebook />}
+            color={"red"}
+            leftIcon={<IconBrandGoogle />}
             onClick={() => {
               setVisible(true);
-              signIn("facebook", { callbackUrl: "/" });
+              signIn("google", { callbackUrl: "/" });
             }}
           >
-            Anmelden mit Facebook
+            Anmelden mit Google
           </Button>
         ) : (
           <Button
-            leftIcon={<IconBrandFacebook />}
+            leftIcon={<IconBrandGoogle />}
             onClick={() => {
               setVisible(true);
               signOut();
