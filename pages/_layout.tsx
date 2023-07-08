@@ -104,7 +104,7 @@ interface HeaderMiddleProps {
 
 export default function HeaderMiddle({ children }: HeaderMiddleProps) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
 
   const links = [
     { link: "/events", label: "Events" },
@@ -151,42 +151,45 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
 
   return (
     <>
-      <Header height={56}>
-        <Container className={classes.inner}>
-          <Group className={classes.links} spacing={5}>
-            {items}
-          </Group>
-
-          <Link href="/" className={classes.logoLink}>
-            <Group spacing={5}>
-              <IconHeartHandshake />
-              <Text size={18}>MeetIn</Text>
-              {isMobile && <Text size={14}>{active?.substring(1)}</Text>}
+      {sessionStatus === "authenticated" && (
+        <Header height={56}>
+          <Container className={classes.inner}>
+            <Group className={classes.links} spacing={5}>
+              {items}
             </Group>
-          </Link>
 
-          <Group spacing={0} className={classes.social} position="right" noWrap mr={"xl"}>
-            <ActionIcon
-              size="lg"
-              component={Link}
-              href={"https://facebook.com/groups/NeuInDo"}
-              target={"_blank"}
-            >
-              <IconBrandFacebook size="1.1rem" stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon
-              size="lg"
-              component={Link}
-              href={"https://www.instagram.com/neuindortmund/"}
-              target={"_blank"}
-            >
-              <IconBrandInstagram size="1.1rem" stroke={1.5} />
-            </ActionIcon>
-          </Group>
-          {!isMobile && <UserMenu session={session} signOut={signOut} />}
-          <Burger opened={drawerOpened} onClick={toggleDrawer} size="sm" className={classes.burger} />
-        </Container>
-      </Header>
+            <Link href="/" className={classes.logoLink}>
+              <Group spacing={5}>
+                <IconHeartHandshake />
+                <Text size={18}>MeetIn</Text>
+                {isMobile && <Text size={14}>{active?.substring(1)}</Text>}
+              </Group>
+            </Link>
+
+            <Group spacing={0} className={classes.social} position="right" noWrap mr={"xl"}>
+              <ActionIcon
+                size="lg"
+                component={Link}
+                href={"https://facebook.com/groups/NeuInDo"}
+                target={"_blank"}
+              >
+                <IconBrandFacebook size="1.1rem" stroke={1.5} />
+              </ActionIcon>
+              <ActionIcon
+                size="lg"
+                component={Link}
+                href={"https://www.instagram.com/neuindortmund/"}
+                target={"_blank"}
+              >
+                <IconBrandInstagram size="1.1rem" stroke={1.5} />
+              </ActionIcon>
+            </Group>
+            {!isMobile && <UserMenu session={session} signOut={signOut} />}
+            <Burger opened={drawerOpened} onClick={toggleDrawer} size="sm" className={classes.burger} />
+          </Container>
+        </Header>
+      )}
+
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
