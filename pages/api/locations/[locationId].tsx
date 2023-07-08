@@ -1,10 +1,16 @@
 import { deleteLocationFromDb, updateLocationInDb } from "@/services/locationService";
 
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
+
 export default async function handler(req: any, res: any): Promise<any> {
   const {
     query: { locationId },
     method,
   } = req;
+
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ message: "unauthorized" });
 
   switch (method) {
     case "PATCH":
