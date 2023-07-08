@@ -20,7 +20,7 @@ export default function Events() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchEvent, setSearchEvent] = useState("");
 
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width: 1000px)");
 
   useEffect(() => {
     const loadData = async () => {
