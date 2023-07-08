@@ -19,7 +19,8 @@ export default function Login() {
         </Group>
         {!session ? (
           <>
-            <Button
+            {/* // Facebook auth is not available (app must be published as a registered company) */}
+            {/* <Button
               w={"100%"}
               leftIcon={<IconBrandFacebook />}
               onClick={() => {
@@ -28,7 +29,7 @@ export default function Login() {
               }}
             >
               Anmelden mit Facebook
-            </Button>
+            </Button> */}
             <Button
               w={"100%"}
               color={"red"}
