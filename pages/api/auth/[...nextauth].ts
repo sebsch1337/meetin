@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, req): Promise<any> {
         return { id: 0, name: "Gast", email: "gast@scherbes.de" };
       },
     }),
