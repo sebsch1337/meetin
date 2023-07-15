@@ -1,6 +1,6 @@
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import { getPastEvents, getUpcomingEvents } from "@/lib/eventLib";
 import { getAllEventsFromDb } from "@/services/eventService";
@@ -50,7 +50,7 @@ export default function Home({ locations, events, invitedTeam }: { locations: Lo
       {
         //@ts-ignore
         !session?.user?.team ? (
-          <WelcomeModal session={session} invitedTeam={invitedTeam} />
+          <WelcomeModal session={session} invitedTeam={invitedTeam} signOut={signOut} />
         ) : (
           <>
             <Grid grow style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>

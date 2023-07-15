@@ -1,14 +1,14 @@
+import { useState } from "react";
 import { Button, Modal, Space, Text, Title } from "@mantine/core";
 import WelcomeForm from "../WelcomeForm";
-import { useState } from "react";
 import WelcomeInvited from "../WelcomeInvited";
 
-export default function WelcomeModal({ session, invitedTeam }: { session: any; invitedTeam: Team }) {
+export default function WelcomeModal({ session, invitedTeam, signOut }: { session: any; invitedTeam: Team; signOut: any }) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [invitationState, setInvitationState] = useState("");
 
   return (
-    <Modal size={"xl"} opened={true} onClose={() => {}} withCloseButton={false}>
+    <Modal size={"xl"} opened={true} onClose={() => signOut()} title={"Benutzer einrichten"}>
       <Title>Willkommen bei MeetIn, {session?.user?.name?.split(" ")[0] || "Unbekannter"}!</Title>
       <Space h="md" />
       <Text>
