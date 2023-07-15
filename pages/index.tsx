@@ -12,7 +12,8 @@ import EventCardCompact from "@/components/EventCardCompact";
 import WelcomeModal from "@/components/WelcomeModal";
 
 import dynamic from "next/dynamic";
-import { getAllTeamsFromDb } from "@/services/teamService";
+import { getTeamByInvitedEmailFromDb } from "@/services/teamService";
+
 const OverviewMap = dynamic((): any => import("@/components/OverviewMap"), {
   ssr: false,
 });
@@ -22,17 +23,15 @@ export async function getServerSideProps(context: any) {
   if (!session) return { redirect: { destination: "/login", permanent: false } };
 
   try {
-    const [locations, events, teams] = await Promise.all([
-      getAllLocationsFromDb(),
-      getAllEventsFromDb(),
-      getAllTeamsFromDb(),
-    ]);
+    const [locations, events] = await Promise.all([getAllLocationsFromDb(), getAllEventsFromDb()]);
+    //@ts-ignore
+    const invitedTeam = !session?.user?.team ? await getTeamByInvitedEmailFromDb(session?.user?.email) : "";
 
     return {
       props: {
         locations,
         events,
-        teams,
+        invitedTeam,
       },
     };
   } catch (error) {
@@ -40,15 +39,7 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-export default function Home({
-  locations,
-  events,
-  teams,
-}: {
-  locations: Location[];
-  events: Event[];
-  teams: Team[];
-}) {
+export default function Home({ locations, events, invitedTeam }: { locations: Location[]; events: Event[]; invitedTeam: Team }) {
   const { data: session } = useSession();
 
   const lastFiveEvents = getPastEvents(events).slice(0, 5);
@@ -59,7 +50,7 @@ export default function Home({
       {
         //@ts-ignore
         !session?.user?.team ? (
-          <WelcomeModal session={session} teams={teams} />
+          <WelcomeModal session={session} invitedTeam={invitedTeam} />
         ) : (
           <>
             <Grid grow style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>

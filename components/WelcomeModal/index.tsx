@@ -3,9 +3,7 @@ import WelcomeForm from "../WelcomeForm";
 import { useState } from "react";
 import WelcomeInvited from "../WelcomeInvited";
 
-export default function WelcomeModal({ session, teams }: { session: any; teams: Team[] }) {
-  const invitedTeam = teams.find((team: Team) => team?.invitedEmails?.some((invitedEmail) => invitedEmail === session?.user?.email));
-
+export default function WelcomeModal({ session, invitedTeam }: { session: any; invitedTeam: Team }) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [invitationState, setInvitationState] = useState("");
 
