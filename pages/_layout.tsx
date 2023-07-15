@@ -15,9 +15,12 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
+
 import { useSession, signOut } from "next-auth/react";
+
 import UserMenu from "@/components/UserMenu";
 
 const useStyles = createStyles((theme) => ({
@@ -189,7 +192,6 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
           </Container>
         </Header>
       )}
-
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
