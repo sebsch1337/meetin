@@ -21,6 +21,16 @@ import LocationSort from "@/components/LocationSort";
 import FormModal from "@/components/FormModal";
 import SearchInput from "@/components/SearchInput";
 
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+
+export async function getServerSideProps(context: any) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) return { redirect: { destination: "/login", permanent: false } };
+
+  return { props: {} };
+}
+
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
   const [tags, setTags] = useAtom(tagsAtom);

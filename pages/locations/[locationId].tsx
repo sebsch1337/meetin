@@ -23,7 +23,13 @@ const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetai
   ssr: false,
 });
 
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+
 export async function getServerSideProps(context: any) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) return { redirect: { destination: "/login", permanent: false } };
+
   const locationId = context.params.locationId;
 
   try {
