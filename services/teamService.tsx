@@ -1,3 +1,4 @@
+import { sanitizeUser, validateUser } from "@/validators/userValidator";
 import dbConnect from "../lib/dbConnect";
 import Teams from "../models/teamsModel";
 import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
@@ -61,6 +62,31 @@ export async function getTeamByNameFromDb(teamName: string): Promise<any> {
 
   if (!team) {
     const error: any = new Error("Team not found");
+    error.status = 200;
+    throw error;
+  }
+
+  const sanitizedTeam = await validateTeam(sanitizeTeam(team));
+
+  return sanitizedTeam;
+}
+
+/**
+ * Retrieves a team from the database based on the provided invited email address.
+ *
+ * @param eMail The email address used to search for the team invitation.
+ * @returns A Promise that resolves to the sanitized team object.
+ * @throws Throws an error if the team invitation is not found.
+ */
+export async function getTeamByInvitedEmailFromDb(eMail: string): Promise<any> {
+  await dbConnect();
+
+  const sanitizedInput = await validateUser(sanitizeUser({ email: eMail }));
+
+  const team: any = await Teams.findOne({ invitedEmails: sanitizedInput?.email }).exec();
+
+  if (!team) {
+    const error: any = new Error("Teaminvitation not found");
     error.status = 200;
     throw error;
   }
