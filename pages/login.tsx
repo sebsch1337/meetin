@@ -43,16 +43,6 @@ export default function Login() {
             >
               Anmelden mit Google
             </Button>
-            <Button
-              w={"100%"}
-              variant="outline"
-              onClick={() => {
-                setVisible(true);
-                signIn("guest", { callbackUrl: "/" });
-              }}
-            >
-              Anmelden als Gast
-            </Button>
           </>
         ) : (
           <Button
@@ -68,5 +58,3 @@ export default function Login() {
     </Center>
   );
 }
-
-Login.auth = "Login";
