@@ -20,12 +20,9 @@ export default function WelcomeForm({ setButtonDisabled }: { setButtonDisabled: 
           } else {
             setInputError(false);
             setButtonDisabled(false);
-
-            if (searchString.trim().length === 0) {
-              setButtonDisabled(true);
-            }
           }
         } else {
+          setInputError(false);
           setButtonDisabled(true);
         }
       } catch (e) {
