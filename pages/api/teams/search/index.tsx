@@ -1,11 +1,11 @@
-import { getTeamByNameFromDb } from "@/services/teamService";
+import { getTeamByInvitedEmailFromDb, getTeamByNameFromDb } from "@/services/teamService";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { teamname },
+    query: { teamname, invitedemail },
     method,
   } = req;
 
@@ -19,6 +19,12 @@ export default async function handler(req: any, res: any): Promise<any> {
           const team = await getTeamByNameFromDb(teamname);
           return res.status(200).json(team);
         }
+
+        if (invitedemail) {
+          const team = await getTeamByInvitedEmailFromDb(invitedemail);
+          return res.status(200).json(team);
+        }
+
         return res.status(400).json({ error: "Bad request" });
       } catch (error: any) {
         if (error.status) {
