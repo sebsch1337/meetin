@@ -13,6 +13,16 @@ import { getAllLocations } from "@/lib/locationLib";
 import FormModal from "@/components/FormModal";
 import SearchInput from "@/components/SearchInput";
 
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+
+export async function getServerSideProps(context: any) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) return { redirect: { destination: "/login", permanent: false } };
+
+  return { props: {} };
+}
+
 export default function Events() {
   const [opened, { open, close }] = useDisclosure(false);
   const [events, setEvents] = useAtom(eventsAtom);

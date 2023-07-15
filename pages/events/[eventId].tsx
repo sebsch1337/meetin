@@ -14,7 +14,13 @@ import EventForm from "@/components/EventForm";
 import DeleteModal from "@/components/DeleteModal";
 import { deleteEvent } from "@/lib/eventLib";
 
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+
 export async function getServerSideProps(context: any) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) return { redirect: { destination: "/login", permanent: false } };
+
   const eventId = context.params.eventId;
 
   try {
