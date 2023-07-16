@@ -1,3 +1,4 @@
+import { acceptInvitation } from "@/lib/teamLib";
 import { Blockquote, Button, Group, Text } from "@mantine/core";
 import { IconComet } from "@tabler/icons-react";
 
@@ -26,6 +27,7 @@ export default function WelcomeInvited({
           onClick={() => {
             setButtonDisabled(false);
             setInvitationState("accepted");
+            acceptInvitation();
           }}
         >
           Einladung annehmen
