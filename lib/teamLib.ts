@@ -28,3 +28,16 @@ export const getTeamByInvitedEmail = async (eMail: string): Promise<any> => {
   const data = await response.json();
   return data;
 };
+
+/**
+ * Sends a GET request to accept an invitation through the /api/teams/acceptInvitation endpoint.
+ * @returns {Promise<any>} A Promise that resolves to the response data from the server.
+ */
+export const acceptInvitation = async (): Promise<any> => {
+  const response = await fetch(`/api/teams/acceptInvitation`, {
+    method: "GET",
+  });
+
+  const data = await response.json();
+  return data;
+};
