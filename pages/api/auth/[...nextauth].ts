@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }: { session: any; user: any }): Promise<any> => {
       if (user.team) {
-        session.user = { ...session.user, team: user.team, role: user.team };
+        session.user = { ...session.user, team: user.teamId };
       }
 
       return session;
