@@ -2,6 +2,7 @@ import { sanitizeUser, validateUser } from "@/validators/userValidator";
 import dbConnect from "../lib/dbConnect";
 import Teams from "../models/teamsModel";
 import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
+import { setUserTeamInDb } from "./userService";
 
 /**
  * Gets all teams from the database.
@@ -9,7 +10,7 @@ import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
  * @returns An array of sanitized and validated team objects.
  * @throws Error if the team array is not found or not an array.
  */
-export async function getAllTeamsFromDb(): Promise<any> {
+export async function getAllTeamsFromDb(): Promise<Team[]> {
   await dbConnect();
 
   const teams = await Teams.find({});
@@ -30,7 +31,7 @@ export async function getAllTeamsFromDb(): Promise<any> {
  * @returns A promise that resolves to the retrieved team.
  * @throws If the team is not found in the database.
  */
-export async function getTeamByIdFromDb(teamId: string): Promise<any> {
+export async function getTeamByIdFromDb(teamId: string): Promise<Team> {
   await dbConnect();
 
   const sanitizedInput = await validateTeam(sanitizeTeam({ id: teamId }));
@@ -53,7 +54,7 @@ export async function getTeamByIdFromDb(teamId: string): Promise<any> {
  * @returns A promise that resolves to the retrieved team.
  * @throws Error if the team is not found in the database.
  */
-export async function getTeamByNameFromDb(teamName: string): Promise<any> {
+export async function getTeamByNameFromDb(teamName: string): Promise<Team> {
   await dbConnect();
 
   const sanitizedInput = await validateTeam(sanitizeTeam({ name: teamName.replaceAll("+", " ") }));
@@ -78,20 +79,46 @@ export async function getTeamByNameFromDb(teamName: string): Promise<any> {
  * @returns A Promise that resolves to the sanitized team object.
  * @throws Throws an error if the team invitation is not found.
  */
-export async function getTeamByInvitedEmailFromDb(eMail: string): Promise<any> {
+export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise<any> {
   await dbConnect();
 
-  const sanitizedInput = await validateUser(sanitizeUser({ email: eMail }));
+  const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail }));
 
   const team: any = await Teams.findOne({ invitedEmails: sanitizedInput?.email }).exec();
 
   if (!team) {
-    const error: any = new Error("Teaminvitation not found");
-    error.status = 200;
-    throw error;
+    return null;
   }
 
   const sanitizedTeam = await validateTeam(sanitizeTeam(team));
 
   return sanitizedTeam;
+}
+
+/**
+ * Sets an invited email as a team user in the database.
+ * @param {string} invitedEmail - The email of the invited user.
+ * @returns {Promise<boolean>} A Promise that resolves to true if the email is successfully set as a team user, false otherwise.
+ */
+export async function setEmailAsTeamUserInDb(invitedEmail: string): Promise<boolean> {
+  await dbConnect();
+
+  const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail }));
+
+  const team: any = await Teams.findOne({ invitedEmails: sanitizedInput?.email }).exec();
+
+  if (team) {
+    const userIndex = team.invitedEmails.indexOf(sanitizedInput?.email);
+    if (userIndex !== -1) {
+      team.invitedEmails.splice(userIndex, 1);
+      team.users.push(invitedEmail);
+      await team.save();
+      if (sanitizedInput?.email) {
+        await setUserTeamInDb(sanitizedInput.email, team.id);
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
