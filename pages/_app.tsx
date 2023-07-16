@@ -7,7 +7,7 @@ import { Notifications } from "@mantine/notifications";
 import Layout from "./_layout";
 import { RouterTransition } from "@/components/RouterTransition";
 
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 
 export default function App(props: AppProps) {
   const {
