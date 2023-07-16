@@ -24,18 +24,31 @@ export async function getServerSideProps(context: any) {
 
   const [locations, events] = await Promise.all([getAllLocationsFromDb(), getAllEventsFromDb()]);
   //@ts-ignore
-  const invitedTeam = !session?.user?.team ? await getTeamByInvitedEmailFromDb(session?.user?.email) : "";
+  const invitedTeam = !session?.user?.teamId ? await getTeamByInvitedEmailFromDb(session?.user?.email) : null;
+  //@ts-ignore
+  const showWelcome = !session?.user?.teamId;
 
   return {
     props: {
       locations,
       events,
       invitedTeam,
+      showWelcome,
     },
   };
 }
 
-export default function Home({ locations, events, invitedTeam }: { locations: Location[]; events: Event[]; invitedTeam: Team }) {
+export default function Home({
+  locations,
+  events,
+  invitedTeam,
+  showWelcome,
+}: {
+  locations: Location[];
+  events: Event[];
+  invitedTeam: Team;
+  showWelcome: boolean;
+}) {
   const { data: session } = useSession();
 
   const lastFiveEvents = getPastEvents(events).slice(0, 5);
@@ -43,67 +56,64 @@ export default function Home({ locations, events, invitedTeam }: { locations: Lo
 
   return (
     <Container fluid px={"xl"} py={"xs"}>
-      {
-        //@ts-ignore
-        !session?.user?.team ? (
-          <WelcomeModal session={session} invitedTeam={invitedTeam} signOut={signOut} />
-        ) : (
-          <>
-            <Grid grow style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              <Grid.Col span={6}>
-                <Stack spacing={0}>
-                  <Title order={2} size={18}>
-                    Bevorstehend
-                  </Title>
+      {showWelcome ? (
+        <WelcomeModal session={session} invitedTeam={invitedTeam} signOut={signOut} />
+      ) : (
+        <>
+          <Grid grow style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <Grid.Col span={6}>
+              <Stack spacing={0}>
+                <Title order={2} size={18}>
+                  Bevorstehend
+                </Title>
 
-                  {nextFiveEvents.length > 0 ? (
-                    nextFiveEvents.map((event: Event) => (
-                      <EventCardCompact
-                        key={event.id}
-                        event={event}
-                        location={locations.find((location) => location.id === event.locationId)}
-                      />
-                    ))
-                  ) : (
-                    <Text c={"dimmed"} fs={"italic"} size={"sm"}>
-                      Keine bevorstehenden Events
-                    </Text>
-                  )}
-                </Stack>
-              </Grid.Col>
+                {nextFiveEvents.length > 0 ? (
+                  nextFiveEvents.map((event: Event) => (
+                    <EventCardCompact
+                      key={event.id}
+                      event={event}
+                      location={locations.find((location) => location.id === event.locationId)}
+                    />
+                  ))
+                ) : (
+                  <Text c={"dimmed"} fs={"italic"} size={"sm"}>
+                    Keine bevorstehenden Events
+                  </Text>
+                )}
+              </Stack>
+            </Grid.Col>
 
-              <Grid.Col span={6}>
-                <Stack spacing={0}>
-                  <Title order={2} size={"h4"}>
-                    Vergangen
-                  </Title>
-                  {lastFiveEvents.length > 0 ? (
-                    lastFiveEvents.map((event: Event) => (
-                      <EventCardCompact
-                        key={event.id}
-                        event={event}
-                        location={locations.find((location) => location.id === event.locationId)}
-                      />
-                    ))
-                  ) : (
-                    <Text c={"dimmed"} fs={"italic"} size={"sm"}>
-                      Keine vergangenen Events
-                    </Text>
-                  )}
-                </Stack>
-              </Grid.Col>
-            </Grid>
+            <Grid.Col span={6}>
+              <Stack spacing={0}>
+                <Title order={2} size={"h4"}>
+                  Vergangen
+                </Title>
+                {lastFiveEvents.length > 0 ? (
+                  lastFiveEvents.map((event: Event) => (
+                    <EventCardCompact
+                      key={event.id}
+                      event={event}
+                      location={locations.find((location) => location.id === event.locationId)}
+                    />
+                  ))
+                ) : (
+                  <Text c={"dimmed"} fs={"italic"} size={"sm"}>
+                    Keine vergangenen Events
+                  </Text>
+                )}
+              </Stack>
+            </Grid.Col>
+          </Grid>
 
-            <Space h={"lg"} />
+          <Space h={"lg"} />
 
-            <OverviewMap
-              // @ts-ignore
-              locations={locations}
-              events={events}
-            />
-          </>
-        )
-      }
+          <OverviewMap
+            // @ts-ignore
+            locations={locations}
+            events={events}
+          />
+        </>
+      )}
     </Container>
   );
 }
