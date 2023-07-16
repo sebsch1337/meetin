@@ -3,7 +3,17 @@ import { Button, Modal, Space, Text, Title } from "@mantine/core";
 import WelcomeForm from "../WelcomeForm";
 import WelcomeInvited from "../WelcomeInvited";
 
-export default function WelcomeModal({ session, invitedTeam, signOut }: { session: any; invitedTeam: Team; signOut: any }) {
+export default function WelcomeModal({
+  session,
+  invitedTeam,
+  signOut,
+  setShowWelcomeModal,
+}: {
+  session: any;
+  invitedTeam: Team;
+  signOut: any;
+  setShowWelcomeModal: any;
+}) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [invitationState, setInvitationState] = useState("");
 
@@ -37,7 +47,7 @@ export default function WelcomeModal({ session, invitedTeam, signOut }: { sessio
       )}
 
       <Space h="xl" />
-      <Button disabled={buttonDisabled} fullWidth>
+      <Button disabled={buttonDisabled} fullWidth onClick={() => setShowWelcomeModal(false)}>
         Weiter
       </Button>
     </Modal>

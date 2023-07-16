@@ -13,6 +13,7 @@ import WelcomeModal from "@/components/WelcomeModal";
 
 import dynamic from "next/dynamic";
 import { getTeamByInvitedEmailFromDb } from "@/services/teamService";
+import { useState } from "react";
 
 const OverviewMap = dynamic((): any => import("@/components/OverviewMap"), {
   ssr: false,
@@ -51,13 +52,15 @@ export default function Home({
 }) {
   const { data: session } = useSession();
 
+  const [showWelcomeModal, setShowWelcomeModal] = useState(showWelcome);
+
   const lastFiveEvents = getPastEvents(events).slice(0, 5);
   const nextFiveEvents = getUpcomingEvents(events).slice(0, 5);
 
   return (
     <Container fluid px={"xl"} py={"xs"}>
-      {showWelcome ? (
-        <WelcomeModal session={session} invitedTeam={invitedTeam} signOut={signOut} />
+      {showWelcomeModal ? (
+        <WelcomeModal session={session} invitedTeam={invitedTeam} signOut={signOut} setShowWelcomeModal={setShowWelcomeModal} />
       ) : (
         <>
           <Grid grow style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
