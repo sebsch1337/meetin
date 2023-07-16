@@ -22,21 +22,17 @@ export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return { redirect: { destination: "/login", permanent: false } };
 
-  try {
-    const [locations, events] = await Promise.all([getAllLocationsFromDb(), getAllEventsFromDb()]);
-    //@ts-ignore
-    const invitedTeam = !session?.user?.team ? await getTeamByInvitedEmailFromDb(session?.user?.email) : "";
+  const [locations, events] = await Promise.all([getAllLocationsFromDb(), getAllEventsFromDb()]);
+  //@ts-ignore
+  const invitedTeam = !session?.user?.team ? await getTeamByInvitedEmailFromDb(session?.user?.email) : "";
 
-    return {
-      props: {
-        locations,
-        events,
-        invitedTeam,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-  }
+  return {
+    props: {
+      locations,
+      events,
+      invitedTeam,
+    },
+  };
 }
 
 export default function Home({ locations, events, invitedTeam }: { locations: Location[]; events: Event[]; invitedTeam: Team }) {
