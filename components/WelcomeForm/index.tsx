@@ -44,8 +44,8 @@ export default function WelcomeForm({ setButtonDisabled }: { setButtonDisabled: 
       <Space h={"sm"} />
 
       <TextInput
-        label="Gib deinem Team einen Namen"
-        description="Teamname"
+        label="Teamname"
+        description="Gib deinem Team einen Namen."
         placeholder="z.B. Neu in Dortmund"
         error={inputError}
         onChange={(event) => setSearchString(event.target.value)}
