@@ -26,17 +26,10 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }: { token: any; user: any }) => {
+    session: async ({ session, user }: { session: any; user: any }) => {
       if (user) {
-        token.email = user.email;
-        token.teamId = user.teamId;
-      }
-      return token;
-    },
-    session: async ({ session, token }: { session: any; token: any }) => {
-      if (token && session.user) {
-        session.user.email = token.email;
-        session.user.teamId = token.teamId;
+        session.user.email = user.email;
+        session.user.teamId = user.teamId;
       }
       return session;
     },
