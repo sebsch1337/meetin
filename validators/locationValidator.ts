@@ -11,7 +11,7 @@ export const sanitizeLocation = (location: any) => {
 
   const sanitizedLocation = {
     id: location?._id?.toString().trim() || location?.id?.toString().trim() || undefined,
-    teamId: location?.teamId?.toString().trim(),
+    teamId: location?.teamId?.toString().trim() || undefined,
     name: location?.name?.toString().trim() || "",
     description: location?.description?.toString().trim() || "",
     infos: location?.infos?.toString().trim() || "",

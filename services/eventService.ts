@@ -85,10 +85,11 @@ export async function getAllEventsByLocationIdFromDb(locationId: string, teamId:
 export async function postEventToDb(event: any, teamId: string | undefined): Promise<any> {
   if (!teamId) return;
   event.teamId = teamId;
-
   await dbConnect();
 
   const sanitizedEvent = await validateEvent(sanitizeEvent(event));
+  console.log("event: ", sanitizedEvent);
+
   const newEvent = await Events.create(sanitizedEvent);
   const returnedEvent = validateEvent(sanitizeEvent(newEvent));
 

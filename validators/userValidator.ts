@@ -3,7 +3,7 @@ import { object, string } from "yup";
 export const sanitizeUser = (user: any) => {
   const sanitizedUser = {
     id: user?._id?.toString().trim() || user?.id?.toString().trim() || undefined,
-    teamId: location?.teamId?.toString().trim() || undefined,
+    teamId: user?.teamId?.toString().trim() || undefined,
     name: user?.name?.trim() || "",
     email: user?.email || "",
   };
