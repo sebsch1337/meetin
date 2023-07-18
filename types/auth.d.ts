@@ -1,6 +1,7 @@
 import { DefaultSession, DefaultUser } from "next-auth";
 
 interface IUser extends DefaultUser {
+  email?: string;
   teamId?: string;
 }
 declare module "next-auth" {
