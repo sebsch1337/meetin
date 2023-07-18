@@ -23,10 +23,9 @@ export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return { redirect: { destination: "/login", permanent: false } };
 
-  const [locations, events] = await Promise.all([getAllLocationsFromDb(), getAllEventsFromDb()]);
-  //@ts-ignore
+  const [locations, events] = await Promise.all([getAllLocationsFromDb(), getAllEventsFromDb(session?.user?.teamId)]);
+
   const invitedTeam = !session?.user?.teamId ? await getTeamByInvitedEmailFromDb(session?.user?.email) : null;
-  //@ts-ignore
   const showWelcome = !session?.user?.teamId;
 
   return {

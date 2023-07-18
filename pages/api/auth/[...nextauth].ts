@@ -26,11 +26,16 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    session: async ({ session, user }: { session: any; user: any }): Promise<any> => {
-      if (user.teamId) {
-        session.user = { ...session.user, teamId: user.teamId };
+    jwt: async ({ token, user }: { token: any; user: any }) => {
+      if (user) {
+        token.teamId = user.teamId;
       }
-
+      return token;
+    },
+    session: async ({ session, token }: { session: any; token: any }) => {
+      if (token && session.user) {
+        session.user.teamId = token.teamId;
+      }
       return session;
     },
   },

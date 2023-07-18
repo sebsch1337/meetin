@@ -15,7 +15,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "GET":
       try {
-        const tags = await getAllEventsFromDb();
+        const tags = await getAllEventsFromDb(session?.user?.teamId);
         res.status(200).json(tags);
       } catch (error: any) {
         if (error.status) {
@@ -28,7 +28,7 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "POST":
       try {
-        const newEvent: any = await postEventToDb(req.body);
+        const newEvent: any = await postEventToDb(req.body, session?.user?.teamId);
         res.status(200).json(newEvent);
       } catch (error: any) {
         if (error.status) {

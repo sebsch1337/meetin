@@ -24,7 +24,7 @@ export async function getServerSideProps(context: any) {
   const eventId = context.params.eventId;
 
   try {
-    const eventData = await getEventByIdFromDb(eventId);
+    const eventData = await getEventByIdFromDb(eventId, session?.user?.teamId);
     const locationData = await getAllLocationsFromDb();
 
     return {
@@ -39,13 +39,7 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-export default function EventDetails({
-  eventData,
-  locationData,
-}: {
-  eventData: Event;
-  locationData: Location[];
-}) {
+export default function EventDetails({ eventData, locationData }: { eventData: Event; locationData: Location[] }) {
   const [event, setEvent] = useState(eventData ?? {});
   const [location, setLocation] = useState<Location>();
   const [modal, setModal] = useState<Modal>({});
@@ -60,21 +54,10 @@ export default function EventDetails({
     <>
       <DetailsModal opened={modalOpened} onClose={closeModal} modal={modal}>
         {modal.type === "form" && (
-          <EventForm
-            closeModal={closeModal}
-            event={event}
-            setEvent={setEvent}
-            locations={locationData}
-            modal={modal}
-            setModal={setModal}
-          />
+          <EventForm closeModal={closeModal} event={event} setEvent={setEvent} locations={locationData} modal={modal} setModal={setModal} />
         )}
         {modal.type === "delete" && (
-          <DeleteModal
-            type={"event"}
-            deleteData={async () => await deleteEvent(event.id)}
-            closeModal={closeModal}
-          />
+          <DeleteModal type={"event"} deleteData={async () => await deleteEvent(event.id)} closeModal={closeModal} />
         )}
       </DetailsModal>
 

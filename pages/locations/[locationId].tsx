@@ -35,7 +35,7 @@ export async function getServerSideProps(context: any) {
   try {
     const [locationData, locationEvents, tags] = await Promise.all([
       getLocationByIdFromDb(locationId),
-      getAllEventsByLocationIdFromDb(locationId),
+      getAllEventsByLocationIdFromDb(locationId, session?.user?.teamId),
       getAllTagsFromDb(),
     ]);
 
@@ -100,11 +100,7 @@ export default function LocationDetails({
           />
         )}
         {modal.type === "deleteLocation" && (
-          <DeleteModal
-            type={"location"}
-            deleteData={async () => await deleteLocation(location)}
-            closeModal={closeModal}
-          />
+          <DeleteModal type={"location"} deleteData={async () => await deleteLocation(location)} closeModal={closeModal} />
         )}
       </DetailsModal>
 
@@ -170,23 +166,13 @@ export default function LocationDetails({
 
         <Tabs.Panel value="infos" pt="xs">
           {activeTab === "infos" && (
-            <LocationDetailsBasics
-              location={location}
-              averageVisitors={averageVisitors}
-              lastVisit={lastVisit}
-              tags={tags}
-            />
+            <LocationDetailsBasics location={location} averageVisitors={averageVisitors} lastVisit={lastVisit} tags={tags} />
           )}
         </Tabs.Panel>
 
         <Tabs.Panel value="gallery" pt="xs">
           {activeTab === "gallery" && (
-            <LocationDetailsPictures
-              location={location}
-              setLoading={setLoading}
-              setLocation={setLocation}
-              isMobile={isMobile}
-            />
+            <LocationDetailsPictures location={location} setLoading={setLoading} setLocation={setLocation} isMobile={isMobile} />
           )}
         </Tabs.Panel>
 

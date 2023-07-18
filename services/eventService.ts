@@ -1,4 +1,3 @@
-import { CONTROL_SIZES } from "@mantine/core/lib/NumberInput/NumberInput.styles";
 import dbConnect from "../lib/dbConnect";
 import Events from "../models/eventsModel";
 import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";
@@ -9,15 +8,15 @@ import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";
  * @returns An array of sanitized and validated event objects.
  * @throws Error if the event array is not found or not an array.
  */
-export async function getAllEventsFromDb(): Promise<any[]> {
+export async function getAllEventsFromDb(teamId: string | undefined): Promise<any[]> {
+  if (!teamId) return [];
+
   await dbConnect();
 
-  const events = await Events.find({}).sort({ dateTime: -1 }).exec();
+  const events = await Events.find({ teamId }).sort({ dateTime: -1 }).exec();
   if (!Array.isArray(events)) throw new Error();
 
-  const sanitizedEvents = await Promise.all(
-    events.map(async (event) => await validateEvent(sanitizeEvent(event)))
-  );
+  const sanitizedEvents = await Promise.all(events.map(async (event) => await validateEvent(sanitizeEvent(event))));
 
   const newEvents = sanitizedEvents.map((event: any): any[] => ({
     ...event,
@@ -33,7 +32,9 @@ export async function getAllEventsFromDb(): Promise<any[]> {
  * @returns A promise that resolves to the retrieved event.
  * @throws If the event is not found in the database.
  */
-export async function getEventByIdFromDb(eventId: string): Promise<any> {
+export async function getEventByIdFromDb(eventId: string, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+
   await dbConnect();
 
   const sanitizedInput = await validateEvent(sanitizeEvent({ id: eventId }));
@@ -57,15 +58,15 @@ export async function getEventByIdFromDb(eventId: string): Promise<any> {
  * @returns An array of sanitized and validated event objects.
  * @throws Error if the event array is not found or not an array.
  */
-export async function getAllEventsByLocationIdFromDb(locationId: string): Promise<any> {
+export async function getAllEventsByLocationIdFromDb(locationId: string, teamId: string | undefined): Promise<any> {
+  if (!teamId) return [];
+
   await dbConnect();
 
   const events = await Events.find({ locationId }).sort({ dateTime: -1 }).exec();
   if (!Array.isArray(events)) throw new Error();
 
-  const sanitizedEvents = await Promise.all(
-    events.map(async (event) => await validateEvent(sanitizeEvent(event)))
-  );
+  const sanitizedEvents = await Promise.all(events.map(async (event) => await validateEvent(sanitizeEvent(event))));
 
   const newEvents = sanitizedEvents.map((event: any): any[] => ({
     ...event,
@@ -81,7 +82,9 @@ export async function getAllEventsByLocationIdFromDb(locationId: string): Promis
  * @param event - The event data to store.
  * @returns The sanitized and validated event object.
  */
-export async function postEventToDb(event: any): Promise<any> {
+export async function postEventToDb(event: any, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+
   await dbConnect();
 
   const sanitizedEvent = await validateEvent(sanitizeEvent(event));
@@ -98,17 +101,15 @@ export async function postEventToDb(event: any): Promise<any> {
  * @returns A Promise that resolves to the updated event document in the database.
  * @throws An error indicating that the update operation did not complete successfully.
  */
-export async function updateEventInDb(id: string, event: Event): Promise<any> {
+export async function updateEventInDb(id: string, event: Event, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+
   await dbConnect();
 
   const eventData = { ...event, id };
   const sanitizedEvent = await validateEvent(sanitizeEvent(eventData));
 
-  const updatedEvent = await Events.findOneAndUpdate(
-    { _id: sanitizedEvent.id },
-    { $set: sanitizedEvent },
-    { new: true }
-  ).exec();
+  const updatedEvent = await Events.findOneAndUpdate({ _id: sanitizedEvent.id }, { $set: sanitizedEvent }, { new: true }).exec();
   if (!updatedEvent) throw new Error();
 
   const sanitizedNewEvent = await validateEvent(sanitizeEvent(updatedEvent));
@@ -122,7 +123,9 @@ export async function updateEventInDb(id: string, event: Event): Promise<any> {
  * @returns A promise that resolves with the status of the deletion operation.
  * @throws If the deletion operation fails.
  */
-export async function deleteEventFromDb(id: string): Promise<any> {
+export async function deleteEventFromDb(id: string, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+
   await dbConnect();
 
   const sanitizedId = await validateEvent(sanitizeEvent({ id: id }));

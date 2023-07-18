@@ -13,9 +13,7 @@ export async function getAllLocationsFromDb(): Promise<any> {
 
   const locations = await Locations.find({}).exec();
 
-  const sanitizedLocations = await Promise.all(
-    locations.map(async (location) => await validateLocation(sanitizeLocation(location)))
-  );
+  const sanitizedLocations = await Promise.all(locations.map(async (location) => await validateLocation(sanitizeLocation(location))));
 
   return sanitizedLocations;
 }
@@ -67,11 +65,7 @@ export async function updateLocationInDb(id: string, location: Location): Promis
     await validateLocation(sanitizeLocation({ id })),
     await validateLocation(sanitizeLocation(location)),
   ]);
-  const updatedLocation = await Locations.findOneAndUpdate(
-    { _id: sanitizedId.id },
-    { $set: sanitizedLocation },
-    { new: true }
-  ).exec();
+  const updatedLocation = await Locations.findOneAndUpdate({ _id: sanitizedId.id }, { $set: sanitizedLocation }, { new: true }).exec();
   if (!updatedLocation) throw new Error();
 
   const sanitizedUpdatedLocation = await validateLocation(sanitizeLocation(updatedLocation));

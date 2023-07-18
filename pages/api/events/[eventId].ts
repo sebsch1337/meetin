@@ -15,7 +15,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "PATCH":
       try {
-        const updatedEvent = await updateEventInDb(eventId, req.body.values);
+        const updatedEvent = await updateEventInDb(eventId, req.body.values, session?.user?.teamId);
         res.status(200).json(updatedEvent);
       } catch (error: any) {
         if (error.status) {
@@ -31,7 +31,7 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "DELETE":
       try {
-        const deletedEvent: any = await deleteEventFromDb(eventId);
+        const deletedEvent: any = await deleteEventFromDb(eventId, session?.user?.teamId);
         res.status(200).json(deletedEvent);
       } catch (error: any) {
         if (error.status) {
