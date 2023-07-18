@@ -25,7 +25,7 @@ export async function getServerSideProps(context: any) {
 
   const [locations, events] = await Promise.all([getAllLocationsFromDb(session?.user?.teamId), getAllEventsFromDb(session?.user?.teamId)]);
 
-  const invitedTeam = !session?.user?.teamId ? await getTeamByInvitedEmailFromDb(session?.user?.email) : null;
+  const invitedTeam = !session?.user?.teamId && session?.user?.email ? await getTeamByInvitedEmailFromDb(session?.user?.email) : null;
   const showWelcome = !session?.user?.teamId;
 
   return {
