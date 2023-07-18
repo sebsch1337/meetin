@@ -19,6 +19,7 @@ import { getServerSession } from "next-auth/next";
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return { redirect: { destination: "/login", permanent: false } };
+  if (!session?.user?.teamId) return { redirect: { destination: "/", permanent: false } };
 
   return { props: {} };
 }
@@ -58,13 +59,7 @@ export default function Events() {
 
       <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
         <Group position={"apart"} noWrap>
-          <Button
-            leftIcon={<IconPlus size="1rem" />}
-            variant={"light"}
-            size={"sm"}
-            color={"cyan"}
-            onClick={open}
-          >
+          <Button leftIcon={<IconPlus size="1rem" />} variant={"light"} size={"sm"} color={"cyan"} onClick={open}>
             Neues Event
           </Button>
           <SearchInput searchString={searchEvent} setSearchString={setSearchEvent} />
