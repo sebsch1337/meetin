@@ -25,7 +25,7 @@ export async function getServerSideProps(context: any) {
 
   try {
     const eventData = await getEventByIdFromDb(eventId, session?.user?.teamId);
-    const locationData = await getAllLocationsFromDb();
+    const locationData = await getAllLocationsFromDb(session?.user?.teamId);
 
     return {
       props: {

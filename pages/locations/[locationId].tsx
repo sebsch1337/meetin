@@ -34,7 +34,7 @@ export async function getServerSideProps(context: any) {
 
   try {
     const [locationData, locationEvents, tags] = await Promise.all([
-      getLocationByIdFromDb(locationId),
+      getLocationByIdFromDb(locationId, session?.user?.teamId),
       getAllEventsByLocationIdFromDb(locationId, session?.user?.teamId),
       getAllTagsFromDb(),
     ]);

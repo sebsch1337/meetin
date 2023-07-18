@@ -15,7 +15,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "GET":
       try {
-        const locations = await getAllLocationsFromDb();
+        const locations = await getAllLocationsFromDb(session?.user?.teamId);
         res.status(200).json(locations);
       } catch (error: any) {
         if (error.status) {
@@ -28,7 +28,7 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "POST":
       try {
-        const postedLocation: any = await postLocationToDb(req.body);
+        const postedLocation: any = await postLocationToDb(req.body, session?.user?.teamId);
         res.status(200).json(postedLocation);
       } catch (error: any) {
         if (error.status) {

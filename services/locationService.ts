@@ -8,10 +8,12 @@ import { sanitizeLocation, validateLocation } from "@/validators/locationValidat
  * @returns An array of sanitized and validated location objects.
  * @throws Error if the locations array is not found or not an array.
  */
-export async function getAllLocationsFromDb(): Promise<any> {
+export async function getAllLocationsFromDb(teamId: string | undefined): Promise<any> {
+  if (!teamId) return [];
+
   await dbConnect();
 
-  const locations = await Locations.find({}).exec();
+  const locations = await Locations.find({ teamId }).exec();
 
   const sanitizedLocations = await Promise.all(locations.map(async (location) => await validateLocation(sanitizeLocation(location))));
 
@@ -25,10 +27,12 @@ export async function getAllLocationsFromDb(): Promise<any> {
  * @returns The sanitized and validated location object.
  * @throws Error if the location is not found.
  */
-export async function getLocationByIdFromDb(id: string): Promise<any> {
+export async function getLocationByIdFromDb(id: string, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+
   await dbConnect();
 
-  const location = await Locations.findById(id).exec();
+  const location = await Locations.findOne({ _id: id, teamId }).exec();
 
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
 
@@ -41,7 +45,10 @@ export async function getLocationByIdFromDb(id: string): Promise<any> {
  * @param location - The location data to store.
  * @returns The sanitized and validated location object.
  */
-export async function postLocationToDb(location: any): Promise<any> {
+export async function postLocationToDb(location: any, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+  location.teamId = teamId;
+
   await dbConnect();
 
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
@@ -58,14 +65,20 @@ export async function postLocationToDb(location: any): Promise<any> {
  * @returns A Promise that resolves to the updated location document in the database.
  * @throws An error indicating that the update operation did not complete successfully.
  */
-export async function updateLocationInDb(id: string, location: Location): Promise<any> {
+export async function updateLocationInDb(id: string, location: Location, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+
   await dbConnect();
 
   const [sanitizedId, sanitizedLocation] = await Promise.all([
     await validateLocation(sanitizeLocation({ id })),
     await validateLocation(sanitizeLocation(location)),
   ]);
-  const updatedLocation = await Locations.findOneAndUpdate({ _id: sanitizedId.id }, { $set: sanitizedLocation }, { new: true }).exec();
+  const updatedLocation = await Locations.findOneAndUpdate(
+    { _id: sanitizedId.id, teamId },
+    { $set: sanitizedLocation },
+    { new: true }
+  ).exec();
   if (!updatedLocation) throw new Error();
 
   const sanitizedUpdatedLocation = await validateLocation(sanitizeLocation(updatedLocation));
@@ -80,11 +93,13 @@ export async function updateLocationInDb(id: string, location: Location): Promis
  * @returns A promise that resolves with the status of the deletion operation.
  * @throws If the deletion operation fails.
  */
-export async function deleteLocationFromDb(id: string): Promise<any> {
+export async function deleteLocationFromDb(id: string, teamId: string | undefined): Promise<any> {
+  if (!teamId) return;
+
   await dbConnect();
 
   const sanitizedId = await validateLocation(sanitizeLocation({ id }));
-  const deletedLocation = await Locations.deleteOne({ _id: sanitizedId.id }).exec();
+  const deletedLocation = await Locations.deleteOne({ _id: sanitizedId.id, teamId }).exec();
   if (!deletedLocation.acknowledged) throw new Error();
 
   return deletedLocation;
@@ -97,12 +112,14 @@ export async function deleteLocationFromDb(id: string): Promise<any> {
  * @returns A Promise that resolves to the updated location document in the database.
  * @throws An Error if the update operation did not complete successfully.
  */
-export const deleteImageByIdFromDb = async (publicId: string, locationId: string): Promise<Location> => {
+export const deleteImageByIdFromDb = async (publicId: string, locationId: string, teamId: string | undefined): Promise<any> => {
+  if (!teamId) return;
+
   await dbConnect();
 
   const sanitizedId = await validateLocation(sanitizeLocation({ id: locationId }));
   const updatedLocation = await Locations.findOneAndUpdate(
-    { _id: sanitizedId.id },
+    { _id: sanitizedId.id, teamId },
     { $pull: { images: { publicId } } },
     { new: true }
   ).exec();
