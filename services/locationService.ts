@@ -27,13 +27,13 @@ export async function getAllLocationsFromDb(teamId: string | undefined): Promise
  * @returns The sanitized and validated location object.
  * @throws Error if the location is not found.
  */
-export async function getLocationByIdFromDb(id: string, teamId: string | undefined): Promise<any> {
+export async function getLocationByIdFromDb(locationId: string, teamId: string | undefined): Promise<any> {
   if (!teamId) return;
 
   await dbConnect();
 
-  const location = await Locations.findOne({ _id: id, teamId }).exec();
-
+  const sanitizedInput = await validateLocation(sanitizeLocation({ id: locationId }));
+  const location = await Locations.findOne({ _id: sanitizedInput.id, teamId }).exec();
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
 
   return sanitizedLocation;

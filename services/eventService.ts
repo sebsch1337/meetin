@@ -39,7 +39,7 @@ export async function getEventByIdFromDb(eventId: string, teamId: string | undef
 
   const sanitizedInput = await validateEvent(sanitizeEvent({ id: eventId }));
 
-  const event = await Events.findById(sanitizedInput.id).exec();
+  const event = await Events.findOne({ _id: sanitizedInput.id, teamId }).exec();
   if (!event) throw new Error("Event not found");
 
   const sanitizedEvent = await validateEvent(sanitizeEvent(event));
@@ -63,7 +63,7 @@ export async function getAllEventsByLocationIdFromDb(locationId: string, teamId:
 
   await dbConnect();
 
-  const events = await Events.find({ locationId }).sort({ dateTime: -1 }).exec();
+  const events = await Events.find({ locationId, teamId }).sort({ dateTime: -1 }).exec();
   if (!Array.isArray(events)) throw new Error();
 
   const sanitizedEvents = await Promise.all(events.map(async (event) => await validateEvent(sanitizeEvent(event))));
@@ -84,6 +84,7 @@ export async function getAllEventsByLocationIdFromDb(locationId: string, teamId:
  */
 export async function postEventToDb(event: any, teamId: string | undefined): Promise<any> {
   if (!teamId) return;
+  event.teamId = teamId;
 
   await dbConnect();
 
@@ -106,10 +107,10 @@ export async function updateEventInDb(id: string, event: Event, teamId: string |
 
   await dbConnect();
 
-  const eventData = { ...event, id };
+  const eventData = { ...event, id, teamId };
   const sanitizedEvent = await validateEvent(sanitizeEvent(eventData));
 
-  const updatedEvent = await Events.findOneAndUpdate({ _id: sanitizedEvent.id }, { $set: sanitizedEvent }, { new: true }).exec();
+  const updatedEvent = await Events.findOneAndUpdate({ _id: sanitizedEvent.id, teamId }, { $set: sanitizedEvent }, { new: true }).exec();
   if (!updatedEvent) throw new Error();
 
   const sanitizedNewEvent = await validateEvent(sanitizeEvent(updatedEvent));
@@ -129,7 +130,7 @@ export async function deleteEventFromDb(id: string, teamId: string | undefined):
   await dbConnect();
 
   const sanitizedId = await validateEvent(sanitizeEvent({ id: id }));
-  const deletedEvent = await Events.deleteOne({ _id: sanitizedId.id }).exec();
+  const deletedEvent = await Events.deleteOne({ _id: sanitizedId.id, teamId }).exec();
   if (!deletedEvent.acknowledged) throw new Error();
 
   return deletedEvent;
