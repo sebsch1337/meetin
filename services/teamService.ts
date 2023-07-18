@@ -123,25 +123,19 @@ export async function addUserToTeamInDb(invitedEmail: string, userId: string): P
   return false;
 }
 
-export async function createTeamInDb(invitedEmail: string): Promise<boolean> {
+/**
+ * Creates a new team in the database.
+ *
+ * @param teamName - The name of the team to be created.
+ * @param userId - The ID of the user creating the team.
+ * @returns A Promise that resolves to a `Team` object representing the created team.
+ */
+export async function createTeamInDb(teamName: string, userId: string): Promise<Team> {
   await dbConnect();
 
-  const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail }));
+  const sanitizedInput = await validateTeam(validateTeam({ name: teamName, admins: [userId] }));
+  const team: any = await Teams.create({ name: sanitizedInput.name, admins: sanitizedInput.admins });
+  const sanitizedTeam = await validateTeam(sanitizeTeam(team));
 
-  const team: any = await Teams.findOne({ invitedEmails: sanitizedInput?.email }).exec();
-
-  if (team) {
-    const userIndex = team.invitedEmails.indexOf(sanitizedInput?.email);
-    if (userIndex !== -1) {
-      team.invitedEmails.splice(userIndex, 1);
-      team.users.push(invitedEmail);
-      await team.save();
-      if (sanitizedInput?.id) {
-        await setUserTeamInDb(sanitizedInput.id, team.id);
-        return true;
-      }
-    }
-  }
-
-  return false;
+  return sanitizedTeam;
 }
