@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const locationsSchema = new Schema({
+  teamId: { type: String, required: true, length: 24 },
   name: { type: String, required: true, maxLength: 50 },
   address: {
     road: { type: String, maxLength: 100 },
