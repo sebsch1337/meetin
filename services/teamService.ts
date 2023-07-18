@@ -130,7 +130,9 @@ export async function addUserToTeamInDb(invitedEmail: string, userId: string): P
  * @param userId - The ID of the user creating the team.
  * @returns A Promise that resolves to a `Team` object representing the created team.
  */
-export async function createTeamInDb(teamName: string, userId: string): Promise<Team> {
+export async function createTeamInDb(teamName: string, userId: string | undefined): Promise<Team | object> {
+  if (!teamName || !userId) return {};
+
   await dbConnect();
 
   const sanitizedInput = await validateTeam(validateTeam({ name: teamName, admins: [userId] }));
