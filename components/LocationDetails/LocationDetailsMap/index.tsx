@@ -6,15 +6,7 @@ import "leaflet-defaulticon-compatibility";
 
 import PinBlueImg from "../../../assets/icons/pin-blue.png";
 
-export default function LocationDetailsMap({
-  latitude,
-  longitude,
-  isMobile,
-}: {
-  latitude: number;
-  longitude: number;
-  isMobile: boolean;
-}) {
+export default function LocationDetailsMap({ latitude, longitude, isMobile }: { latitude: number; longitude: number; isMobile: boolean }) {
   const pinBlueIcon = L.icon({
     iconUrl: PinBlueImg.src,
     iconRetinaUrl: PinBlueImg.src,
@@ -27,7 +19,7 @@ export default function LocationDetailsMap({
       center={[latitude, longitude]}
       zoom={15}
       scrollWheelZoom={false}
-      style={{ height: `${isMobile ? "50vh" : "60vh"}`, width: "100vw" }}
+      style={{ height: `${isMobile ? "50vh" : "60vh"}`, width: "100vw", zIndex: 1 }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

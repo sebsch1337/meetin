@@ -10,4 +10,5 @@ interface Event {
   preNotes?: string;
   postNotes?: string;
   fbLink?: string;
+  teamId: string;
 }

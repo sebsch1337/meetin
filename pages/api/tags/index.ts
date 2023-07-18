@@ -1,16 +1,22 @@
-import { createCloudinarySignature } from "@/services/cloudinaryService";
+import { getAllTagsFromDb } from "@/services/tagService";
+
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { publicId, timestamp, uploadPreset },
+    query: {},
     method,
   } = req;
+
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ message: "unauthorized" });
 
   switch (method) {
     case "GET":
       try {
-        const signature = createCloudinarySignature(publicId, timestamp, uploadPreset);
-        res.status(200).json(signature);
+        const tags = await getAllTagsFromDb();
+        res.status(200).json(tags);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });

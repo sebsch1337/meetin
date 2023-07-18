@@ -1,23 +1,10 @@
 import { Button, Space, Text, Title } from "@mantine/core";
 import Link from "next/link";
 
-import {
-  getFiveLeastVisitedLocations,
-  getLastVisit,
-  getLastVisitedDay,
-  getSixMonthsNotVisitedLocations,
-} from "@/lib/visitLib";
+import { getFiveLeastVisitedLocations, getLastVisit, getLastVisitedDay, getSixMonthsNotVisitedLocations } from "@/lib/visitLib";
 import { getPastEvents, getUpcomingEvents } from "@/lib/eventLib";
 
-import {
-  pinBlueIcon,
-  pinBlueHighlightedIcon,
-  pinGreenIcon,
-  pinGreyIcon,
-  pinPinkIcon,
-  pinRedIcon,
-  pinYellowIcon,
-} from "@/lib/iconLib";
+import { pinBlueIcon, pinBlueHighlightedIcon, pinGreenIcon, pinGreyIcon, pinPinkIcon, pinRedIcon, pinYellowIcon } from "@/lib/iconLib";
 
 import { IconListDetails } from "@tabler/icons-react";
 
@@ -26,15 +13,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 
-export default function OverviewMap({
-  locations,
-  events,
-  isMobile,
-}: {
-  locations: Location[];
-  events: Event[];
-  isMobile: boolean;
-}) {
+export default function OverviewMap({ locations, events, isMobile }: { locations: Location[]; events: Event[]; isMobile: boolean }) {
   const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
   const sixMonthsNotVisitedLocations = getSixMonthsNotVisitedLocations(locations, events);
 
@@ -43,7 +22,7 @@ export default function OverviewMap({
       center={[51.51360649415908, 7.46530746959316]}
       zoom={13}
       scrollWheelZoom={true}
-      style={{ height: `${isMobile ? "50vh" : "60vh"}`, width: "100%" }}
+      style={{ height: `${isMobile ? "50vh" : "60vh"}`, width: "100%", zIndex: 10 }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -61,14 +40,11 @@ export default function OverviewMap({
                 ? pinPinkIcon
                 : !location.indoor && location.outdoor
                 ? pinGreenIcon
-                : fiveLeastVisitedLocations.includes(location.id) &&
-                  sixMonthsNotVisitedLocations.includes(location.id)
+                : fiveLeastVisitedLocations.includes(location.id) && sixMonthsNotVisitedLocations.includes(location.id)
                 ? pinRedIcon
                 : sixMonthsNotVisitedLocations.includes(location.id)
                 ? pinYellowIcon
-                : [...getUpcomingEvents(events), ...getPastEvents(events)]
-                    .slice(0, 3)
-                    .find((event) => event.locationId === location.id)
+                : [...getUpcomingEvents(events), ...getPastEvents(events)].slice(0, 3).find((event) => event.locationId === location.id)
                 ? pinBlueHighlightedIcon
                 : pinBlueIcon
             }

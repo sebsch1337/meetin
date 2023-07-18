@@ -1,4 +1,7 @@
-import { getAllLocationsFromDb, postLocationToDb } from "@/services/locationService";
+import { createTeamInDb, getAllTeamsFromDb } from "@/services/teamService";
+
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
@@ -6,11 +9,14 @@ export default async function handler(req: any, res: any): Promise<any> {
     method,
   } = req;
 
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ message: "unauthorized" });
+
   switch (method) {
     case "GET":
       try {
-        const locations = await getAllLocationsFromDb();
-        res.status(200).json(locations);
+        const teams = await getAllTeamsFromDb();
+        res.status(200).json(teams);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
@@ -22,8 +28,9 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "POST":
       try {
-        const postedLocation: any = await postLocationToDb(req.body);
-        res.status(200).json(postedLocation);
+        const teamData = JSON.parse(req.body);
+        const team = await createTeamInDb(teamData.teamName, session?.user?.id);
+        res.status(200).json(team);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });

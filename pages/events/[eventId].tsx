@@ -14,12 +14,19 @@ import EventForm from "@/components/EventForm";
 import DeleteModal from "@/components/DeleteModal";
 import { deleteEvent } from "@/lib/eventLib";
 
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+
 export async function getServerSideProps(context: any) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) return { redirect: { destination: "/login", permanent: false } };
+  if (!session?.user?.teamId) return { redirect: { destination: "/", permanent: false } };
+
   const eventId = context.params.eventId;
 
   try {
-    const eventData = await getEventByIdFromDb(eventId);
-    const locationData = await getAllLocationsFromDb();
+    const eventData = await getEventByIdFromDb(eventId, session?.user?.teamId);
+    const locationData = await getAllLocationsFromDb(session?.user?.teamId);
 
     return {
       props: {
@@ -33,13 +40,7 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-export default function EventDetails({
-  eventData,
-  locationData,
-}: {
-  eventData: Event;
-  locationData: Location[];
-}) {
+export default function EventDetails({ eventData, locationData }: { eventData: Event; locationData: Location[] }) {
   const [event, setEvent] = useState(eventData ?? {});
   const [location, setLocation] = useState<Location>();
   const [modal, setModal] = useState<Modal>({});
@@ -54,21 +55,10 @@ export default function EventDetails({
     <>
       <DetailsModal opened={modalOpened} onClose={closeModal} modal={modal}>
         {modal.type === "form" && (
-          <EventForm
-            closeModal={closeModal}
-            event={event}
-            setEvent={setEvent}
-            locations={locationData}
-            modal={modal}
-            setModal={setModal}
-          />
+          <EventForm closeModal={closeModal} event={event} setEvent={setEvent} locations={locationData} modal={modal} setModal={setModal} />
         )}
         {modal.type === "delete" && (
-          <DeleteModal
-            type={"event"}
-            deleteData={async () => await deleteEvent(event.id)}
-            closeModal={closeModal}
-          />
+          <DeleteModal type={"event"} deleteData={async () => await deleteEvent(event.id)} closeModal={closeModal} />
         )}
       </DetailsModal>
 

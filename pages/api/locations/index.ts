@@ -1,4 +1,7 @@
-import { getAllEventsFromDb, postEventToDb } from "@/services/eventService";
+import { getAllLocationsFromDb, postLocationToDb } from "@/services/locationService";
+
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
@@ -6,11 +9,14 @@ export default async function handler(req: any, res: any): Promise<any> {
     method,
   } = req;
 
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ message: "unauthorized" });
+
   switch (method) {
     case "GET":
       try {
-        const tags = await getAllEventsFromDb();
-        res.status(200).json(tags);
+        const locations = await getAllLocationsFromDb(session?.user?.teamId);
+        res.status(200).json(locations);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
@@ -22,8 +28,8 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "POST":
       try {
-        const newEvent: any = await postEventToDb(req.body);
-        res.status(200).json(newEvent);
+        const postedLocation: any = await postLocationToDb(req.body, session?.user?.teamId);
+        res.status(200).json(postedLocation);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });

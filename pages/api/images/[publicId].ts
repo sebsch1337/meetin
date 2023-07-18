@@ -1,11 +1,17 @@
 import { deleteImageFromCloudinary } from "@/services/cloudinaryService";
 import { deleteImageByIdFromDb } from "@/services/locationService";
 
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
+
 export default async function handler(req: any, res: any): Promise<any> {
   const {
     query: { publicId, locationId },
     method,
   } = req;
+
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ message: "unauthorized" });
 
   switch (method) {
     case "DELETE":
@@ -13,7 +19,7 @@ export default async function handler(req: any, res: any): Promise<any> {
         const sanitizedPublicId = publicId.replace("-", "/");
         const [, changedLocation]: [any, Location] = await Promise.all([
           deleteImageFromCloudinary(sanitizedPublicId),
-          deleteImageByIdFromDb(sanitizedPublicId, locationId),
+          deleteImageByIdFromDb(sanitizedPublicId, locationId, session?.user?.teamId),
         ]);
         res.status(200).json(changedLocation);
       } catch (error: any) {

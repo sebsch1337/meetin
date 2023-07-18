@@ -1,16 +1,22 @@
-import { deleteLocationFromDb, updateLocationInDb } from "@/services/locationService";
+import { getAllEventsFromDb, postEventToDb } from "@/services/eventService";
+
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { locationId },
+    query: {},
     method,
   } = req;
 
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ message: "unauthorized" });
+
   switch (method) {
-    case "PATCH":
+    case "GET":
       try {
-        const udpatedLocation = await updateLocationInDb(locationId, req.body.values);
-        res.status(200).json(udpatedLocation);
+        const tags = await getAllEventsFromDb(session?.user?.teamId);
+        res.status(200).json(tags);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });
@@ -20,10 +26,10 @@ export default async function handler(req: any, res: any): Promise<any> {
       }
       break;
 
-    case "DELETE":
+    case "POST":
       try {
-        const deletedLocation: any = await deleteLocationFromDb(locationId);
-        res.status(200).json(deletedLocation);
+        const newEvent: any = await postEventToDb(req.body, session?.user?.teamId);
+        res.status(200).json(newEvent);
       } catch (error: any) {
         if (error.status) {
           return res.status(error.status).json({ message: error.message });

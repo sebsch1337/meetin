@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const eventsSchema = new Schema({
+  teamId: { type: mongoose.Schema.Types.ObjectId, ref: "teams" },
+  locationId: { type: mongoose.Schema.Types.ObjectId, ref: "locations" },
   name: { type: String, required: true, maxLength: 50 },
   dateTime: { type: Date, required: true },
-  locationId: { type: String, required: true, length: 24 },
   going: { type: Number, max: 999 },
   announced: { type: Number, max: 999 },
   visitors: { type: Number, max: 999 },

@@ -11,6 +11,7 @@ export const sanitizeLocation = (location: any) => {
 
   const sanitizedLocation = {
     id: location?._id?.toString().trim() || location?.id?.toString().trim() || undefined,
+    teamId: location?.teamId?.toString().trim() || undefined,
     name: location?.name?.toString().trim() || "",
     description: location?.description?.toString().trim() || "",
     infos: location?.infos?.toString().trim() || "",
@@ -44,6 +45,7 @@ export const validateLocation = async (location: any) => {
 
   let locationSchema = object({
     id: string().length(24),
+    teamId: string().length(24),
     name: string().max(50),
     description: string().max(1000),
     infos: string().max(1000),

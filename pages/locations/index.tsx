@@ -21,6 +21,17 @@ import LocationSort from "@/components/LocationSort";
 import FormModal from "@/components/FormModal";
 import SearchInput from "@/components/SearchInput";
 
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+
+export async function getServerSideProps(context: any) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) return { redirect: { destination: "/login", permanent: false } };
+  if (!session?.user?.teamId) return { redirect: { destination: "/", permanent: false } };
+
+  return { props: {} };
+}
+
 export default function Locations() {
   const [locations, setLocations] = useAtom(locationsAtom);
   const [tags, setTags] = useAtom(tagsAtom);
@@ -55,8 +66,7 @@ export default function Locations() {
             .sort((a: any, b: any) => a.name.localeCompare(b.name))
             .map((location: any) => ({
               ...location,
-              lastVisit:
-                allEvents?.find((event: any) => event?.locationId === location?.id)?.dateTime || null,
+              lastVisit: allEvents?.find((event: any) => event?.locationId === location?.id)?.dateTime || null,
               averageVisitors: getAverageVisitors(location.id, allEvents),
             }))
         );
@@ -73,9 +83,7 @@ export default function Locations() {
 
   useEffect(() => {
     if (filteredTagIds?.length > 0) {
-      setFilteredLocations(
-        locations?.filter((location: any) => filteredTagIds?.every((tagId) => location?.tags.includes(tagId)))
-      );
+      setFilteredLocations(locations?.filter((location: any) => filteredTagIds?.every((tagId) => location?.tags.includes(tagId))));
     } else {
       setFilteredLocations(locations);
     }
@@ -89,17 +97,13 @@ export default function Locations() {
 
       case "leastVisited":
         setLocations((location) =>
-          [...location].sort(
-            (a: any, b: any) => new Date(a.lastVisit).getTime() - new Date(b.lastVisit).getTime()
-          )
+          [...location].sort((a: any, b: any) => new Date(a.lastVisit).getTime() - new Date(b.lastVisit).getTime())
         );
         break;
 
       case "recentlyVisited":
         setLocations((location) =>
-          [...location].sort(
-            (a: any, b: any) => new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime()
-          )
+          [...location].sort((a: any, b: any) => new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime())
         );
         break;
 
@@ -108,9 +112,7 @@ export default function Locations() {
         break;
 
       case "averageVisitors":
-        setLocations((location) =>
-          [...location].sort((a: any, b: any) => b.averageVisitors - a.averageVisitors)
-        );
+        setLocations((location) => [...location].sort((a: any, b: any) => b.averageVisitors - a.averageVisitors));
         break;
     }
   }, [sortBy, setLocations]);
@@ -119,12 +121,7 @@ export default function Locations() {
     <>
       <FormModal title={modal.title} opened={modalOpened} close={closeModal}>
         {modal.type === "form" && (
-          <LocationForm
-            closeModal={closeModal}
-            editLocationMode={editLocationMode}
-            preValues={preValues}
-            tags={tags}
-          />
+          <LocationForm closeModal={closeModal} editLocationMode={editLocationMode} preValues={preValues} tags={tags} />
         )}
       </FormModal>
 
@@ -168,11 +165,7 @@ export default function Locations() {
         {filterOpened && (
           <>
             <LocationSort sortBy={sortBy} setSortBy={setSortBy} />
-            <LocationFilter
-              tags={tags}
-              setFilteredTagIds={setFilteredTagIds}
-              filteredTagIds={filteredTagIds}
-            />
+            <LocationFilter tags={tags} setFilteredTagIds={setFilteredTagIds} filteredTagIds={filteredTagIds} />
           </>
         )}
 

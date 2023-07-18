@@ -2,6 +2,7 @@ import { object, string, number, date } from "yup";
 
 export const sanitizeEvent = (event: any) => ({
   id: event?._id?.toString().trim() || event?.id?.toString().trim() || undefined,
+  teamId: event?.teamId?.toString().trim() || undefined,
   name: event?.name?.toString().trim() || "",
   dateTime: event?.dateTime ? new Date(event.dateTime) : undefined,
   locationId: event?.locationId?.toString().trim() || undefined,
@@ -17,6 +18,7 @@ export const sanitizeEvent = (event: any) => ({
 export const validateEvent = async (event: any) => {
   const eventSchema = object({
     id: string().length(24),
+    teamId: string().length(24),
     name: string().max(50),
     dateTime: date(),
     locationId: string().length(24),

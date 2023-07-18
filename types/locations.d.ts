@@ -27,6 +27,7 @@ interface Location {
   latitude?: number;
   longitude?: number;
   images: Images[];
+  teamId: string;
 }
 
 interface Images {
