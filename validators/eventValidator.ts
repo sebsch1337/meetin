@@ -2,7 +2,7 @@ import { object, string, number, date } from "yup";
 
 export const sanitizeEvent = (event: any) => ({
   id: event?._id?.toString().trim() || event?.id?.toString().trim() || undefined,
-  teamId: location?.teamId?.toString().trim() || undefined,
+  teamId: location?.teamId?.toString().trim(),
   name: event?.name?.toString().trim() || "",
   dateTime: event?.dateTime ? new Date(event.dateTime) : undefined,
   locationId: event?.locationId?.toString().trim() || undefined,

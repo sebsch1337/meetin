@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const locationsSchema = new Schema({
-  teamId: { type: String, required: true, length: 24 },
+  teamId: { type: mongoose.Schema.Types.ObjectId, ref: "teams" },
   name: { type: String, required: true, maxLength: 50 },
   address: {
     road: { type: String, maxLength: 100 },
@@ -23,7 +23,6 @@ const locationsSchema = new Schema({
   images: { type: Array, maxLength: 4, default: undefined },
   latitude: { type: Number, min: -90, max: 90 },
   longitude: { type: Number, min: -180, max: 180 },
-  //   tripId: { type: mongoose.Schema.Types.ObjectId, ref: "trips" },
 });
 
 const Locations = mongoose.models.Locations || mongoose.model("Locations", locationsSchema, "locations");

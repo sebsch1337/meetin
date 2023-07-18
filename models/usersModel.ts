@@ -6,7 +6,7 @@ const usersSchema = new Schema({
   email: { type: String },
   image: { type: String },
   emailVerified: { type: String },
-  teamId: { type: String },
+  teamId: { type: mongoose.Schema.Types.ObjectId, ref: "teams" },
 });
 
 const Users = mongoose.models.Users || mongoose.model("Users", usersSchema, "users");
