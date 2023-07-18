@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Modal, Space, Text, Title } from "@mantine/core";
 import WelcomeForm from "../WelcomeForm";
 import WelcomeInvited from "../WelcomeInvited";
+import { createTeam } from "@/lib/teamLib";
 
 export default function WelcomeModal({
   session,
@@ -16,6 +17,15 @@ export default function WelcomeModal({
 }) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [invitationState, setInvitationState] = useState("");
+  const [teamName, setTeamName] = useState("");
+
+  const continueButtonHandler = async () => {
+    if (!invitedTeam) {
+      const createdTeam = await createTeam(teamName);
+      if (!createdTeam) return;
+    }
+    setShowWelcomeModal(false);
+  };
 
   return (
     <Modal size={"xl"} opened={true} onClose={() => signOut()} title={"Benutzer einrichten"}>
@@ -43,11 +53,11 @@ export default function WelcomeModal({
       ) : invitationState === "accepted" ? (
         <Text>Einladung angenommen.</Text>
       ) : (
-        <WelcomeForm setButtonDisabled={setButtonDisabled} />
+        <WelcomeForm setButtonDisabled={setButtonDisabled} setTeamName={setTeamName} />
       )}
 
       <Space h="xl" />
-      <Button disabled={buttonDisabled} fullWidth onClick={() => setShowWelcomeModal(false)}>
+      <Button disabled={buttonDisabled} fullWidth onClick={async () => await continueButtonHandler()}>
         Weiter
       </Button>
     </Modal>

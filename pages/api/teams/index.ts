@@ -28,7 +28,8 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "POST":
       try {
-        const team = await createTeamInDb(req.body.teamName, session?.user?.id);
+        const teamData = JSON.parse(req.body);
+        const team = await createTeamInDb(teamData.teamName, session?.user?.id);
         res.status(200).json(team);
       } catch (error: any) {
         if (error.status) {

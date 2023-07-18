@@ -59,22 +59,24 @@ export const createTeam = async (teamName: string): Promise<boolean> => {
   if (response.ok) {
     const data = await response.json();
 
-    notifications.show({
-      icon: <IconCheck />,
-      color: "teal",
-      title: teamName,
-      message: `Team erfolgreich erstellt.`,
-    });
+    if (data.name) {
+      notifications.show({
+        icon: <IconCheck />,
+        color: "teal",
+        title: data.name,
+        message: `Team erfolgreich erstellt.`,
+      });
 
-    return true;
-  } else {
-    notifications.show({
-      icon: <IconX />,
-      color: "red",
-      title: teamName,
-      message: `Fehler beim Erstellen des Teams.`,
-    });
-
-    return false;
+      return true;
+    }
   }
+
+  notifications.show({
+    icon: <IconX />,
+    color: "red",
+    title: teamName,
+    message: `Fehler beim Erstellen des Teams.`,
+  });
+
+  return false;
 };
