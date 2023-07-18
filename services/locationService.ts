@@ -54,7 +54,6 @@ export async function postLocationToDb(location: any, teamId: string | undefined
   const sanitizedLocation = await validateLocation(sanitizeLocation(location));
   const newLocation = await Locations.create(sanitizedLocation);
   const returnedLocation = validateLocation(sanitizeLocation(newLocation));
-
   return returnedLocation;
 }
 
