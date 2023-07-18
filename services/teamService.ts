@@ -100,7 +100,30 @@ export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise
  * @param {string} invitedEmail - The email of the invited user.
  * @returns {Promise<boolean>} A Promise that resolves to true if the email is successfully set as a team user, false otherwise.
  */
-export async function setEmailAsTeamUserInDb(invitedEmail: string): Promise<boolean> {
+export async function addUserToTeamInDb(invitedEmail: string, userId: string): Promise<boolean> {
+  await dbConnect();
+
+  const sanitizedInput = await validateUser(sanitizeUser({ id: userId, email: invitedEmail }));
+
+  const team: any = await Teams.findOne({ invitedEmails: sanitizedInput?.email }).exec();
+
+  if (team) {
+    const userIndex = team.invitedEmails.indexOf(sanitizedInput?.email);
+    if (userIndex !== -1) {
+      team.invitedEmails.splice(userIndex, 1);
+      team.users.push(sanitizedInput.id);
+      await team.save();
+      if (sanitizedInput?.id) {
+        await setUserTeamInDb(sanitizedInput?.id, team.id);
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+export async function createTeamInDb(invitedEmail: string): Promise<boolean> {
   await dbConnect();
 
   const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail }));
@@ -113,8 +136,8 @@ export async function setEmailAsTeamUserInDb(invitedEmail: string): Promise<bool
       team.invitedEmails.splice(userIndex, 1);
       team.users.push(invitedEmail);
       await team.save();
-      if (sanitizedInput?.email) {
-        await setUserTeamInDb(sanitizedInput.email, team.id);
+      if (sanitizedInput?.id) {
+        await setUserTeamInDb(sanitizedInput.id, team.id);
         return true;
       }
     }

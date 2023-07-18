@@ -8,10 +8,9 @@ import Users from "@/models/usersModel";
  * @param {string} teamId - The new teamId value to set for the user.
  * @returns {Promise<void>} A Promise that resolves when the user's teamId has been updated in the database.
  */
-export async function setUserTeamInDb(eMail: string, teamId: string): Promise<void> {
+export async function setUserTeamInDb(userId: string, teamId: string): Promise<void> {
   await dbConnect();
 
-  const sanitizedInput = await validateUser(sanitizeUser({ teamId }));
-
-  const user: any = await Users.updateOne({ email: eMail }, { $set: { teamId } }).exec();
+  const sanitizedInput = await validateUser(sanitizeUser({ id: userId, teamId }));
+  const user: any = await Users.updateOne({ _id: sanitizedInput.id }, { $set: { teamId } }).exec();
 }

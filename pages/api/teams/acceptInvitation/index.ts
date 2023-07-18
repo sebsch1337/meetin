@@ -1,4 +1,4 @@
-import { setEmailAsTeamUserInDb } from "@/services/teamService";
+import { addUserToTeamInDb } from "@/services/teamService";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
@@ -15,7 +15,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "GET":
       try {
-        const invitationAccepted: boolean = await setEmailAsTeamUserInDb(session?.user?.email || "");
+        const invitationAccepted: boolean = session?.user?.email ? await addUserToTeamInDb(session?.user?.email, session?.user?.id) : false;
         return res.status(200).json({ message: "Accepted: " + invitationAccepted });
       } catch (error: any) {
         if (error.status) {
