@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const teamsSchema = new Schema({
   name: { type: String, required: true, maxLength: 50 },
-  invitedEmails: { type: Array },
+  invitedEmails: [{ email: { type: String, maxLength: 100 }, role: { type: String } }],
   admins: { type: Array },
   users: { type: Array },
 });
