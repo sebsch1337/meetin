@@ -11,7 +11,7 @@ import Email from "next-auth/providers/email";
  * @returns An array of sanitized and validated team objects.
  * @throws Error if the team array is not found or not an array.
  */
-export async function getAllTeamsFromDb(): Promise<Team[]> {
+export async function getAllTeamsFromDb(): Promise<any[]> {
   await dbConnect();
 
   const teams = await Teams.find({});
@@ -32,7 +32,7 @@ export async function getAllTeamsFromDb(): Promise<Team[]> {
  * @returns A promise that resolves to the retrieved team.
  * @throws If the team is not found in the database.
  */
-export async function getTeamByIdFromDb(teamId: string): Promise<Team> {
+export async function getTeamByIdFromDb(teamId: string): Promise<any> {
   await dbConnect();
 
   const sanitizedInput = await validateTeam(sanitizeTeam({ id: teamId }));
@@ -55,7 +55,7 @@ export async function getTeamByIdFromDb(teamId: string): Promise<Team> {
  * @returns A promise that resolves to the retrieved team.
  * @throws Error if the team is not found in the database.
  */
-export async function getTeamByNameFromDb(teamName: string): Promise<Team> {
+export async function getTeamByNameFromDb(teamName: string): Promise<any> {
   await dbConnect();
 
   const sanitizedInput = await validateTeam(sanitizeTeam({ name: teamName.replaceAll("+", " ") }));
@@ -96,35 +96,6 @@ export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise
 
   return sanitizedTeam;
 }
-
-// /**
-//  * Sets an invited email as a team user in the database.
-//  * @param {string} invitedEmail - The email of the invited user.
-//  * @returns {Promise<boolean>} A Promise that resolves to true if the email is successfully set as a team user, false otherwise.
-//  */
-// export async function addUserToTeamInDb(invitedEmail: string, userId: string): Promise<boolean> {
-//   await dbConnect();
-
-//   const sanitizedInput = await validateUser(sanitizeUser({ id: userId, email: invitedEmail }));
-
-//   const team: any = await Teams.findOne({ invitedEmails: sanitizedInput?.email }).exec();
-
-//   if (team) {
-//     const userIndex = team.invitedEmails.indexOf(sanitizedInput?.email);
-//     if (userIndex !== -1) {
-//       team.invitedEmails.splice(userIndex, 1);
-//       team.users.push(sanitizedInput.id);
-//       await team.save();
-
-//       if (sanitizedInput?.id) {
-//         await setUserTeamInDb(sanitizedInput?.id, team.id);
-//         return true;
-//       }
-//     }
-//   }
-
-//   return false;
-// }
 
 /**
  * Adds a user to a team in the database based on the invited email and user ID.
