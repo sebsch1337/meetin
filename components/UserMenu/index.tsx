@@ -1,5 +1,6 @@
 import { Avatar, Menu, UnstyledButton } from "@mantine/core";
 import { IconLogout, IconSettings, IconTrash, IconUsersGroup } from "@tabler/icons-react";
+import Link from "next/link";
 
 export default function UserMenu({ session, signOut }: { session: any; signOut: any }) {
   return (
@@ -12,7 +13,7 @@ export default function UserMenu({ session, signOut }: { session: any; signOut: 
 
       <Menu.Dropdown>
         <Menu.Label>{session?.user?.name}</Menu.Label>
-        <Menu.Item icon={<IconUsersGroup size={14} />} disabled>
+        <Menu.Item component={Link} href={"/team"} icon={<IconUsersGroup size={14} />}>
           Team verwalten
         </Menu.Item>
 
