@@ -60,8 +60,10 @@ export const validateLocation = async (location: any) => {
     noGo: bool(),
   });
 
-  const validatedLocation = await locationSchema.validate(location);
-  const validatedAddress = await addressSchema.validate(location?.address);
+  const [validatedLocation, validatedAddress] = await Promise.all([
+    locationSchema.validate(location),
+    addressSchema.validate(location?.address),
+  ]);
 
   return {
     ...validatedLocation,
