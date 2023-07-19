@@ -7,6 +7,7 @@ const nextConfig = {
       "images.unsplash.com",
       "res.cloudinary.com",
       "platform-lookaside.fbsbx.com",
+      "lh3.googleusercontent.com/",
     ],
   },
 };
