@@ -1,18 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  createStyles,
-  Header,
-  Group,
-  ActionIcon,
-  Container,
-  Burger,
-  rem,
-  Text,
-  Drawer,
-  ScrollArea,
-  Divider,
-  Button,
-} from "@mantine/core";
+import { createStyles, Header, Group, ActionIcon, Container, Burger, rem, Text, Drawer, ScrollArea, Divider, Button } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
 
@@ -120,11 +107,7 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const items = links.map((link) => (
-    <Link
-      key={link.label}
-      href={link.link}
-      className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-    >
+    <Link key={link.label} href={link.link} className={cx(classes.link, { [classes.linkActive]: active === link.link })}>
       {link.label}
     </Link>
   ));
@@ -170,36 +153,19 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
             </Link>
 
             <Group spacing={0} className={classes.social} position="right" noWrap mr={"xl"}>
-              <ActionIcon
-                size="lg"
-                component={Link}
-                href={"https://facebook.com/groups/NeuInDo"}
-                target={"_blank"}
-              >
+              {/* <ActionIcon size="lg" component={Link} href={"https://facebook.com/groups/NeuInDo"} target={"_blank"}>
                 <IconBrandFacebook size="1.1rem" stroke={1.5} />
               </ActionIcon>
-              <ActionIcon
-                size="lg"
-                component={Link}
-                href={"https://www.instagram.com/neuindortmund/"}
-                target={"_blank"}
-              >
+              <ActionIcon size="lg" component={Link} href={"https://www.instagram.com/neuindortmund/"} target={"_blank"}>
                 <IconBrandInstagram size="1.1rem" stroke={1.5} />
-              </ActionIcon>
+              </ActionIcon> */}
             </Group>
             {!isMobile && <UserMenu session={session} signOut={signOut} />}
             <Burger opened={drawerOpened} onClick={toggleDrawer} size="sm" className={classes.burger} />
           </Container>
         </Header>
       )}
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        size="100%"
-        padding="md"
-        title="Menü"
-        className={classes.hiddenDesktop}
-      >
+      <Drawer opened={drawerOpened} onClose={closeDrawer} size="100%" padding="md" title="Menü" className={classes.hiddenDesktop}>
         <ScrollArea h={`calc(100vh - ${rem(60)})`} m="-md">
           <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
 
