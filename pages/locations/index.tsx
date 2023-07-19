@@ -1,25 +1,24 @@
-import { ActionIcon, Button, Center, Container, Divider, Flex, Group, Loader, Space } from "@mantine/core";
-import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
-
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-
-import LocationForm from "@/components/LocationForm";
 import { useEffect, useState } from "react";
 
-import { IconFilter, IconPlus } from "@tabler/icons-react";
+import { ActionIcon, Button, Center, Container, Flex, Group, Loader, Space } from "@mantine/core";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
+import { getLastVisitedDay, getAverageVisitors } from "@/lib/visitLib";
 import { getAllLocations } from "@/lib/locationLib";
-
-import { useAtom } from "jotai";
-import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
 import { getAllTags } from "@/lib/tagLib";
+import { getAllEvents } from "@/lib/eventLib";
 
 import LocationCardCompact from "@/components/LocationCardCompact";
-import { getAllEvents } from "@/lib/eventLib";
+import LocationForm from "@/components/LocationForm";
 import LocationFilter from "@/components/LocationFilter";
 import LocationSort from "@/components/LocationSort";
 import FormModal from "@/components/FormModal";
 import SearchInput from "@/components/SearchInput";
+
+import { IconFilter, IconPlus } from "@tabler/icons-react";
+
+import { useAtom } from "jotai";
+import { eventsAtom, locationsAtom, tagsAtom, modalAtom } from "@/store";
 
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
