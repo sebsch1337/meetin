@@ -4,6 +4,7 @@ import Teams from "../models/teamsModel";
 import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
 import { setUserTeamInDb } from "./userService";
 import Email from "next-auth/providers/email";
+import Users from "@/models/usersModel";
 
 /**
  * Gets all teams from the database.
@@ -88,7 +89,7 @@ export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise
   const team = await Teams.findOne({ "invitedEmails.email": sanitizedInput.email });
 
   if (!team) {
-    console.log("Team not found.");
+    console.error("Team not found.");
     return false;
   }
 
@@ -164,4 +165,28 @@ export async function createTeamInDb(teamName: any, userId: string | undefined):
   }
 
   return sanitizedTeam;
+}
+
+/**
+ * Retrieves and sanitizes user data for a specific team from the database.
+ * @param {string} teamId - The unique identifier of the team for which users are to be fetched.
+ * @returns {Promise<any[]>} - A promise that resolves to an array of sanitized user data.
+ * @throws {Error} - If the team with the given `teamId` is not found in the database.
+ */
+export async function getUsersAndAdminsForTeamFromDb(teamId: string): Promise<any[]> {
+  const team = await Teams.findOne({ _id: teamId }).exec();
+  if (!team) {
+    throw new Error(`Team with ID '${teamId}' not found.`);
+  }
+
+  const adminUsers = await Users.find({ _id: { $in: team.admins }, teamId }).exec();
+  const userUsers = await Users.find({ _id: { $in: team.users }, teamId }).exec();
+
+  const usersWithRole: any[] = [
+    ...adminUsers.map((admin) => ({ ...admin.toObject(), role: "admin" })),
+    ...userUsers.map((user) => ({ ...user.toObject(), role: "user" })),
+  ];
+
+  const sanitizedInput = await Promise.all(usersWithRole.map(async (user) => await validateUser(sanitizeUser(user))));
+  return sanitizedInput;
 }
