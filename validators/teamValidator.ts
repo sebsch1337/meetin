@@ -1,10 +1,11 @@
 import { object, string, array } from "yup";
 
 export const sanitizeTeam = (team: any) => {
-  const sanitizedInvitation = {
-    email: team?.invitedEmails?.email?.toString().trim() || "",
-    role: team?.invitedEmails?.role?.toString().trim() || "",
-  };
+  const sanitizedInvitation =
+    team?.invitedEmails?.map((invited: any) => ({
+      email: invited?.email?.toString().trim() || "",
+      role: invited?.role?.toString().trim() || "",
+    })) || [];
 
   const sanitizedTeam = {
     id: team?._id?.toString().trim() || team?.id?.toString().trim() || undefined,
@@ -14,14 +15,19 @@ export const sanitizeTeam = (team: any) => {
     users: team?.users || [],
   };
 
-  return { ...sanitizedTeam, invitedEmails: { ...sanitizedInvitation } };
+  return {
+    ...sanitizedTeam,
+    invitedEmails: sanitizedInvitation,
+  };
 };
 
 export const validateTeam = async (team: any) => {
-  let teamInvitationSchema = object({
-    email: string().max(100),
-    role: string(),
-  });
+  let teamInvitationSchema = array(
+    object({
+      email: string().max(100),
+      role: string(),
+    })
+  );
 
   let teamSchema = object({
     id: string().length(24),
@@ -35,5 +41,5 @@ export const validateTeam = async (team: any) => {
     teamInvitationSchema.validate(team?.invitedEmails),
   ]);
 
-  return { ...validatedTeam, invitedEmails: [validatedTeamInvitation] };
+  return { ...validatedTeam, invitedEmails: validatedTeamInvitation };
 };
