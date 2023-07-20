@@ -6,6 +6,7 @@ export const sanitizeUser = (user: any) => {
     teamId: user?.teamId?.toString().trim() || undefined,
     name: user?.name?.trim() || "",
     email: user?.email || "",
+    role: user?.role?.toString().trim() || "",
   };
 
   return sanitizedUser;
@@ -17,6 +18,7 @@ export const validateUser = async (user: any) => {
     teamId: string().length(24),
     name: string().max(50),
     email: string().max(50),
+    role: string(),
   });
 
   const validatedUser = await userSchema.validate(user);
