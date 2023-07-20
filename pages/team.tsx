@@ -12,6 +12,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import { getTeamByIdFromDb, getUsersAndAdminsForTeamFromDb } from "@/services/teamService";
+import InvitedMemberCard from "@/components/InvitedMemberCard";
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -57,6 +58,10 @@ export default function ManageTeam({ team, members }: { team: Team; members: any
       <Space h={"md"} />
 
       <MemberCard team={team} members={members} />
+
+      <Space h={"md"} />
+
+      <InvitedMemberCard invitedMembers={team.invitedEmails} />
     </Container>
   );
 }

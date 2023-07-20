@@ -38,7 +38,7 @@ export const validateTeam = async (team: any) => {
 
   const [validatedTeam, validatedTeamInvitation] = await Promise.all([
     teamSchema.validate(team),
-    teamInvitationSchema.validate(team?.invitedEmails),
+    teamInvitationSchema.validate(team.invitedEmails),
   ]);
 
   return { ...validatedTeam, invitedEmails: validatedTeamInvitation };
