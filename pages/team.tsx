@@ -11,7 +11,7 @@ import { IconPlus } from "@tabler/icons-react";
 
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
-import { getTeamByIdFromDb } from "@/services/teamService";
+import { getTeamByIdFromDb, getUsersAndAdminsForTeamFromDb } from "@/services/teamService";
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -19,11 +19,12 @@ export async function getServerSideProps(context: any) {
   if (!session?.user?.teamId) return { redirect: { destination: "/", permanent: false } };
 
   const team = await getTeamByIdFromDb(session.user.teamId);
+  const members = await getUsersAndAdminsForTeamFromDb(session.user.teamId);
 
-  return { props: { teamName: team.name } };
+  return { props: { team, members } };
 }
 
-export default function ManageTeam({ teamName }: { teamName: string }) {
+export default function ManageTeam({ team, members }: { team: Team; members: any[] }) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [modal, setModal] = useState<Modal>();
@@ -50,12 +51,12 @@ export default function ManageTeam({ teamName }: { teamName: string }) {
       <Space h={"md"} />
 
       <Title order={2} size={22}>
-        {teamName}
+        {team.name}
       </Title>
 
       <Space h={"md"} />
 
-      <MemberCard />
+      <MemberCard team={team} members={members} />
     </Container>
   );
 }
