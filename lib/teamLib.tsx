@@ -72,17 +72,46 @@ export const createInvitation = async (eMail: string, role: string): Promise<any
   return false;
 };
 
-/**
- * Sends a GET request to accept an invitation through the /api/teams/acceptInvitation endpoint.
- * @returns {Promise<any>} A Promise that resolves to the response data from the server.
- */
 export const acceptInvitation = async (): Promise<any> => {
-  const response = await fetch(`/api/teams/acceptInvitation`, {
-    method: "GET",
+  const response = await fetch(`/api/teams/invitation`, {
+    method: "POST",
+    body: JSON.stringify({ type: "accept" }),
   });
 
-  const data = await response.json();
-  return data;
+  if (response.ok) {
+    const data = await response.json();
+
+    notifications.show({
+      icon: <IconCheck />,
+      color: "teal",
+      title: "Teameinladung",
+      message: `Team erfolgreich beigetreten.`,
+    });
+
+    return data;
+  }
+
+  notifications.show({
+    icon: <IconX />,
+    color: "red",
+    title: "Teameinladung",
+    message: "Fehler beim Teambeitritt.",
+  });
+  return false;
+};
+
+export const declineInvitation = async (): Promise<boolean> => {
+  const response = await fetch(`/api/teams/invitation`, {
+    method: "POST",
+    body: JSON.stringify({ type: "decline" }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return true;
+  }
+
+  return false;
 };
 
 /**
