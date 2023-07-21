@@ -33,6 +33,46 @@ export const getTeamByInvitedEmail = async (eMail: string): Promise<any> => {
 };
 
 /**
+ * Creates an invitation for a team member.
+ *
+ * @param eMail The email address of the invited team member.
+ * @param role The role of the invited team member.
+ * @returns If the invitation is successfully created, returns the response data from the server.
+ *          Otherwise, returns `false` and displays an error notification.
+ */
+export const createInvitation = async (eMail: string, role: string): Promise<any> => {
+  const response = await fetch(`/api/teams/invitation`, {
+    method: "POST",
+    body: JSON.stringify({ type: "create", eMail, role }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+
+    if (data.invitedEmails.length > 0) {
+      notifications.show({
+        icon: <IconCheck />,
+        color: "teal",
+        title: "Teameinladung",
+        message: `${eMail} erfolgreich eingladen.`,
+      });
+      return data;
+    }
+  }
+
+  let errorMessage = "Fehler beim Einladen der E-Mail Adresse.";
+  if (response.status === 409) errorMessage = "E-Mail Adresse existiert bereits.";
+
+  notifications.show({
+    icon: <IconX />,
+    color: "red",
+    title: eMail,
+    message: errorMessage,
+  });
+  return false;
+};
+
+/**
  * Sends a GET request to accept an invitation through the /api/teams/acceptInvitation endpoint.
  * @returns {Promise<any>} A Promise that resolves to the response data from the server.
  */
