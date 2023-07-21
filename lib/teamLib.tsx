@@ -72,6 +72,14 @@ export const createInvitation = async (eMail: string, role: string): Promise<any
   return false;
 };
 
+/**
+ * Sends a request to accept an invitation to join a team by making a POST request to the API.
+ *
+ * @returns {Promise<any>} A Promise that resolves to the data returned by the API if the invitation acceptance is successful.
+ *                        If the API response is successful, it shows a success notification with the team join message and icon.
+ *                        If the API response is not successful, it shows an error notification.
+ *                        If the API response is not successful, the Promise resolves to false.
+ */
 export const acceptInvitation = async (): Promise<any> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",
@@ -100,6 +108,13 @@ export const acceptInvitation = async (): Promise<any> => {
   return false;
 };
 
+/**
+ * Sends a request to decline an invitation to join a team by making a POST request to the API.
+ *
+ * @returns A Promise that resolves to a boolean value indicating if the invitation was declined successfully.
+ *          - If the response from the API is successful, the Promise resolves to true.
+ *          - If the response from the API is not successful, the Promise resolves to false.
+ */
 export const declineInvitation = async (): Promise<boolean> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",

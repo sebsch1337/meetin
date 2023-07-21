@@ -242,6 +242,16 @@ export async function getUsersAndAdminsForTeamFromDb(teamId: string): Promise<an
   return sanitizedInput;
 }
 
+/**
+ * Deletes an email address from the "invitedEmails" field of a team in the database.
+ *
+ * @param invitedEmail - The email address of the user to be deleted from invitations.
+ * @returns The updated team object after the email address has been removed.
+ * @throws Error with status code 404 if:
+ *   - The user with the given email address is not found in the database.
+ *   - The team containing the email address in "invitedEmails" is not found.
+ *   - The invited user with the given email address is not found in the team's "invitedEmails" array.
+ */
 export async function deleteEmailFromInvitationsInDb(invitedEmail: string) {
   await dbConnect();
 
