@@ -1,7 +1,7 @@
 import { ActionIcon, Group, Menu, Text } from "@mantine/core";
 import { IconTrashX, IconUser, IconUserShield } from "@tabler/icons-react";
 
-export default function MemberCardItem({ member }: { member: any }) {
+export default function MemberCardItem({ member, deleteItem }: { member: any; deleteItem: any }) {
   return (
     <Group key={member.id} position="apart" noWrap>
       <Text size={"sm"} truncate>
@@ -21,7 +21,7 @@ export default function MemberCardItem({ member }: { member: any }) {
           </Menu.Dropdown>
         </Menu>
 
-        <ActionIcon size={"lg"} variant={"filled"}>
+        <ActionIcon size={"lg"} variant={"filled"} onClick={() => deleteItem(member?.email)}>
           <IconTrashX size={"1.2rem"} />
         </ActionIcon>
       </Group>
