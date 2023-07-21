@@ -9,7 +9,7 @@ export default function MemberCard({ team, members }: { team: Team; members: any
   return (
     <PaperCard title={"Mitglieder verwalten"}>
       {teamMembers?.map((member: any) => (
-        <MemberCardItem key={member.id} member={member} />
+        <MemberCardItem key={member.id} member={member} deleteItem={() => {}} />
       ))}
     </PaperCard>
   );
