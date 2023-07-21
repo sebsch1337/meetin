@@ -1,5 +1,25 @@
+import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
+
+/**
+ * Retrieves team information from the API based on the provided team ID.
+ *
+ * @param teamId - The ID of the team to fetch from the API.
+ * @returns {Promise<any>} A Promise that resolves to the data of the team if found in the API response.
+ *                        The function makes a GET request to the API using the provided teamId and returns the data obtained.
+ *                        If the team with the given ID is not found, the Promise resolves to undefined.
+ */
+export const getTeamById = async (teamId: string): Promise<any> => {
+  const sanitizedInput = await validateTeam(sanitizeTeam({ id: teamId }));
+
+  const response = await fetch(`/api/teams/search?teamid=${sanitizedInput.id}`, {
+    method: "GET",
+  });
+
+  const data = await response.json();
+  return data;
+};
 
 /**
  * Retrieves a team from the API based on the provided team name.
@@ -115,14 +135,25 @@ export const acceptInvitation = async (): Promise<any> => {
  *          - If the response from the API is successful, the Promise resolves to true.
  *          - If the response from the API is not successful, the Promise resolves to false.
  */
-export const declineInvitation = async (): Promise<boolean> => {
+export const declineInvitation = async (eMail?: string): Promise<boolean> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",
-    body: JSON.stringify({ type: "decline" }),
+    body: JSON.stringify({ type: "decline", eMail }),
   });
 
   if (response.ok) {
-    const data = await response.json();
+    let deleteMessage = "Einladung abgelehnt.";
+    if (eMail) {
+      deleteMessage = "Einladung zurückgezogen.";
+    }
+
+    notifications.show({
+      icon: <IconCheck />,
+      color: "teal",
+      title: "Teameinladung",
+      message: deleteMessage,
+    });
+
     return true;
   }
 
