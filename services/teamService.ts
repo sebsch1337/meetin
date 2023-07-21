@@ -7,6 +7,7 @@ import { setUserTeamInDb } from "./userService";
 
 import Users from "@/models/usersModel";
 import Teams from "@/models/teamsModel";
+import { Types } from "mongoose";
 
 /**
  * Gets all teams from the database.
@@ -224,7 +225,7 @@ export async function createTeamInDb(teamName: any, userId: string | undefined):
  * @returns {Promise<any[]>} - A promise that resolves to an array of sanitized user data.
  * @throws {Error} - If the team with the given `teamId` is not found in the database.
  */
-export async function getUsersAndAdminsForTeamFromDb(teamId: string): Promise<any[]> {
+export async function getUsersAndAdminsForTeamFromDb(teamId: any): Promise<any[]> {
   await dbConnect();
 
   const team = await Teams.findOne({ _id: teamId }).exec();
@@ -283,4 +284,49 @@ export async function deleteEmailFromInvitationsInDb(invitedEmail: any) {
   await team.save();
 
   return team;
+}
+
+/**
+ * Removes a user with the given `userId` from the specified team in the database.
+ * The function updates both the `admins` and `users` arrays in the team document.
+ * Additionally, it removes the `teamId` field from the user's document in the `Users` collection.
+ *
+ * @param teamId - The ID of the team from which the user will be removed.
+ * @param userId - The ID of the user to be removed from the team.
+ * @returns {Promise<boolean>} A Promise that resolves to `true` if the user was successfully removed from the team.
+ *                            If the team with the given ID is not found, the Promise resolves to `false`.
+ *                            If an error occurs during the removal process, the Promise also resolves to `false`.
+ * @throws Error with status code 404 if the team with the given ID is not found.
+ */
+export async function removeUserIdFromTeamInDb(teamId: any, userId: string) {
+  await dbConnect();
+
+  const sanitizedTeamId = new Types.ObjectId(teamId); // Convert teamId to ObjectId for safe querying
+  const sanitizedUserId = new Types.ObjectId(userId); // Convert userId to ObjectId for safe querying
+
+  try {
+    const team = await Teams.findOne({ _id: sanitizedTeamId }).exec();
+
+    if (!team) {
+      const error: any = new Error("Team not found.");
+      error.status = 404;
+      throw error;
+    }
+
+    if (team.admins.includes(userId)) {
+      team.admins = team.admins.filter((adminId: string) => adminId.toString() !== userId);
+    }
+
+    if (team.users.includes(userId)) {
+      team.users = team.users.filter((userId: string) => userId.toString() !== userId);
+    }
+
+    await team.save();
+
+    await Users.updateOne({ _id: sanitizedUserId }, { $unset: { teamId: 1 } });
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
