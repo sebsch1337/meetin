@@ -1,4 +1,10 @@
-import { addEmailToInvitedEmailsInDb, getTeamByInvitedEmailFromDb, getTeamByNameFromDb } from "@/services/teamService";
+import {
+  addEmailToInvitedEmailsInDb,
+  addUserToTeamInDb,
+  deleteEmailFromInvitationsInDb,
+  getTeamByInvitedEmailFromDb,
+  getTeamByNameFromDb,
+} from "@/services/teamService";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
@@ -26,6 +32,18 @@ export default async function handler(req: any, res: any): Promise<any> {
             throw error;
           }
           return res.status(200).json(team);
+        }
+
+        if (invitation.type === "accept") {
+          const invitationAccepted: boolean = session?.user?.email
+            ? await addUserToTeamInDb(session?.user?.email, session?.user?.id)
+            : false;
+          return res.status(200).json({ message: "Accepted: " + invitationAccepted });
+        }
+
+        if (invitation.type === "decline") {
+          const declinedState: boolean = session?.user?.email ? await deleteEmailFromInvitationsInDb(session?.user?.email) : false;
+          return res.status(200).json({ message: "Invitation declined" });
         }
       } catch (error: any) {
         if (error.status) {
