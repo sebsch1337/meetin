@@ -1,9 +1,16 @@
+import { Button, Loader, Select, Stack, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useState } from "react";
 
-import { Button, Select, Stack, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
-
-export default function AddMemberForm() {
+export default function AddMemberForm({
+  createInvitation,
+  closeModal,
+  setInvitedEmails,
+}: {
+  createInvitation: any;
+  closeModal: any;
+  setInvitedEmails: any;
+}) {
   const form = useForm({
     initialValues: {
       email: "",
@@ -16,11 +23,21 @@ export default function AddMemberForm() {
     },
   });
 
-  const [invitedMembers, setInvitedMembers] = useState([]);
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  const onSubmitHandler = async (values: any) => {
+    setButtonLoading(true);
+    const newInvitations = await createInvitation(values.email, values.role);
+    if (newInvitations) {
+      setInvitedEmails(newInvitations.invitedEmails);
+    }
+    setButtonLoading(false);
+    closeModal();
+  };
 
   return (
     <Stack spacing={"xs"}>
-      <form onSubmit={form.onSubmit((values) => setInvitedMembers((prev): any => [...prev, values]))}>
+      <form onSubmit={form.onSubmit(onSubmitHandler)}>
         <Stack spacing={"xl"}>
           <TextInput placeholder={"max.mustermann@googlemail.com"} label={"E-Mail Adresse"} {...form.getInputProps("email")} />
           <Select
@@ -33,8 +50,8 @@ export default function AddMemberForm() {
             ]}
             {...form.getInputProps("role")}
           />
-          <Button type={"submit"} mt={"md"} fullWidth>
-            Einladen
+          <Button type={"submit"} mt={"md"} fullWidth disabled={buttonLoading}>
+            {buttonLoading ? <Loader size={"1.4rem"} /> : "Einladen"}
           </Button>
         </Stack>
       </form>
