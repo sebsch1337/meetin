@@ -22,7 +22,7 @@ export default function InvitedMemberCard({
     <PaperCard title="Eingeladene Mitglieder">
       {invitedMembers.length > 0 ? (
         invitedMembers?.map((member: any) => (
-          <MemberCardItem key={member.email} member={member} deleteItem={() => deleteItemHandler(member.email, teamId)} />
+          <MemberCardItem key={member.email} member={member} deleteItem={async () => await deleteItemHandler(member.email, teamId)} />
         ))
       ) : (
         <Text size={"sm"} fs={"italic"} c={"dimmed"}>
