@@ -99,6 +99,52 @@ export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise
 }
 
 /**
+ * Add an email with role to the invitedEmails array of a specific team.
+ * @param teamId - The ID of the team.
+ * @param email - The email address to add to the invitedEmails array.
+ * @param role - The role associated with the email address.
+ * @returns The updated team object.
+ * @throws Error if the team is not found in the database or if there's a permission / existing email problem.
+ */
+export async function addEmailToInvitedEmailsInDb(invitedEmail: string, invitedRole: string, teamId: any, securityRole: string) {
+  await dbConnect();
+
+  try {
+    if (securityRole !== "admin") {
+      const error: any = new Error("User is not permitted to invite members");
+      error.status = 403;
+      throw error;
+    }
+
+    const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail, role: invitedRole, teamId }));
+
+    const [existingEmail, existingEmailInUsers, team] = await Promise.all([
+      Teams.findOne({ "invitedEmails.email": sanitizedInput.email }).exec(),
+      Users.findOne({ email: sanitizedInput.email }).exec(),
+      Teams.findById(sanitizedInput.teamId).exec(),
+    ]);
+
+    if (existingEmail || existingEmailInUsers) {
+      const error: any = new Error("Email address already exists");
+      error.status = 409;
+      throw error;
+    }
+
+    if (!team) {
+      const error: any = new Error("Team not found");
+      error.status = 404;
+      throw error;
+    }
+
+    team.invitedEmails.push({ email: sanitizedInput.email, role: sanitizedInput.role });
+    await team.save();
+    return team;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
  * Adds a user to a team in the database based on the invited email and user ID.
  * @param invitedEmail The email of the invited user.
  * @param userId The ID of the user to be added.
@@ -107,40 +153,43 @@ export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise
 export async function addUserToTeamInDb(invitedEmail: string, userId: string): Promise<boolean> {
   await dbConnect();
 
-  try {
-    const sanitizedInput = await validateUser(sanitizeUser({ id: userId, email: invitedEmail }));
+  const sanitizedInput = await validateUser(sanitizeUser({ id: userId, email: invitedEmail }));
 
-    if (!sanitizedInput.id || !sanitizedInput.email) {
-      throw new Error("User not found");
-    }
-
-    const team = await Teams.findOne({ "invitedEmails.email": sanitizedInput.email }).exec();
-    if (!team) {
-      throw new Error("Team not found");
-    }
-
-    const invitedUserIndex = team.invitedEmails.findIndex((user: any) => user.email === sanitizedInput.email);
-    if (invitedUserIndex === -1) {
-      throw new Error("Invited user not found");
-    }
-
-    const { role } = team.invitedEmails[invitedUserIndex];
-    if (role === "admin") {
-      team.admins.push(sanitizedInput.id);
-    } else if (role === "user") {
-      team.users.push(sanitizedInput.id);
-    } else {
-      throw new Error("Invalid role");
-    }
-
-    team.invitedEmails.splice(invitedUserIndex, 1);
-
-    await team.save();
-    await setUserTeamInDb(sanitizedInput.id, team.id);
-  } catch (error) {
-    console.error("An error occurred:", error);
-    return false;
+  if (!sanitizedInput.id || !sanitizedInput.email) {
+    const error: any = new Error("User not found");
+    error.status = 404;
+    throw error;
   }
+
+  const team = await Teams.findOne({ "invitedEmails.email": sanitizedInput.email }).exec();
+  if (!team) {
+    const error: any = new Error("Team not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const invitedUserIndex = team.invitedEmails.findIndex((user: any) => user.email === sanitizedInput.email);
+  if (invitedUserIndex === -1) {
+    const error: any = new Error("Invited user not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const { role } = team.invitedEmails[invitedUserIndex];
+  if (role === "admin") {
+    team.admins.push(sanitizedInput.id);
+  } else if (role === "user") {
+    team.users.push(sanitizedInput.id);
+  } else {
+    const error: any = new Error("Invalid role");
+    error.status = 400;
+    throw error;
+  }
+
+  team.invitedEmails.splice(invitedUserIndex, 1);
+
+  await team.save();
+  await setUserTeamInDb(sanitizedInput.id, team.id);
 
   return true;
 }
