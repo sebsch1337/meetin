@@ -195,3 +195,52 @@ export const createTeam = async (teamName: string): Promise<boolean> => {
 
   return false;
 };
+
+/**
+ * Sends a request to remove a user from a team by making a DELETE request to the API endpoint.
+ *
+ * @param userId - The ID of the user to be removed from the team.
+ * @returns {Promise<boolean>} A Promise that resolves to a boolean value indicating if the user was successfully removed from the team.
+ *                            If the API response is successful, the Promise resolves to `true`, and a success notification is shown.
+ *                            If the API response is not successful, the Promise resolves to `false`, and an error notification is shown.
+ */
+export const removeUserFromTeam = async (userId: string): Promise<boolean> => {
+  const response = await fetch(`/api/teams/remove-user/${userId}`, {
+    method: "DELETE",
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+
+    notifications.show({
+      icon: <IconCheck />,
+      color: "teal",
+      title: "Teamverwaltung",
+      message: `Benutzer wurde aus Team entfernt.`,
+    });
+
+    return true;
+  }
+
+  notifications.show({
+    icon: <IconX />,
+    color: "red",
+    title: "Teamverwaltung",
+    message: `Fehler beim Entfernen des Benutzers.`,
+  });
+
+  return false;
+};
+
+export const getUsersAndAdminsForTeamId = async (teamId: string) => {
+  const response = await fetch(`/api/teams/users`, {
+    method: "GET",
+  });
+
+  if (response.ok) {
+    const userData = await response.json();
+    return userData;
+  } else {
+    return false;
+  }
+};
