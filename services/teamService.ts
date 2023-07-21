@@ -223,6 +223,8 @@ export async function createTeamInDb(teamName: any, userId: string | undefined):
  * @throws {Error} - If the team with the given `teamId` is not found in the database.
  */
 export async function getUsersAndAdminsForTeamFromDb(teamId: string): Promise<any[]> {
+  await dbConnect();
+
   const team = await Teams.findOne({ _id: teamId }).exec();
   if (!team) {
     throw new Error(`Team with ID '${teamId}' not found.`);
@@ -238,4 +240,35 @@ export async function getUsersAndAdminsForTeamFromDb(teamId: string): Promise<an
 
   const sanitizedInput = await Promise.all(usersWithRole.map(async (user) => await validateUser(sanitizeUser(user))));
   return sanitizedInput;
+}
+
+export async function deleteEmailFromInvitationsInDb(invitedEmail: string) {
+  await dbConnect();
+
+  const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail }));
+
+  if (!sanitizedInput.email) {
+    const error: any = new Error("User not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const team = await Teams.findOne({ "invitedEmails.email": sanitizedInput.email }).exec();
+  if (!team) {
+    const error: any = new Error("Team not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const invitedUserIndex = team.invitedEmails.findIndex((user: any) => user.email === sanitizedInput.email);
+  if (invitedUserIndex === -1) {
+    const error: any = new Error("Invited user not found");
+    error.status = 404;
+    throw error;
+  }
+
+  team.invitedEmails.splice(invitedUserIndex, 1);
+  await team.save();
+
+  return team;
 }
