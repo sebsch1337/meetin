@@ -199,6 +199,18 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
 
           <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
 
+          <Link
+            href="/team"
+            className={cx(classes.link, classes.mobileLink)}
+            onClick={() => {
+              closeDrawer();
+            }}
+          >
+            Team verwalten
+          </Link>
+
+          <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
+
           <Group position="center" grow pb="xl" px="md">
             <Button variant="default" onClick={() => signOut()}>
               Ausloggen
