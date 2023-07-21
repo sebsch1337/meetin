@@ -66,7 +66,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
           <Space h={"md"} />
           <MemberCard team={team} members={members} />
           <Space h={"md"} />
-          <InvitedMemberCard invitedMembers={invitedEmails} />
+          <InvitedMemberCard invitedMembers={invitedEmails} setInvitedMembers={setInvitedEmails} teamId={team.id} />
         </>
       ) : (
         <Button>Team verlassen</Button>
