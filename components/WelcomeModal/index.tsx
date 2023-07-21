@@ -20,7 +20,7 @@ export default function WelcomeModal({
   const [teamName, setTeamName] = useState("");
 
   const continueButtonHandler = async () => {
-    if (!invitedTeam) {
+    if (invitationState !== "accepted") {
       const createdTeam = await createTeam(teamName);
       if (!createdTeam) return;
     }
