@@ -1,10 +1,12 @@
-import { sanitizeUser, validateUser } from "@/validators/userValidator";
 import dbConnect from "../lib/dbConnect";
-import Teams from "../models/teamsModel";
+
+import { sanitizeUser, validateUser } from "@/validators/userValidator";
 import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
+
 import { setUserTeamInDb } from "./userService";
-import Email from "next-auth/providers/email";
+
 import Users from "@/models/usersModel";
+import Teams from "@/models/teamsModel";
 
 /**
  * Gets all teams from the database.
@@ -33,7 +35,7 @@ export async function getAllTeamsFromDb(): Promise<any[]> {
  * @returns A promise that resolves to the retrieved team.
  * @throws If the team is not found in the database.
  */
-export async function getTeamByIdFromDb(teamId: string): Promise<any> {
+export async function getTeamByIdFromDb(teamId: any): Promise<any> {
   await dbConnect();
 
   const sanitizedInput = await validateTeam(sanitizeTeam({ id: teamId }));
@@ -252,7 +254,7 @@ export async function getUsersAndAdminsForTeamFromDb(teamId: string): Promise<an
  *   - The team containing the email address in "invitedEmails" is not found.
  *   - The invited user with the given email address is not found in the team's "invitedEmails" array.
  */
-export async function deleteEmailFromInvitationsInDb(invitedEmail: string) {
+export async function deleteEmailFromInvitationsInDb(invitedEmail: any) {
   await dbConnect();
 
   const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail }));
