@@ -6,7 +6,6 @@ export default function MemberCard({ teamId, teamMembers, setTeamMembers }: { te
   const deleteItemHandler = async (userId: any) => {
     await removeUserFromTeam(userId);
     const newMembers = await getUsersAndAdminsForTeamId(teamId);
-    console.log(newMembers);
     setTeamMembers(newMembers);
   };
 
