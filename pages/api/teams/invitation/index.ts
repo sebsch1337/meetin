@@ -6,7 +6,7 @@ import { getUserRoleInTeamFromDb } from "@/services/userService";
 
 export default async function handler(req: any, res: any): Promise<any> {
   const {
-    query: { teamname, invitedemail },
+    query: {},
     method,
   } = req;
 
