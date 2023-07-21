@@ -1,10 +1,4 @@
-import {
-  addEmailToInvitedEmailsInDb,
-  addUserToTeamInDb,
-  deleteEmailFromInvitationsInDb,
-  getTeamByInvitedEmailFromDb,
-  getTeamByNameFromDb,
-} from "@/services/teamService";
+import { addEmailToInvitedEmailsInDb, addUserToTeamInDb, deleteEmailFromInvitationsInDb } from "@/services/teamService";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
