@@ -6,7 +6,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../adapters/mongoDbAdapter";
 import { sanitizeUser, validateUser } from "@/validators/userValidator";
-import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
 
 const { NEXTAUTH_SECRET = "", FACEBOOK_ID = "", FACEBOOK_SECRET = "", GOOGLE_ID = "", GOOGLE_SECRET = "" } = process.env;
 
