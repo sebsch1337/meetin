@@ -35,6 +35,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [modal, setModal] = useState<Modal>();
 
+  const [teamMembers, setTeamMembers] = useState(members || []);
   const [invitedEmails, setInvitedEmails] = useState(team.invitedEmails);
 
   return (
@@ -64,7 +65,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
             {team.name}
           </Title>
           <Space h={"md"} />
-          <MemberCard team={team} members={members} />
+          <MemberCard teamId={team.id} teamMembers={teamMembers} setTeamMembers={setTeamMembers} />
           <Space h={"md"} />
           <InvitedMemberCard invitedMembers={invitedEmails} setInvitedMembers={setInvitedEmails} teamId={team.id} />
         </>
