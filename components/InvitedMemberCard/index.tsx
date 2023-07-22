@@ -1,7 +1,7 @@
 import PaperCard from "../PaperCard";
 import MemberCardItem from "../MemberCardItem";
 import { Text } from "@mantine/core";
-import { declineInvitation, getTeamById } from "@/lib/teamLib";
+import { declineInvitation, getTeamById, getUsersAndAdminsForTeamId } from "@/lib/teamLib";
 
 export default function InvitedMemberCard({
   invitedMembers,
@@ -13,9 +13,8 @@ export default function InvitedMemberCard({
   teamId: any;
 }) {
   const deleteItemHandler = async (email: any, teamId: any) => {
-    await declineInvitation(email);
-    const newInvitedMembers = await getTeamById(teamId);
-    setInvitedMembers(newInvitedMembers);
+    const newInvitedMembers = await declineInvitation(email);
+    setInvitedMembers(newInvitedMembers.invitedEmails);
   };
 
   return (
