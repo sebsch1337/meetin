@@ -39,12 +39,13 @@ export default async function handler(req: any, res: any): Promise<any> {
           if (invitation.eMail) {
             const role = await getUserRoleInTeamFromDb(session.user?.id, session.user?.teamId);
             if (role === "admin") {
-              await deleteEmailFromInvitationsInDb(invitation.eMail);
+              const newInvitations = await deleteEmailFromInvitationsInDb(invitation.eMail);
+              return res.status(200).json(newInvitations);
             }
           } else {
             await deleteEmailFromInvitationsInDb(session?.user?.email);
+            return res.status(200).json({ message: "Invitation declined" });
           }
-          return res.status(200).json({ message: "Invitation declined" });
         }
       } catch (error: any) {
         if (error.status) {
