@@ -135,13 +135,15 @@ export const acceptInvitation = async (): Promise<any> => {
  *          - If the response from the API is successful, the Promise resolves to true.
  *          - If the response from the API is not successful, the Promise resolves to false.
  */
-export const declineInvitation = async (eMail?: string): Promise<boolean> => {
+export const declineInvitation = async (eMail?: string): Promise<any> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",
     body: JSON.stringify({ type: "decline", eMail }),
   });
 
   if (response.ok) {
+    const data = await response.json();
+
     let deleteMessage = "Einladung abgelehnt.";
     if (eMail) {
       deleteMessage = "Einladung zurückgezogen.";
@@ -154,7 +156,7 @@ export const declineInvitation = async (eMail?: string): Promise<boolean> => {
       message: deleteMessage,
     });
 
-    return true;
+    return data;
   }
 
   return false;
@@ -232,6 +234,12 @@ export const removeUserFromTeam = async (userId: string): Promise<boolean> => {
   return false;
 };
 
+/**
+ * Retrieves users and admins for a given team ID from the server.
+ *
+ * @param {string} teamId - The ID of the team to fetch users and admins for.
+ * @returns {Promise<false | UserData[]>} A Promise that resolves to an array of UserData or false if the request fails.
+ */
 export const getUsersAndAdminsForTeamId = async (teamId: string) => {
   const response = await fetch(`/api/teams/users`, {
     method: "GET",
