@@ -1,4 +1,5 @@
 import dbConnect from "../lib/dbConnect";
+import { Types } from "mongoose";
 
 import { sanitizeUser, validateUser } from "@/validators/userValidator";
 import { sanitizeTeam, validateTeam } from "@/validators/teamValidator";
@@ -7,7 +8,10 @@ import { setUserTeamInDb } from "./userService";
 
 import Users from "@/models/usersModel";
 import Teams from "@/models/teamsModel";
-import { Types } from "mongoose";
+import Locations from "@/models/locationsModel";
+import Events from "@/models/eventsModel";
+
+import { deleteLocationFromDb } from "./locationService";
 
 /**
  * Gets all teams from the database.
@@ -353,8 +357,8 @@ export async function deleteEmailFromInvitationsInDb(invitedEmail: any) {
 export async function removeUserIdFromTeamInDb(teamId: any, userId: string): Promise<boolean> {
   await dbConnect();
 
-  const sanitizedTeamId = new Types.ObjectId(teamId); // Convert teamId to ObjectId for safe querying
-  const sanitizedUserId = new Types.ObjectId(userId); // Convert userId to ObjectId for safe querying
+  const sanitizedTeamId = new Types.ObjectId(teamId);
+  const sanitizedUserId = new Types.ObjectId(userId);
 
   try {
     const team = await Teams.findOne({ _id: sanitizedTeamId }).exec();
@@ -381,4 +385,27 @@ export async function removeUserIdFromTeamInDb(teamId: any, userId: string): Pro
   } catch (error) {
     return false;
   }
+}
+
+/**
+ * Deletes a team from the database based on the provided teamId.
+ *
+ * @param {any} teamId - The ID of the team to be deleted.
+ * @returns {Promise<boolean>} - A Promise that resolves to true if the team is deleted successfully, false otherwise.
+ */
+export async function deleteTeamInDb(teamId?: string): Promise<boolean> {
+  await dbConnect();
+
+  const sanitizedTeam = await validateTeam(sanitizeTeam({ id: teamId }));
+
+  const [deletedTeam, deletedEvents, teamUsers, teamLocations] = await Promise.all([
+    Teams.findOneAndDelete({ _id: sanitizedTeam.id }).exec(),
+    Events.deleteMany({ teamId: sanitizedTeam.id }).exec(),
+    Users.updateMany({ teamId: sanitizedTeam.id }, { $unset: { teamId: 1 } }),
+    Locations.find({ teamId: sanitizedTeam.id }).exec(),
+  ]);
+
+  await Promise.all(teamLocations.map((location) => deleteLocationFromDb(location.id, sanitizedTeam.id)));
+
+  return true;
 }
