@@ -1,18 +1,24 @@
-import { Avatar, Menu } from "@mantine/core";
-import { IconLogout, IconSettings, IconTrash } from "@tabler/icons-react";
+import { Avatar, Menu, UnstyledButton } from "@mantine/core";
+import { IconLogout, IconSettings, IconTrash, IconUsersGroup } from "@tabler/icons-react";
+import Link from "next/link";
 
 export default function UserMenu({ session, signOut }: { session: any; signOut: any }) {
   return (
     <Menu shadow="md" withArrow>
       <Menu.Target>
-        <Avatar src={session?.user?.image} alt={"Profilbild"} radius={"xl"} />
+        <UnstyledButton>
+          <Avatar src={session?.user?.image} alt={"Profilbild"} radius={"xl"} />
+        </UnstyledButton>
       </Menu.Target>
 
       <Menu.Dropdown>
         <Menu.Label>{session?.user?.name}</Menu.Label>
-        <Menu.Item icon={<IconSettings size={14} />} disabled>
-          Einstellungen
+        <Menu.Item component={Link} href={"/team"} icon={<IconUsersGroup size={14} />}>
+          Team verwalten
         </Menu.Item>
+
+        <Menu.Divider />
+
         <Menu.Item icon={<IconLogout size={14} />} onClick={() => signOut()}>
           Ausloggen
         </Menu.Item>

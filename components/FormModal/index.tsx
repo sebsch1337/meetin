@@ -12,7 +12,7 @@ export default function FormModal({
   children: any;
 }) {
   return (
-    <Modal.Root opened={opened} onClose={close}>
+    <Modal.Root opened={opened} onClose={close} centered>
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Header style={{ zIndex: 200 }} px={0} mx={"md"}>

@@ -1,6 +1,7 @@
 import dbConnect from "../lib/dbConnect";
 import Locations from "../models/locationsModel";
 import { sanitizeLocation, validateLocation } from "@/validators/locationValidator";
+import { deleteImageFromCloudinary } from "./cloudinaryService";
 
 /**
  * Gets all locations from the database.
@@ -92,14 +93,17 @@ export async function updateLocationInDb(id: string, location: Location, teamId:
  * @returns A promise that resolves with the status of the deletion operation.
  * @throws If the deletion operation fails.
  */
-export async function deleteLocationFromDb(id: string, teamId: string | undefined): Promise<any> {
+export async function deleteLocationFromDb(id: string, teamId?: string): Promise<any> {
   if (!teamId) return;
 
   await dbConnect();
 
   const sanitizedId = await validateLocation(sanitizeLocation({ id }));
-  const deletedLocation = await Locations.deleteOne({ _id: sanitizedId.id, teamId }).exec();
-  if (!deletedLocation.acknowledged) throw new Error();
+  const deletedLocation = await Locations.findOneAndDelete({ _id: sanitizedId.id, teamId }).exec();
+  if (!deletedLocation) throw new Error();
+
+  const publicIds = deletedLocation.images.map((image: any) => image.publicId);
+  await Promise.all(publicIds.map((publicId: string) => deleteImageFromCloudinary(publicId)));
 
   return deletedLocation;
 }

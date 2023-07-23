@@ -13,11 +13,7 @@ export const createCloudinarySignature = (publicId: any, timestamp: any, uploadP
   return crypto.createHash("sha1").update(secret).digest("hex");
 };
 
-export const getCloudinarySignature = async (
-  publicId: any,
-  timestamp: any,
-  uploadPreset: any
-): Promise<string> => {
+export const getCloudinarySignature = async (publicId: any, timestamp: any, uploadPreset: any): Promise<string> => {
   const res = await fetch(
     "/api/images/?" +
       `${publicId ? `public_id=${publicId}&` : ""}${timestamp ? `timestamp=${timestamp}` : ""}${
@@ -29,9 +25,7 @@ export const getCloudinarySignature = async (
   return response;
 };
 
-export const uploadImageToCloudinary = async (
-  image: any
-): Promise<{ publicId: string; url: string } | [string]> => {
+export const uploadImageToCloudinary = async (image: any): Promise<any> => {
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const uploadPreset = "meetin";
   const signature = await getCloudinarySignature(null, timestamp, uploadPreset);
@@ -50,9 +44,8 @@ export const uploadImageToCloudinary = async (
     });
     const data = await response.json();
     return { publicId: data.public_id, url: data.secure_url };
-  } catch (e) {
-    console.error(e);
-    return ["Error: " + e];
+  } catch (error) {
+    return error;
   }
 };
 
@@ -77,8 +70,7 @@ export const deleteImageFromCloudinary = async (publicId: string): Promise<any> 
       error.status = response.status;
       throw error;
     }
-  } catch (e) {
-    console.error(e);
-    return ["Error: " + e];
+  } catch (error) {
+    return error;
   }
 };

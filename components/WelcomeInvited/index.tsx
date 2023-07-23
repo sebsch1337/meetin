@@ -1,4 +1,4 @@
-import { acceptInvitation } from "@/lib/teamLib";
+import { acceptInvitation, declineInvitation } from "@/lib/teamLib";
 import { Blockquote, Button, Group, Text } from "@mantine/core";
 import { IconComet } from "@tabler/icons-react";
 
@@ -37,6 +37,8 @@ export default function WelcomeInvited({
           fullWidth
           variant="outline"
           onClick={() => {
+            setButtonDisabled(false);
+            declineInvitation();
             setInvitationState("declined");
           }}
         >

@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../adapters/mongoDbAdapter";
+import { sanitizeUser, validateUser } from "@/validators/userValidator";
 
 const { NEXTAUTH_SECRET = "", FACEBOOK_ID = "", FACEBOOK_SECRET = "", GOOGLE_ID = "", GOOGLE_SECRET = "" } = process.env;
 
@@ -28,8 +29,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }: { session: any; user: any }) => {
       if (user) {
-        session.user.id = user.id;
-        session.user.teamId = user.teamId;
+        const validatedInput = await validateUser(sanitizeUser({ id: user.id, teamId: user.teamId }));
+        session.user.id = validatedInput.id;
+        session.user.teamId = validatedInput.teamId;
       }
       return session;
     },
