@@ -240,7 +240,7 @@ export const removeUserFromTeam = async (userId: string): Promise<boolean> => {
  * @param {string} teamId - The ID of the team to fetch users and admins for.
  * @returns {Promise<false | UserData[]>} A Promise that resolves to an array of UserData or false if the request fails.
  */
-export const getUsersAndAdminsForTeamId = async (teamId: string) => {
+export const getUsersAndAdminsForTeamId = async (teamId: string): Promise<any> => {
   const response = await fetch(`/api/teams/users`, {
     method: "GET",
   });
@@ -251,4 +251,37 @@ export const getUsersAndAdminsForTeamId = async (teamId: string) => {
   } else {
     return false;
   }
+};
+
+/**
+ * Retrieves users and admins for a given team ID from the server.
+ *
+ * @param {string} teamId - The ID of the team to fetch users and admins for.
+ * @returns {Promise<false | UserData[]>} A Promise that resolves to an array of UserData or false if the request fails.
+ */
+export const changeUserRole = async (userId: string, role: string): Promise<boolean> => {
+  const response = await fetch(`/api/teams/users`, {
+    method: "POST",
+    body: JSON.stringify({ userId, role }),
+  });
+
+  if (response.ok) {
+    notifications.show({
+      icon: <IconCheck />,
+      color: "teal",
+      title: "Teamverwaltung",
+      message: `Rolle erfolgreich geändert.`,
+    });
+
+    return true;
+  }
+
+  notifications.show({
+    icon: <IconX />,
+    color: "red",
+    title: "Teamverwaltung",
+    message: `Fehler beim Ändern der Rolle.`,
+  });
+
+  return false;
 };
