@@ -18,6 +18,7 @@ import { getUserRoleInTeamFromDb } from "@/services/userService";
 
 import { createInvitation, deleteTeam } from "@/lib/teamLib";
 import DeleteTeamModal from "@/components/DeleteTeamModal";
+import LeaveTeamModal from "@/components/LeaveTeamModal";
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -47,6 +48,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
           <AddMemberForm createInvitation={createInvitation} closeModal={closeModal} setInvitedEmails={setInvitedEmails} />
         )}
         {modal?.type === "delete" && <DeleteTeamModal team={team} deleteTeam={deleteTeam} signOut={signOut} />}
+        {modal?.type === "leave" && <LeaveTeamModal userId={session?.user?.id} />}
       </FormModal>
 
       <Grid grow>
