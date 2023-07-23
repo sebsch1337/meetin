@@ -23,7 +23,8 @@ export default async function handler(req: any, res: any): Promise<any> {
         return res.status(200).json(users);
 
       case "POST":
-        const removedSuccess = await changeUserRoleInDb(req.body.userId, req.body.role);
+        const userData = JSON.parse(req.body);
+        const removedSuccess = await changeUserRoleInDb(userData.userId, userData.role);
         return res.status(200).json({ message: `Changing role successfully: ${removedSuccess}` });
 
       default:
