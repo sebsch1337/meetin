@@ -211,7 +211,7 @@ export const removeUserFromTeam = async (userId: string): Promise<boolean> => {
     method: "DELETE",
   });
 
-  if (response.ok) {
+  if (response.status === 200) {
     const data = await response.json();
 
     notifications.show({
@@ -222,16 +222,16 @@ export const removeUserFromTeam = async (userId: string): Promise<boolean> => {
     });
 
     return true;
+  } else {
+    notifications.show({
+      icon: <IconX />,
+      color: "red",
+      title: "Teamverwaltung",
+      message: `Der einzige Admin kann nicht entfernt werden.`,
+    });
+
+    return false;
   }
-
-  notifications.show({
-    icon: <IconX />,
-    color: "red",
-    title: "Teamverwaltung",
-    message: `Fehler beim Entfernen des Benutzers.`,
-  });
-
-  return false;
 };
 
 /**
