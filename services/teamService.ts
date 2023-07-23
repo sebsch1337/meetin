@@ -198,6 +198,53 @@ export async function addUserToTeamInDb(invitedEmail: string, userId: string): P
 }
 
 /**
+ * Changes the role of a user in the database by moving the userId from one role to another role in the teams collection.
+ * @param userId The ID of the user whose role needs to be changed.
+ * @param role The new role to assign to the user. Must be either "admins" or "users".
+ * @returns A Promise that resolves to true if the user's role is successfully changed, or an Error object if any error occurs.
+ * @throws An Error if userId or role is not provided, if the team is not found for the given user, or if an invalid role is provided.
+ */
+export async function changeUserRoleInDb(userId: string, role: string): Promise<boolean | Error> {
+  const sanitizedInput = await validateUser(sanitizeUser({ id: userId, role }));
+
+  if (!sanitizedInput.id || !sanitizedInput.role) {
+    const error: any = new Error("User or role not given");
+    error.status = 404;
+    throw error;
+  }
+
+  await dbConnect();
+
+  const team = await Teams.findOne({ $or: [{ admins: sanitizedInput.id }, { users: sanitizedInput.id }] }).exec();
+
+  if (!team) {
+    const error: any = new Error("Team not found for the given user");
+    error.status = 404;
+    throw error;
+  }
+
+  if (team.admins.includes(sanitizedInput.id)) {
+    team.admins.pull(sanitizedInput.id);
+  } else {
+    team.users.pull(sanitizedInput.id);
+  }
+
+  if (sanitizedInput.role === "admin") {
+    team.admins.push(sanitizedInput.id);
+  } else if (sanitizedInput.role === "user") {
+    team.users.push(sanitizedInput.id);
+  } else {
+    const error: any = new Error('Invalid role. Use "admin" or "user".');
+    error.status = 400;
+    throw error;
+  }
+
+  await team.save();
+
+  return true;
+}
+
+/**
  * Creates a new team in the database.
  *
  * @param teamName - The name of the team to be created.
@@ -298,7 +345,7 @@ export async function deleteEmailFromInvitationsInDb(invitedEmail: any) {
  *                            If an error occurs during the removal process, the Promise also resolves to `false`.
  * @throws Error with status code 404 if the team with the given ID is not found.
  */
-export async function removeUserIdFromTeamInDb(teamId: any, userId: string) {
+export async function removeUserIdFromTeamInDb(teamId: any, userId: string): Promise<boolean> {
   await dbConnect();
 
   const sanitizedTeamId = new Types.ObjectId(teamId); // Convert teamId to ObjectId for safe querying
