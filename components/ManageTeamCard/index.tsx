@@ -44,7 +44,14 @@ export default function ManageTeamCard({
         </>
       )}
 
-      <Button>Team verlassen</Button>
+      <Button
+        onClick={() => {
+          setModal({ title: "Team verlassen", type: "leave" });
+          openModal();
+        }}
+      >
+        Team verlassen
+      </Button>
     </PaperCard>
   );
 }
