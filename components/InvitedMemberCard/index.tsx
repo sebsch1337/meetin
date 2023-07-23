@@ -1,18 +1,17 @@
 import PaperCard from "../PaperCard";
 import MemberCardItem from "../MemberCardItem";
 import { Text } from "@mantine/core";
-import { declineInvitation, getTeamById, getUsersAndAdminsForTeamId } from "@/lib/teamLib";
+import { declineInvitation } from "@/lib/teamLib";
 
 export default function InvitedMemberCard({
   invitedMembers,
   setInvitedMembers,
-  teamId,
 }: {
   invitedMembers: any;
   setInvitedMembers: any;
   teamId: any;
 }) {
-  const deleteItemHandler = async (email: any, teamId: any) => {
+  const deleteItemHandler = async (email: any) => {
     const newInvitedMembers = await declineInvitation(email);
     setInvitedMembers(newInvitedMembers.invitedEmails);
   };
@@ -21,7 +20,12 @@ export default function InvitedMemberCard({
     <PaperCard title="Eingeladene Mitglieder">
       {invitedMembers.length > 0 ? (
         invitedMembers?.map((member: any) => (
-          <MemberCardItem key={member.email} member={member} deleteItem={async () => await deleteItemHandler(member.email, teamId)} />
+          <MemberCardItem
+            key={member.email}
+            member={member}
+            invited={true}
+            deleteItem={async () => await deleteItemHandler(member.email)}
+          />
         ))
       ) : (
         <Text size={"sm"} fs={"italic"} c={"dimmed"}>
