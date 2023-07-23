@@ -1,22 +1,23 @@
 import { useState } from "react";
 
-import { Button, Container, Grid, Space } from "@mantine/core";
+import { Container, Grid, Space } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
-import AddMemberForm from "@/components/AddMemberForm";
+import AddMemberForm from "@/components/MemberForm";
 import MemberCard from "@/components/MemberCard";
 import FormModal from "@/components/FormModal";
 import InvitedMemberCard from "@/components/InvitedMemberCard";
+import ManageTeamCard from "@/components/ManageTeamCard";
 
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import { useSession, signOut } from "next-auth/react";
 
 import { getTeamByIdFromDb, getUsersAndAdminsForTeamFromDb } from "@/services/teamService";
 import { getUserRoleInTeamFromDb } from "@/services/userService";
 
-import { createInvitation } from "@/lib/teamLib";
-import ManageTeamCard from "@/components/ManageTeamCard";
-import { useSession } from "next-auth/react";
+import { createInvitation, deleteTeam } from "@/lib/teamLib";
+import DeleteTeamModal from "@/components/DeleteTeamModal";
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -45,6 +46,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
         {modal?.type === "form" && (
           <AddMemberForm createInvitation={createInvitation} closeModal={closeModal} setInvitedEmails={setInvitedEmails} />
         )}
+        {modal?.type === "delete" && <DeleteTeamModal team={team} deleteTeam={deleteTeam} signOut={signOut} />}
       </FormModal>
 
       <Grid grow>
