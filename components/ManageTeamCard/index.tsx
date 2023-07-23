@@ -1,6 +1,6 @@
 import { Button } from "@mantine/core";
 import PaperCard from "../PaperCard";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconDoorExit, IconPlus, IconTrash } from "@tabler/icons-react";
 
 export default function ManageTeamCard({
   team,
@@ -45,6 +45,7 @@ export default function ManageTeamCard({
       )}
 
       <Button
+        leftIcon={<IconDoorExit size="1rem" />}
         onClick={() => {
           setModal({ title: "Team verlassen", type: "leave" });
           openModal();
