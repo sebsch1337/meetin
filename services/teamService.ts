@@ -224,6 +224,11 @@ export async function changeUserRoleInDb(userId: string, role: string): Promise<
   }
 
   if (team.admins.includes(sanitizedInput.id)) {
+    if (team.admins.length === 1) {
+      const error: any = new Error("Removal of last remaining admin not allowed");
+      error.status = 403;
+      throw error;
+    }
     team.admins.pull(sanitizedInput.id);
   } else {
     team.users.pull(sanitizedInput.id);
