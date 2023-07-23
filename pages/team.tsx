@@ -1,14 +1,12 @@
 import { useState } from "react";
 
-import { Button, Container, Space, Title } from "@mantine/core";
+import { Button, Container, Grid, Space } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 import AddMemberForm from "@/components/AddMemberForm";
 import MemberCard from "@/components/MemberCard";
 import FormModal from "@/components/FormModal";
 import InvitedMemberCard from "@/components/InvitedMemberCard";
-
-import { IconPlus } from "@tabler/icons-react";
 
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
@@ -17,6 +15,7 @@ import { getTeamByIdFromDb, getUsersAndAdminsForTeamFromDb } from "@/services/te
 import { getUserRoleInTeamFromDb } from "@/services/userService";
 
 import { createInvitation } from "@/lib/teamLib";
+import ManageTeamCard from "@/components/ManageTeamCard";
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -46,32 +45,20 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
         )}
       </FormModal>
 
-      {userRole === "admin" ? (
-        <>
-          <Button
-            leftIcon={<IconPlus size="1rem" />}
-            variant={"light"}
-            size={"sm"}
-            color={"teal"}
-            onClick={() => {
-              setModal({ title: "Mitglied einladen", type: "form" });
-              openModal();
-            }}
-          >
-            Neues Mitglied
-          </Button>
-          <Space h={"md"} />
-          <Title order={2} size={22}>
-            {team.name}
-          </Title>
-          <Space h={"md"} />
-          <MemberCard teamId={team.id} teamMembers={teamMembers} setTeamMembers={setTeamMembers} />
-          <Space h={"md"} />
-          <InvitedMemberCard invitedMembers={invitedEmails} setInvitedMembers={setInvitedEmails} teamId={team.id} />
-        </>
-      ) : (
-        <Button>Team verlassen</Button>
-      )}
+      <Grid grow>
+        <Grid.Col span={3}>
+          <ManageTeamCard team={team} setModal={setModal} openModal={openModal} isAdmin={userRole === "admin"} />
+        </Grid.Col>
+        <Grid.Col span={9}>
+          {userRole === "admin" && (
+            <>
+              <MemberCard teamId={team.id} teamMembers={teamMembers} setTeamMembers={setTeamMembers} />
+              <Space h={"md"} />
+              <InvitedMemberCard invitedMembers={invitedEmails} setInvitedMembers={setInvitedEmails} teamId={team.id} />
+            </>
+          )}
+        </Grid.Col>
+      </Grid>
     </Container>
   );
 }
