@@ -3,16 +3,7 @@ import { useForm } from "@mantine/form";
 
 import { createEvent, editEvent } from "@/lib/eventLib";
 
-import {
-  TextInput,
-  Button,
-  Select,
-  Flex,
-  Textarea,
-  NumberInput,
-  Divider,
-  LoadingOverlay,
-} from "@mantine/core";
+import { TextInput, Button, Select, Flex, Textarea, NumberInput, Divider, LoadingOverlay } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
 import { IconChecks, IconSpeakerphone, IconUsers } from "@tabler/icons-react";
@@ -92,20 +83,14 @@ export default function EventForm({
     >
       <Flex direction={"column"} gap={"md"}>
         <LoadingOverlay visible={loading} overlayBlur={2} />
-        <TextInput
-          withAsterisk
-          label="Name"
-          maxLength={50}
-          placeholder="Stammtisch 01/2023"
-          {...form.getInputProps("name")}
-        />
+        <TextInput withAsterisk label="Name" maxLength={50} placeholder="Stammtisch 01/2023" {...form.getInputProps("name")} />
 
         <Select
           withAsterisk
           label="Location"
           placeholder="Location wählen"
           searchable
-          nothingFound="Nichts gefunden"
+          nothingFound="Hinterlege zuerst eine Location"
           data={locationData}
           spellCheck={false}
           {...form.getInputProps("locationId")}
@@ -160,26 +145,11 @@ export default function EventForm({
           {...form.getInputProps("description")}
         />
 
-        <Textarea
-          placeholder="Informationen zur Planung"
-          label="Notizen"
-          maxLength={1000}
-          {...form.getInputProps("preNotes")}
-        />
+        <Textarea placeholder="Informationen zur Planung" label="Notizen" maxLength={1000} {...form.getInputProps("preNotes")} />
 
-        <Textarea
-          placeholder="Fazit nach dem Stammtisch"
-          label="Fazit"
-          maxLength={1000}
-          {...form.getInputProps("postNotes")}
-        />
+        <Textarea placeholder="Fazit nach dem Stammtisch" label="Fazit" maxLength={1000} {...form.getInputProps("postNotes")} />
 
-        <TextInput
-          label="Facebook Link"
-          maxLength={100}
-          placeholder="Link zum Facebook Event"
-          {...form.getInputProps("fbLink")}
-        />
+        <TextInput label="Facebook Link" maxLength={100} placeholder="Link zum Facebook Event" {...form.getInputProps("fbLink")} />
 
         <Button type="submit" variant={"light"} color={"cyan"} size={"sm"} fullWidth>
           {modal?.editMode ? "Änderungen speichern" : "Event erstellen"}
