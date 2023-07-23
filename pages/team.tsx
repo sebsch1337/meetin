@@ -16,6 +16,7 @@ import { getUserRoleInTeamFromDb } from "@/services/userService";
 
 import { createInvitation } from "@/lib/teamLib";
 import ManageTeamCard from "@/components/ManageTeamCard";
+import { useSession } from "next-auth/react";
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -33,6 +34,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [modal, setModal] = useState<Modal>();
+  const { data: session } = useSession();
 
   const [teamMembers, setTeamMembers] = useState(members || []);
   const [invitedEmails, setInvitedEmails] = useState(team.invitedEmails);
@@ -52,7 +54,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
         <Grid.Col span={9}>
           {userRole === "admin" && (
             <>
-              <MemberCard teamId={team.id} teamMembers={teamMembers} setTeamMembers={setTeamMembers} />
+              <MemberCard session={session} teamId={team.id} teamMembers={teamMembers} setTeamMembers={setTeamMembers} />
               <Space h={"md"} />
               <InvitedMemberCard invitedMembers={invitedEmails} setInvitedMembers={setInvitedEmails} teamId={team.id} />
             </>
