@@ -249,7 +249,7 @@ export const getUsersAndAdminsForTeamId = async (teamId: string): Promise<any> =
     const userData = await response.json();
     return userData;
   } else {
-    return false;
+    return [];
   }
 };
 
