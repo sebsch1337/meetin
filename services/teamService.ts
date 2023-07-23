@@ -360,31 +360,33 @@ export async function removeUserIdFromTeamInDb(teamId: any, userId: string): Pro
   const sanitizedTeamId = new Types.ObjectId(teamId);
   const sanitizedUserId = new Types.ObjectId(userId);
 
-  try {
-    const team = await Teams.findOne({ _id: sanitizedTeamId }).exec();
+  const team = await Teams.findOne({ _id: sanitizedTeamId }).exec();
 
-    if (!team) {
-      const error: any = new Error("Team not found.");
-      error.status = 404;
+  if (!team) {
+    const error: any = new Error("Team not found");
+    error.status = 404;
+    throw error;
+  }
+
+  if (team.admins.includes(userId)) {
+    if (team.admins.length === 1) {
+      const error: any = new Error("Can't remove the last admin");
+      error.status = 403;
+      console.error(error);
       throw error;
     }
-
-    if (team.admins.includes(userId)) {
-      team.admins = team.admins.filter((adminId: string) => adminId.toString() !== userId);
-    }
-
-    if (team.users.includes(userId)) {
-      team.users = team.users.filter((userId: string) => userId.toString() !== userId);
-    }
-
-    await team.save();
-
-    await Users.updateOne({ _id: sanitizedUserId }, { $unset: { teamId: 1 } });
-
-    return true;
-  } catch (error) {
-    return false;
+    team.admins = team.admins.filter((adminId: string) => adminId.toString() !== userId);
   }
+
+  if (team.users.includes(userId)) {
+    team.users = team.users.filter((userId: string) => userId.toString() !== userId);
+  }
+
+  await team.save();
+
+  await Users.updateOne({ _id: sanitizedUserId }, { $unset: { teamId: 1 } });
+
+  return true;
 }
 
 /**
