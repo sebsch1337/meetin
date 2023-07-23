@@ -285,3 +285,30 @@ export const changeUserRole = async (userId: string, role: string): Promise<bool
 
   return false;
 };
+
+/**
+ * Deletes a team with the specified teamId from the server.
+ *
+ * @param teamId The ID of the team to delete.
+ * @returns A Promise that resolves to a boolean value:
+ * - `true` if the team was deleted successfully.
+ * - `false` if there was an error while deleting the team.
+ */
+export const deleteTeam = async (teamId: string): Promise<boolean> => {
+  const response = await fetch(`/api/teams/${teamId}`, {
+    method: "DELETE",
+  });
+
+  if (response.ok) {
+    return true;
+  }
+
+  notifications.show({
+    icon: <IconX />,
+    color: "red",
+    title: "Teamverwaltung",
+    message: `Fehler beim Löschen des Teams.`,
+  });
+
+  return false;
+};
