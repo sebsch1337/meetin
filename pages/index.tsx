@@ -57,7 +57,7 @@ export default function Home({
   const nextFiveEvents = getUpcomingEvents(events).slice(0, 5);
 
   return (
-    <Container fluid px={"xl"} py={"xs"}>
+    <Container fluid px={"xl"} py={"xl"}>
       {showWelcomeModal ? (
         <WelcomeModal session={session} invitedTeam={invitedTeam} signOut={signOut} setShowWelcomeModal={setShowWelcomeModal} />
       ) : (
