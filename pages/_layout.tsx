@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createStyles, Header, Group, ActionIcon, Container, Burger, rem, Text, Drawer, ScrollArea, Divider, Button } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
+import { useViewportSize } from "@mantine/hooks";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -93,6 +94,8 @@ interface HeaderMiddleProps {
 }
 
 export default function HeaderMiddle({ children }: HeaderMiddleProps) {
+  const { height, width } = useViewportSize();
+
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
 
@@ -218,7 +221,7 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
           </Group>
         </ScrollArea>
       </Drawer>
-      <main>{children}</main>
+      <main style={{ height: "calc(100vh - 56px)" }}>{children}</main>
     </>
   );
 }
