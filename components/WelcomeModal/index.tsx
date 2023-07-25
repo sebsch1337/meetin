@@ -28,13 +28,13 @@ export default function WelcomeModal({
   };
 
   return (
-    <Modal size={"xl"} opened={true} onClose={() => signOut()} title={"Benutzer einrichten"}>
+    <Modal size={"xl"} opened={true} onClose={() => signOut()} title={"Benutzer einrichten"} centered>
       <Title>Willkommen bei MeetIn, {session?.user?.name?.split(" ")[0] || "Unbekannter"}!</Title>
       <Space h="md" />
       <Text>
         MeetIn hilft dir, den Überblick über deine Veranstaltungen und Lokationen zu behalten.
         <Space h="sm" />
-        Hierzu kannst du im Menüpunk{" "}
+        Hierzu kannst du im Menüpunkt{" "}
         <Text span fw={700}>
           {` Locations `}
         </Text>
