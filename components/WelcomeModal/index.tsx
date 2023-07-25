@@ -28,7 +28,7 @@ export default function WelcomeModal({
   };
 
   return (
-    <Modal size={"xl"} opened={true} onClose={() => signOut()} title={"Benutzer einrichten"} centered>
+    <Modal size={"xl"} opened={true} onClose={() => signOut()} title={"Team einrichten"} centered>
       <Title>Willkommen bei MeetIn, {session?.user?.name?.split(" ")[0] || "Unbekannter"}!</Title>
       <Space h="md" />
       <Text>
