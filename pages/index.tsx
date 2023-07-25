@@ -57,11 +57,11 @@ export default function Home({
   const nextFiveEvents = getUpcomingEvents(events).slice(0, 5);
 
   return (
-    <Container fluid px={"xl"} py={"xs"}>
+    <>
       {showWelcomeModal ? (
         <WelcomeModal session={session} invitedTeam={invitedTeam} signOut={signOut} setShowWelcomeModal={setShowWelcomeModal} />
       ) : (
-        <>
+        <Container fluid px={"xl"} py={"xs"}>
           <Grid grow style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             <Grid.Col span={6}>
               <Stack spacing={0}>
@@ -114,8 +114,8 @@ export default function Home({
             locations={locations}
             events={events}
           />
-        </>
+        </Container>
       )}
-    </Container>
+    </>
   );
 }

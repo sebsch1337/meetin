@@ -42,7 +42,7 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
   const [invitedEmails, setInvitedEmails] = useState(team.invitedEmails);
 
   return (
-    <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
+    <>
       <FormModal title={modal?.title} opened={modalOpened} close={closeModal}>
         {modal?.type === "form" && (
           <AddMemberForm createInvitation={createInvitation} closeModal={closeModal} setInvitedEmails={setInvitedEmails} />
@@ -50,21 +50,22 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
         {modal?.type === "delete" && <DeleteTeamModal team={team} deleteTeam={deleteTeam} signOut={signOut} />}
         {modal?.type === "leave" && <LeaveTeamModal userId={session?.user?.id} />}
       </FormModal>
-
-      <Grid grow>
-        <Grid.Col span={3}>
-          <ManageTeamCard team={team} setModal={setModal} openModal={openModal} isAdmin={userRole === "admin"} />
-        </Grid.Col>
-        <Grid.Col span={9}>
-          {userRole === "admin" && (
-            <>
-              <MemberCard session={session} teamId={team.id} teamMembers={teamMembers} setTeamMembers={setTeamMembers} />
-              <Space h={"md"} />
-              <InvitedMemberCard invitedMembers={invitedEmails} setInvitedMembers={setInvitedEmails} teamId={team.id} />
-            </>
-          )}
-        </Grid.Col>
-      </Grid>
-    </Container>
+      <Container fluid px={isMobile ? "xs" : "xl"} py={"md"}>
+        <Grid grow>
+          <Grid.Col span={3}>
+            <ManageTeamCard team={team} setModal={setModal} openModal={openModal} isAdmin={userRole === "admin"} />
+          </Grid.Col>
+          <Grid.Col span={9}>
+            {userRole === "admin" && (
+              <>
+                <MemberCard session={session} teamId={team.id} teamMembers={teamMembers} setTeamMembers={setTeamMembers} />
+                <Space h={"md"} />
+                <InvitedMemberCard invitedMembers={invitedEmails} setInvitedMembers={setInvitedEmails} teamId={team.id} />
+              </>
+            )}
+          </Grid.Col>
+        </Grid>
+      </Container>
+    </>
   );
 }
