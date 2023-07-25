@@ -87,8 +87,6 @@ export default function LocationDetails({
 
   return (
     <>
-      <LoadingOverlay visible={loading} overlayBlur={2} />
-
       <DetailsModal opened={modalOpened} onClose={closeModal} modal={modal}>
         {modal.type === "form" && (
           <LocationForm
@@ -104,6 +102,8 @@ export default function LocationDetails({
           <DeleteModal type={"location"} deleteData={async () => await deleteLocation(location)} closeModal={closeModal} />
         )}
       </DetailsModal>
+
+      <LoadingOverlay visible={loading} overlayBlur={2} />
 
       <Container
         h={"20vh"}
