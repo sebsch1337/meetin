@@ -3,14 +3,13 @@ import MemberCardItem from "../MemberCardItem";
 import { Text } from "@mantine/core";
 import { declineInvitation } from "@/lib/teamLib";
 
-export default function InvitedMemberCard({
-  invitedMembers,
-  setInvitedMembers,
-}: {
-  invitedMembers: any;
-  setInvitedMembers: any;
-  teamId: any;
-}) {
+interface InvitedMemberCardProps {
+  invitedMembers: Team["invitedEmails"];
+  setInvitedMembers: React.Dispatch<React.SetStateAction<Team["invitedEmails"]>>;
+  teamId: Team["id"];
+}
+
+export const InvitedMemberCard: React.FC<InvitedMemberCardProps> = ({ invitedMembers, setInvitedMembers }) => {
   const deleteItemHandler = async (email: any) => {
     const newInvitedMembers = await declineInvitation(email);
     setInvitedMembers(newInvitedMembers.invitedEmails);
@@ -18,7 +17,7 @@ export default function InvitedMemberCard({
 
   return (
     <PaperCard title="Eingeladene Mitglieder">
-      {invitedMembers.length > 0 ? (
+      {invitedMembers && invitedMembers.length > 0 ? (
         invitedMembers?.map((member: any) => (
           <MemberCardItem
             key={member.email}
@@ -34,4 +33,4 @@ export default function InvitedMemberCard({
       )}
     </PaperCard>
   );
-}
+};
