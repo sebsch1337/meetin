@@ -1,14 +1,12 @@
 import { Chip, Flex, ScrollArea, Title } from "@mantine/core";
 
-export default function LocationFilter({
-  tags,
-  filteredTagIds,
-  setFilteredTagIds,
-}: {
+interface LocationFilterProps {
   tags: Tag[];
-  filteredTagIds: string[];
-  setFilteredTagIds: any;
-}) {
+  filteredTagIds?: string[];
+  setFilteredTagIds: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+export const LocationFilter: React.FC<LocationFilterProps> = ({ tags, filteredTagIds, setFilteredTagIds }) => {
   return (
     <>
       <Title order={2} size={"h6"} my={"xs"}>
@@ -27,4 +25,4 @@ export default function LocationFilter({
       </ScrollArea>
     </>
   );
-}
+};
