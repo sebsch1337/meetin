@@ -1,20 +1,18 @@
 import { useState } from "react";
 import { Button, Modal, Space, Text, Title } from "@mantine/core";
-import WelcomeForm from "../WelcomeForm";
-import WelcomeInvited from "../WelcomeInvited";
+import { WelcomeForm } from "../WelcomeForm";
+import { WelcomeInvited } from "../WelcomeInvited";
 import { createTeam } from "@/lib/teamLib";
+import { Session } from "next-auth/core/types";
 
-export default function WelcomeModal({
-  session,
-  invitedTeam,
-  signOut,
-  setShowWelcomeModal,
-}: {
-  session: any;
+interface WelcomeModalProps {
+  session: Session | null;
   invitedTeam: Team;
-  signOut: any;
-  setShowWelcomeModal: any;
-}) {
+  signOut: Function;
+  setShowWelcomeModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const WelcomeModal: React.FC<WelcomeModalProps> = ({ session, invitedTeam, signOut, setShowWelcomeModal }) => {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [invitationState, setInvitationState] = useState("");
   const [teamName, setTeamName] = useState("");
@@ -62,4 +60,4 @@ export default function WelcomeModal({
       </Button>
     </Modal>
   );
-}
+};
