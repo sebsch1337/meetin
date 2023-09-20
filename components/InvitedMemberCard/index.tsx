@@ -5,14 +5,14 @@ import { declineInvitation } from "@/lib/teamLib";
 
 interface InvitedMemberCardProps {
   invitedMembers?: InvitedEmails[] | null;
-  setInvitedMembers: React.Dispatch<React.SetStateAction<Team["invitedEmails"]>>;
+  setInvitedEmails: React.Dispatch<React.SetStateAction<InvitedEmails[]>>;
   teamId: Team["id"];
 }
 
-export const InvitedMemberCard: React.FC<InvitedMemberCardProps> = ({ invitedMembers, setInvitedMembers }) => {
+export const InvitedMemberCard: React.FC<InvitedMemberCardProps> = ({ invitedMembers, setInvitedEmails }) => {
   const deleteItemHandler = async (email: any) => {
     const newInvitedMembers = await declineInvitation(email);
-    setInvitedMembers(newInvitedMembers.invitedEmails);
+    setInvitedEmails(newInvitedMembers.invitedEmails);
   };
 
   return (
