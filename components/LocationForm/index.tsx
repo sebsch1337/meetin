@@ -21,21 +21,23 @@ import { locationsAtom } from "@/store";
 import { useEffect, useState } from "react";
 import { createLocation, editLocation, searchExternalLocation } from "@/lib/locationLib";
 
-export default function LocationForm({
+interface LocationFormProps {
+  closeModal: Function;
+  editLocationMode: boolean;
+  preValues?: Location;
+  tags?: Tag[];
+  setLocation?: any;
+  setModal?: any;
+}
+
+export const LocationForm: React.FC<LocationFormProps> = ({
   closeModal,
   editLocationMode,
   preValues,
   tags = [],
   setLocation,
   setModal,
-}: {
-  closeModal: any;
-  editLocationMode: boolean;
-  preValues: any;
-  tags?: Tag[];
-  setLocation?: any;
-  setModal?: any;
-}) {
+}) => {
   const setLocations = useSetAtom(locationsAtom);
 
   const [loading, setLoading] = useState(false);
@@ -82,19 +84,15 @@ export default function LocationForm({
 
     validate: {
       name: (value) =>
-        value?.length > 0
-          ? value?.length > 50
-            ? "Zu viele Zeichen (max. 50)"
-            : null
-          : "Bitte gib der Location einen Namen",
+        value?.length > 0 ? (value?.length > 50 ? "Zu viele Zeichen (max. 50)" : null) : "Bitte gib der Location einen Namen",
       road: (value) => (value?.length > 100 ? "Zu viele Zeichen (max. 100)" : null),
       houseNo: (value) => (value?.length > 5 ? "Zu viele Zeichen (max. 5)" : null),
       postcode: (value) => (value?.length > 7 ? "Zu viele Zeichen (max. 7)" : null),
       city: (value) => (value?.length > 100 ? "Zu viele Zeichen (max. 100)" : null),
       suburb: (value) => (value?.length > 100 ? "Zu viele Zeichen (max. 100)" : null),
       tel: (value) => (value?.length > 20 ? "Zu viele Zeichen (max. 100)" : null),
-      latitude: (value) => (value?.length > 22 ? "Zu viele Zeichen (max. 22)" : null),
-      longitude: (value) => (value?.length > 22 ? "Zu viele Zeichen (max. 22)" : null),
+      latitude: (value) => (value?.toString.length > 22 ? "Zu viele Zeichen (max. 22)" : null),
+      longitude: (value) => (value?.toString.length > 22 ? "Zu viele Zeichen (max. 22)" : null),
       maxCapacity: (value) => (Number(value) > 999 ? "Zu viele Besucher (max. 999)" : null),
       description: (value) => (value?.length > 1000 ? "Zu viele Zeichen (max. 1000)" : null),
       infos: (value) => (value?.length > 1000 ? "Zu viele Zeichen (max. 1000)" : null),
@@ -147,8 +145,8 @@ export default function LocationForm({
       <form
         onSubmit={form.onSubmit(async (values) => {
           setLoading(true);
-          if (editLocationMode) {
-            await editLocation({ ...values, images: [...preValues.images] }, preValues.id, setLocation);
+          if (editLocationMode && preValues?.id) {
+            await editLocation({ ...values, images: [...preValues?.images] }, preValues?.id, setLocation);
           } else {
             await createLocation(values, setLocations);
           }
@@ -166,20 +164,8 @@ export default function LocationForm({
             maxLength={50}
           />
           <Group grow>
-            <TextInput
-              label="Straße"
-              placeholder="Straße"
-              spellCheck={false}
-              {...form.getInputProps("road")}
-              maxLength={100}
-            />
-            <TextInput
-              label="Hausnummer"
-              placeholder="Hausnummer"
-              spellCheck={false}
-              {...form.getInputProps("houseNo")}
-              maxLength={5}
-            />
+            <TextInput label="Straße" placeholder="Straße" spellCheck={false} {...form.getInputProps("road")} maxLength={100} />
+            <TextInput label="Hausnummer" placeholder="Hausnummer" spellCheck={false} {...form.getInputProps("houseNo")} maxLength={5} />
           </Group>
           <Group grow>
             <TextInput
@@ -189,43 +175,15 @@ export default function LocationForm({
               {...form.getInputProps("postcode")}
               maxLength={7}
             />
-            <TextInput
-              label="Ort"
-              placeholder="Ort"
-              spellCheck={false}
-              {...form.getInputProps("city")}
-              maxLength={100}
-            />
+            <TextInput label="Ort" placeholder="Ort" spellCheck={false} {...form.getInputProps("city")} maxLength={100} />
           </Group>
           <Group grow>
-            <TextInput
-              label="Stadtteil"
-              placeholder="Stadtteil"
-              spellCheck={false}
-              {...form.getInputProps("suburb")}
-              maxLength={100}
-            />
-            <TextInput
-              label="Telefonnummer"
-              placeholder="Telefonnummer"
-              spellCheck={false}
-              {...form.getInputProps("tel")}
-              maxLength={20}
-            />
+            <TextInput label="Stadtteil" placeholder="Stadtteil" spellCheck={false} {...form.getInputProps("suburb")} maxLength={100} />
+            <TextInput label="Telefonnummer" placeholder="Telefonnummer" spellCheck={false} {...form.getInputProps("tel")} maxLength={20} />
           </Group>
           <Group grow>
-            <TextInput
-              maxLength={22}
-              label="Breitengrad"
-              placeholder="10.2931062"
-              {...form.getInputProps("latitude")}
-            />
-            <TextInput
-              maxLength={22}
-              label="Längengrad"
-              placeholder="123.9020773"
-              {...form.getInputProps("longitude")}
-            />
+            <TextInput maxLength={22} label="Breitengrad" placeholder="10.2931062" {...form.getInputProps("latitude")} />
+            <TextInput maxLength={22} label="Längengrad" placeholder="123.9020773" {...form.getInputProps("longitude")} />
           </Group>
 
           <Divider />
@@ -309,4 +267,4 @@ export default function LocationForm({
       </form>
     </Flex>
   );
-}
+};
