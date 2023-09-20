@@ -1,6 +1,13 @@
 import { Modal } from "@mantine/core";
 
-export default function DetailsModal({ opened, onClose, modal, children }: { opened: boolean; onClose: any; modal: Modal; children: any }) {
+interface DetailsModalProps {
+  opened: boolean;
+  onClose: () => void;
+  modal: Modal;
+  children: React.ReactNode;
+}
+
+export const DetailsModal: React.FC<DetailsModalProps> = ({ opened, onClose, modal, children }) => {
   return (
     <Modal.Root opened={opened} onClose={onClose} centered>
       <Modal.Overlay />
@@ -13,4 +20,4 @@ export default function DetailsModal({ opened, onClose, modal, children }: { ope
       </Modal.Content>
     </Modal.Root>
   );
-}
+};
