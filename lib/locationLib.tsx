@@ -7,7 +7,7 @@ import { IconCheck, IconX } from "@tabler/icons-react";
  * @returns A Promise that resolves to an array containing all the locations if the request is successful.
  *          Otherwise, it returns an undefined value if there was an error during the retrieval.
  */
-export const getAllLocations = async (): Promise<any> => {
+export const getAllLocations = async (): Promise<Location[]> => {
   const response = await fetch("/api/locations", {
     method: "GET",
     headers: {
@@ -18,6 +18,8 @@ export const getAllLocations = async (): Promise<any> => {
   if (response.ok) {
     const data = await response.json();
     return data;
+  } else {
+    throw new Error("Failed to fetch locations");
   }
 };
 
@@ -29,7 +31,7 @@ export const getAllLocations = async (): Promise<any> => {
  * @returns A Promise that resolves to void if the location is created successfully.
  *          Otherwise, it returns an Error object if there was an error during creation.
  */
-export const createLocation = async (values: any, setLocations: any) => {
+export const createLocation = async (values: any, setLocations: React.Dispatch<React.SetStateAction<Location[]>>) => {
   const response = await fetch("/api/locations", {
     method: "POST",
     headers: {
@@ -72,7 +74,7 @@ export const createLocation = async (values: any, setLocations: any) => {
  * @returns A Promise that resolves to void if the location is edited successfully.
  *          Otherwise, it returns an Error object if there was an error during editing.
  */
-export const editLocation = async (values: any, locationId: string, setLocation: any) => {
+export const editLocation = async (values: any, locationId: string, setLocation: React.Dispatch<React.SetStateAction<Location>>) => {
   try {
     const response = await fetch(`/api/locations/${locationId}`, {
       method: "PATCH",
@@ -107,7 +109,7 @@ export const editLocation = async (values: any, locationId: string, setLocation:
  * @returns A Promise that resolves to void if the location is deleted successfully.
  *          Otherwise, it returns an Error object if there was an error during deletion.
  */
-export const deleteLocation = async (location: any) => {
+export const deleteLocation = async (location: Location) => {
   try {
     const response = await fetch(`/api/locations/${location.id}`, {
       method: "DELETE",
@@ -132,7 +134,7 @@ export const deleteLocation = async (location: any) => {
   });
 };
 
-export const searchExternalLocation = async (searchString: string): Promise<any> => {
+export const searchExternalLocation = async (searchString: string): Promise<Location[]> => {
   const sanitizedSearchString = searchString.replaceAll(" ", "+");
   const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&addressdetails=1&q=${sanitizedSearchString}`;
 
