@@ -8,23 +8,17 @@ import { DateTimePicker } from "@mantine/dates";
 
 import { IconChecks, IconSpeakerphone, IconUsers } from "@tabler/icons-react";
 
-export default function EventForm({
-  event,
-  setEvent,
-  setEvents,
-  locations,
-  modal,
-  setModal,
-  closeModal,
-}: {
+interface EventFormProps {
   event?: Event;
-  setEvent?: any;
-  setEvents?: any;
+  setEvent?: React.Dispatch<React.SetStateAction<Event>>;
+  setEvents?: React.Dispatch<React.SetStateAction<Event[]>>;
   locations: Location[];
   modal?: Modal;
-  setModal?: any;
-  closeModal: any;
-}) {
+  setModal?: React.Dispatch<React.SetStateAction<Modal>>;
+  closeModal: Function;
+}
+
+export const EventForm: React.FC<EventFormProps> = ({ event, setEvent, setEvents, locations, modal, setModal, closeModal }) => {
   const locationData = locations.map((location): { value: string; label: string } => ({
     value: location?.id || "",
     label: location?.name || "",
@@ -68,7 +62,7 @@ export default function EventForm({
           if (event?.id) {
             try {
               const editedEvent = await editEvent(values, event.id);
-              if (editedEvent.id) setEvent(editedEvent);
+              if (editedEvent.id && setEvent) setEvent(editedEvent);
             } catch (e) {
               console.error(`Error while updating event`);
             }
@@ -154,7 +148,7 @@ export default function EventForm({
         <Button type="submit" variant={"light"} color={"cyan"} size={"sm"} fullWidth>
           {modal?.editMode ? "Änderungen speichern" : "Event erstellen"}
         </Button>
-        {modal?.editMode && (
+        {modal?.editMode && setModal && (
           <>
             <Divider />
             <Button
@@ -177,4 +171,4 @@ export default function EventForm({
       </Flex>
     </form>
   );
-}
+};
