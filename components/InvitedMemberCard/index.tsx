@@ -1,10 +1,10 @@
 import PaperCard from "../PaperCard";
-import MemberCardItem from "../MemberCardItem";
+import { MemberCardItem } from "../MemberCardItem";
 import { Text } from "@mantine/core";
 import { declineInvitation } from "@/lib/teamLib";
 
 interface InvitedMemberCardProps {
-  invitedMembers: Team["invitedEmails"];
+  invitedMembers?: InvitedEmails[] | null;
   setInvitedMembers: React.Dispatch<React.SetStateAction<Team["invitedEmails"]>>;
   teamId: Team["id"];
 }
