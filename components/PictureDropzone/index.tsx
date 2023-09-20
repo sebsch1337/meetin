@@ -5,15 +5,13 @@ import { IconPhotoPlus, IconX } from "@tabler/icons-react";
 
 import { notifications } from "@mantine/notifications";
 
-export default function PictureDropzone({
-  preValues,
-  setLoading,
-  setLocation,
-}: {
-  preValues: any;
-  setLoading: any;
-  setLocation: any;
-}) {
+interface PictureDropzoneProps {
+  preValues: Location;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLocation: React.Dispatch<React.SetStateAction<Location>>;
+}
+
+export const PictureDropzone: React.FC<PictureDropzoneProps> = ({ preValues, setLoading, setLocation }) => {
   const useStyles = createStyles((theme) => ({
     disabled: {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
@@ -63,4 +61,4 @@ export default function PictureDropzone({
       </Flex>
     </Dropzone>
   );
-}
+};

@@ -1,5 +1,5 @@
 import { PictureBox } from "@/components/PictureBox";
-import PictureDropzone from "@/components/PictureDropzone";
+import { PictureDropzone } from "@/components/PictureDropzone";
 
 import { ActionIcon, Flex, getStylesRef, rem, Image } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
