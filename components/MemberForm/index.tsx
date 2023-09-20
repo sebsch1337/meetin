@@ -2,15 +2,14 @@ import { Button, Loader, Select, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 
-export default function AddMemberForm({
-  createInvitation,
-  closeModal,
-  setInvitedEmails,
-}: {
-  createInvitation: any;
-  closeModal: any;
-  setInvitedEmails: any;
-}) {
+import { createInvitation } from "@/lib/teamLib";
+
+interface AddMemberFormProps {
+  closeModal: Function;
+  setInvitedEmails: React.Dispatch<React.SetStateAction<InvitedEmails[]>>;
+}
+
+export const AddMemberForm: React.FC<AddMemberFormProps> = ({ closeModal, setInvitedEmails }) => {
   const form = useForm({
     initialValues: {
       email: "",
@@ -57,4 +56,4 @@ export default function AddMemberForm({
       </form>
     </Stack>
   );
-}
+};
