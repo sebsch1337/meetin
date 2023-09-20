@@ -1,5 +1,5 @@
 import { Button } from "@mantine/core";
-import PaperCard from "../PaperCard";
+import { PaperCard } from "../PaperCard";
 import { IconDoorExit, IconPlus, IconTrash } from "@tabler/icons-react";
 
 interface ManageTeamCardProps {

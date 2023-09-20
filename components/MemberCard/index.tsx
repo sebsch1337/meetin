@@ -1,4 +1,4 @@
-import PaperCard from "../PaperCard";
+import { PaperCard } from "../PaperCard";
 import { MemberCardItem } from "../MemberCardItem";
 import { changeUserRole, getUsersAndAdminsForTeamId, removeUserFromTeam } from "@/lib/teamLib";
 import { useRouter } from "next/router";

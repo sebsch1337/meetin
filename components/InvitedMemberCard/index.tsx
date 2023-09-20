@@ -1,4 +1,4 @@
-import PaperCard from "../PaperCard";
+import { PaperCard } from "../PaperCard";
 import { MemberCardItem } from "../MemberCardItem";
 import { Text } from "@mantine/core";
 import { declineInvitation } from "@/lib/teamLib";

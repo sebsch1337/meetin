@@ -1,7 +1,12 @@
 import { Paper, Stack, Title, createStyles } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
-export default function PaperCard({ title, children, ...props }: { title: string; children: any; [key: string]: any }) {
+interface PaperCardProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+export const PaperCard: React.FC<PaperCardProps> = ({ title, children, ...props }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const useStyles = createStyles((theme) => ({
     paper: {
@@ -20,4 +25,4 @@ export default function PaperCard({ title, children, ...props }: { title: string
       </Stack>
     </Paper>
   );
-}
+};
