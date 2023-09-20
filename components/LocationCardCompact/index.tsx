@@ -1,32 +1,18 @@
-import {
-  Flex,
-  Text,
-  Group,
-  Paper,
-  Title,
-  UnstyledButton,
-  rem,
-  Stack,
-  Tooltip,
-  Image as MantineImage,
-  Center,
-} from "@mantine/core";
+import { Flex, Text, Group, Paper, Title, UnstyledButton, rem, Stack, Tooltip, Image as MantineImage, Center } from "@mantine/core";
 import { useMediaQuery, useWindowEvent } from "@mantine/hooks";
-import { IconHome, IconUsers, IconCalendarPin, IconSun, IconPhotoX, IconPhotoOff } from "@tabler/icons-react";
+import { IconHome, IconUsers, IconCalendarPin, IconSun, IconPhotoOff } from "@tabler/icons-react";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function LocationCardCompact({
-  location,
-  lastVisitedDay,
-  averageVisitors,
-}: {
+interface LocationCardCompactProps {
   location: Location;
   lastVisitedDay: string;
   averageVisitors: number;
-}) {
+}
+
+export const LocationCardCompact: React.FC<LocationCardCompactProps> = ({ location, lastVisitedDay, averageVisitors }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const vwValue = isMobile ? 45 : 18;
 
@@ -61,21 +47,11 @@ export default function LocationCardCompact({
             <IconPhotoOff size={75} />
           </Center>
         )}
-        <Paper
-          pos={"absolute"}
-          top={0}
-          w={"100%"}
-          h={"100%"}
-          style={{ backgroundColor: "rgba(0,0,0,0.50)", borderRadius: rem(15) }}
-        />
+        <Paper pos={"absolute"} top={0} w={"100%"} h={"100%"} style={{ backgroundColor: "rgba(0,0,0,0.50)", borderRadius: rem(15) }} />
         <Flex pos={"absolute"} top={0} w={"100%"} h={"100%"} p={10}>
           <Tooltip label="Max. Besucher (Besucherdurchschnitt)">
             <Group pos={"absolute"} align={"center"} spacing={5} style={{ justifyContent: "center" }}>
-              <IconUsers
-                size={16}
-                color="white"
-                style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
-              />
+              <IconUsers size={16} color="white" style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }} />
               <Text size={"xs"} color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
                 {`${location?.maxCapacity ?? 0} (${averageVisitors})`}
               </Text>
@@ -84,21 +60,9 @@ export default function LocationCardCompact({
 
           <Tooltip label="Indoor / Outdoor">
             <Group pos={"absolute"} align={"center"} spacing={5} top={10} right={10}>
-              {location?.indoor && (
-                <IconHome
-                  size={16}
-                  color="white"
-                  style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
-                />
-              )}
+              {location?.indoor && <IconHome size={16} color="white" style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }} />}
               {location?.indoor && location?.outdoor && "|"}
-              {location?.outdoor && (
-                <IconSun
-                  size={16}
-                  color="white"
-                  style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
-                />
-              )}
+              {location?.outdoor && <IconSun size={16} color="white" style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }} />}
             </Group>
           </Tooltip>
 
@@ -117,29 +81,14 @@ export default function LocationCardCompact({
             >
               {location?.name}
             </Title>
-            <Text
-              size={"xs"}
-              weight={600}
-              align="center"
-              color="white"
-              style={{ textShadow: "0px 0px 4px #000000" }}
-            >
+            <Text size={"xs"} weight={600} align="center" color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
               {location?.address?.suburb}
             </Text>
           </Stack>
 
           <Tooltip label="Letzter Besuch">
-            <Group
-              pos={"absolute"}
-              align={"center"}
-              spacing={5}
-              style={{ alignSelf: "flex-end", justifyContent: "center" }}
-            >
-              <IconCalendarPin
-                size={16}
-                color="white"
-                style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }}
-              />
+            <Group pos={"absolute"} align={"center"} spacing={5} style={{ alignSelf: "flex-end", justifyContent: "center" }}>
+              <IconCalendarPin size={16} color="white" style={{ filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.75))" }} />
               <Text size={"xs"} color="white" style={{ textShadow: "0px 0px 4px #000000" }}>
                 {lastVisitedDay}
               </Text>
@@ -149,4 +98,4 @@ export default function LocationCardCompact({
       </UnstyledButton>
     </Link>
   );
-}
+};
