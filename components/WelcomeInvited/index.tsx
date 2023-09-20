@@ -2,15 +2,13 @@ import { acceptInvitation, declineInvitation } from "@/lib/teamLib";
 import { Blockquote, Button, Group, Text } from "@mantine/core";
 import { IconComet } from "@tabler/icons-react";
 
-export default function WelcomeInvited({
-  invitedTeam,
-  setButtonDisabled,
-  setInvitationState,
-}: {
+interface WelcomeInvitedProps {
   invitedTeam: Team;
-  setButtonDisabled: any;
-  setInvitationState: any;
-}) {
+  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setInvitationState: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const WelcomeInvited: React.FC<WelcomeInvitedProps> = ({ invitedTeam, setButtonDisabled, setInvitationState }) => {
   return (
     <Blockquote p={"sm"} icon={<IconComet size={"2rem"} />}>
       <Text>
@@ -47,4 +45,4 @@ export default function WelcomeInvited({
       </Group>
     </Blockquote>
   );
-}
+};
