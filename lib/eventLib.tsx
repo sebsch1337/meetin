@@ -43,7 +43,7 @@ export const getPastEvents = (events: Event[]): Event[] =>
  * @param {Event} values - An object containing the values of the event to be created.
  * @param {any} setEvents - A function that sets the state of the events array with the newly created event.
  */
-export const createEvent = async (values: Event, setEvents: any) => {
+export const createEvent = async (values: Event, setEvents: React.Dispatch<React.SetStateAction<Event[]>>) => {
   const response = await fetch("/api/events", {
     method: "POST",
     headers: {
@@ -84,7 +84,7 @@ export const createEvent = async (values: Event, setEvents: any) => {
  * @param setEvents A function to update the state of events.
  * @returns If an error occurs during the update process, it is returned.
  */
-export const editEvent = async (values: any, eventId: string) => {
+export const editEvent = async (values: Event, eventId: string) => {
   try {
     const response = await fetch(`/api/events/${eventId}`, {
       method: "PATCH",
@@ -120,8 +120,9 @@ export const editEvent = async (values: any, eventId: string) => {
  * @param setEvent A function to update the state of events.
  * @returns If an error occurs during the deletion process, it is returned.
  */
-export const deleteEvent = async (eventId: any) => {
+export const deleteEvent = async (eventId?: string) => {
   try {
+    if (!eventId) throw Error("Missing eventId.");
     const response = await fetch(`/api/events/${eventId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
