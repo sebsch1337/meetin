@@ -1,7 +1,5 @@
-import PictureBox from "@/components/PictureBox";
+import { PictureBox } from "@/components/PictureBox";
 import PictureDropzone from "@/components/PictureDropzone";
-
-import { deleteImage } from "@/lib/imageLib";
 
 import { ActionIcon, Flex, getStylesRef, rem, Image } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
@@ -84,7 +82,7 @@ export const LocationDetailsPictures: React.FC<LocationDetailsPicturesProps> = (
           </Flex>
         </Carousel.Slide>
       </Carousel>
-      <PictureBox location={location} deleteImage={deleteImage} setLocation={setLocation} />
+      <PictureBox location={location} setLocation={setLocation} />
     </Flex>
   );
 };

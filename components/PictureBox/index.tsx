@@ -1,18 +1,10 @@
-import {
-  createStyles,
-  Flex,
-  Paper,
-  UnstyledButton,
-  getStylesRef,
-  Modal,
-  Text,
-  Button,
-  LoadingOverlay,
-  Group,
-  Space,
-} from "@mantine/core";
+import { createStyles, Flex, Paper, UnstyledButton, getStylesRef, Modal, Text, Button, LoadingOverlay, Group, Space } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+
+import { deleteImage } from "@/lib/imageLib";
+
 import { IconTrash } from "@tabler/icons-react";
+
 import Image from "next/image";
 import { useState } from "react";
 
@@ -40,17 +32,14 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function PictureBox({
-  deleteImage,
-  location,
-  setLocation,
-}: {
-  deleteImage: any;
-  location: any;
-  setLocation: any;
-}) {
+interface PictureBoxProps {
+  location: Location;
+  setLocation: React.Dispatch<React.SetStateAction<Location>>;
+}
+
+export const PictureBox: React.FC<PictureBoxProps> = ({ location, setLocation }) => {
   const { classes } = useStyles();
-  const [deleteImageId, setDeleteImageId] = useState("");
+  const [deleteImageId, setDeleteImageId] = useState<string>();
   const [opened, { open, close }] = useDisclosure(false);
   const [visible, setVisible] = useState(false);
 
@@ -67,8 +56,10 @@ export default function PictureBox({
             onClick={async () => {
               close();
               setVisible(true);
-              await deleteImage(deleteImageId, location.id, setLocation);
-              setVisible(false);
+              if (location?.id && deleteImageId) {
+                await deleteImage(deleteImageId, location.id, setLocation);
+                setVisible(false);
+              }
             }}
           >
             Löschen
@@ -89,14 +80,7 @@ export default function PictureBox({
                   open();
                 }}
               >
-                <Image
-                  src={image.url}
-                  width={80}
-                  height={80}
-                  alt={"Picture"}
-                  style={{ objectFit: "cover" }}
-                  placeholder={"empty"}
-                />
+                <Image src={image.url} width={80} height={80} alt={"Picture"} style={{ objectFit: "cover" }} placeholder={"empty"} />
                 <IconTrash size={30} className={classes.trashIcon} />
               </UnstyledButton>
             ))}
@@ -105,4 +89,4 @@ export default function PictureBox({
       )}
     </>
   );
-}
+};
