@@ -1,19 +1,19 @@
 import { ActionIcon, Group, Menu, Text } from "@mantine/core";
 import { IconTrashX, IconUser, IconUserShield } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 
-export default function MemberCardItem({
-  member,
-  deleteItem,
-  invited = false,
-  changeUserRole,
-}: {
-  member: any;
-  deleteItem: any;
+interface MemberCardItemProps {
+  member: Member;
+  deleteItem: () => void;
   invited?: boolean;
-  changeUserRole?: any;
-}) {
+  changeRoleHandler?: (userId?: string, role?: string) => Promise<void>;
+}
+
+export const MemberCardItem: React.FC<MemberCardItemProps> = ({ member, deleteItem, invited = false, changeRoleHandler }) => {
+  const router = useRouter();
+
   return (
-    <Group key={member.id} position="apart" noWrap>
+    <Group key={member.email} position="apart" noWrap>
       <Text size={"sm"} truncate>
         {member?.email}
       </Text>
@@ -27,10 +27,10 @@ export default function MemberCardItem({
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>Rolle bearbeiten</Menu.Label>
-              <Menu.Item icon={<IconUserShield size={14} />} onClick={async () => await changeUserRole(member.id, "admin")}>
+              <Menu.Item icon={<IconUserShield size={14} />} onClick={() => changeRoleHandler && changeRoleHandler(member.id, "admin")}>
                 Admin
               </Menu.Item>
-              <Menu.Item icon={<IconUser size={14} />} onClick={async () => await changeUserRole(member.id, "user")}>
+              <Menu.Item icon={<IconUser size={14} />} onClick={() => changeRoleHandler && changeRoleHandler(member.id, "user")}>
                 Benutzer
               </Menu.Item>
             </Menu.Dropdown>
@@ -47,4 +47,4 @@ export default function MemberCardItem({
       </Group>
     </Group>
   );
-}
+};
