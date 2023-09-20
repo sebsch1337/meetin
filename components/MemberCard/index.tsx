@@ -1,5 +1,5 @@
 import PaperCard from "../PaperCard";
-import MemberCardItem from "../MemberCardItem";
+import { MemberCardItem } from "../MemberCardItem";
 import { changeUserRole, getUsersAndAdminsForTeamId, removeUserFromTeam } from "@/lib/teamLib";
 import { useRouter } from "next/router";
 import { Session } from "next-auth/core/types";
@@ -24,7 +24,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({ teamId, teamMembers, set
     setTeamMembers(newMembers);
   };
 
-  const changeRoleHandler = async (userId: string, role: string) => {
+  const changeRoleHandler = async (userId?: string, role?: string) => {
     if (!userId || !role || !teamId) return;
 
     await changeUserRole(userId, role);
@@ -40,7 +40,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({ teamId, teamMembers, set
         <MemberCardItem
           key={member.id}
           member={member}
-          changeUserRole={changeRoleHandler}
+          changeRoleHandler={changeRoleHandler}
           deleteItem={async () => await deleteItemHandler(member.id)}
         />
       ))}
