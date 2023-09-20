@@ -1,12 +1,20 @@
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
+import { LatLngTuple } from "leaflet";
+
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 
 import PinBlueImg from "../../../assets/icons/pin-blue.png";
 
-export default function LocationDetailsMap({ latitude, longitude, isMobile }: { latitude: number; longitude: number; isMobile: boolean }) {
+export interface LocationDetailsMapProps {
+  latitude: number;
+  longitude: number;
+  isMobile: boolean;
+}
+
+export const LocationDetailsMap: React.FC<LocationDetailsMapProps> = ({ latitude, longitude, isMobile }) => {
   const pinBlueIcon = L.icon({
     iconUrl: PinBlueImg.src,
     iconRetinaUrl: PinBlueImg.src,
@@ -14,9 +22,11 @@ export default function LocationDetailsMap({ latitude, longitude, isMobile }: { 
     iconAnchor: [12, 35],
   });
 
+  const position: LatLngTuple = [latitude, longitude];
+
   return (
     <MapContainer
-      center={[latitude, longitude]}
+      center={position}
       zoom={15}
       scrollWheelZoom={false}
       style={{ height: `${isMobile ? "50vh" : "60vh"}`, width: "100vw", zIndex: 1 }}
@@ -28,4 +38,4 @@ export default function LocationDetailsMap({ latitude, longitude, isMobile }: { 
       <Marker position={{ lat: latitude, lng: longitude }} icon={pinBlueIcon} />
     </MapContainer>
   );
-}
+};
