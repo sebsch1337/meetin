@@ -43,7 +43,7 @@ export const LocationForm: React.FC<LocationFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const [searchString, setSearchString] = useState("");
-  const [searchLocations, setSearchLocations] = useState([]);
+  const [searchLocations, setSearchLocations] = useState<Location[]>([]);
   const [debouncedSearchString] = useDebouncedValue(searchString, 200);
 
   useEffect(() => {

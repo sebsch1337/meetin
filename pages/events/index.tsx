@@ -1,17 +1,17 @@
 import { Space, Group, Button, Loader, Container, SimpleGrid, Flex, Center } from "@mantine/core";
 
-import EventCard from "@/components/EventCard";
+import { EventCard } from "@/components/EventCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
-import EventForm from "@/components/EventForm";
+import { EventForm } from "@/components/EventForm";
 
 import { eventsAtom, locationsAtom } from "@/store";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { getAllEvents } from "@/lib/eventLib";
 import { getAllLocations } from "@/lib/locationLib";
-import FormModal from "@/components/FormModal";
-import SearchInput from "@/components/SearchInput";
+import { FormModal } from "@/components/FormModal";
+import { SearchInput } from "@/components/SearchInput";
 
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";

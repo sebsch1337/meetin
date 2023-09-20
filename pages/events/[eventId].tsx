@@ -8,10 +8,10 @@ import { getAllLocationsFromDb } from "@/services/locationService";
 import { getLocalDateTimeLong } from "@/utils/date";
 
 import { IconBrandFacebook, IconEdit } from "@tabler/icons-react";
-import DetailsModal from "@/components/DetailsModal";
+import { DetailsModal } from "@/components/DetailsModal";
 import { useDisclosure } from "@mantine/hooks";
-import EventForm from "@/components/EventForm";
-import DeleteModal from "@/components/DeleteModal";
+import { EventForm } from "@/components/EventForm";
+import { DeleteModal } from "@/components/DeleteModal";
 import { deleteEvent } from "@/lib/eventLib";
 
 import { authOptions } from "../api/auth/[...nextauth]";
@@ -57,9 +57,7 @@ export default function EventDetails({ eventData, locationData }: { eventData: E
         {modal.type === "form" && (
           <EventForm closeModal={closeModal} event={event} setEvent={setEvent} locations={locationData} modal={modal} setModal={setModal} />
         )}
-        {modal.type === "delete" && (
-          <DeleteModal type={"event"} deleteData={async () => await deleteEvent(event.id)} closeModal={closeModal} />
-        )}
+        {modal.type === "delete" && <DeleteModal type={"event"} deleteData={async () => await deleteEvent(event.id)} />}
       </DetailsModal>
 
       <Container

@@ -11,3 +11,7 @@ interface InvitedEmails {
   email: string;
   role: string;
 }
+
+interface Member extends InvitedEmails {
+  id?: string;
+}

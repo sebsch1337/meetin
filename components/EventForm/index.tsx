@@ -70,7 +70,7 @@ export const EventForm: React.FC<EventFormProps> = ({ event, setEvent, setEvents
             console.error(`Can't find ID`);
           }
         } else {
-          createEvent(values, setEvents);
+          setEvents && createEvent(values, setEvents);
         }
         closeModal();
       })}

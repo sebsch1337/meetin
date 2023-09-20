@@ -22,10 +22,10 @@ export const WelcomeInvited: React.FC<WelcomeInvitedProps> = ({ invitedTeam, set
         <Button
           size="xs"
           fullWidth
-          onClick={() => {
+          onClick={async () => {
             setButtonDisabled(false);
             setInvitationState("accepted");
-            acceptInvitation();
+            await acceptInvitation();
           }}
         >
           Einladung annehmen

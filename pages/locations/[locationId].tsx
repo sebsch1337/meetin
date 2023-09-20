@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
-import { ActionIcon, Container, Flex, LoadingOverlay, Modal, Tabs, Text, Title, rem } from "@mantine/core";
+import { ActionIcon, Container, Flex, LoadingOverlay, Tabs, Text, Title, rem } from "@mantine/core";
 import { IconEdit, IconHistory, IconInfoCircle, IconMap2, IconPhoto } from "@tabler/icons-react";
 
 import { deleteLocation } from "@/lib/locationLib";
@@ -11,12 +11,12 @@ import { getAllEventsByLocationIdFromDb } from "@/services/eventService";
 import { getLocationByIdFromDb } from "@/services/locationService";
 import { getAllTagsFromDb } from "@/services/tagService";
 
-import LocationDetailsPictures from "@/components/LocationDetails/LocationDetailsPictures";
-import LocationDetailsHistory from "@/components/LocationDetails/LocationDetailsHistory";
-import LocationDetailsBasics from "@/components/LocationDetails/LocationDetailsBasics";
-import LocationForm from "@/components/LocationForm";
-import DetailsModal from "@/components/DetailsModal";
-import DeleteModal from "@/components/DeleteModal";
+import { LocationDetailsPictures } from "@/components/LocationDetails/LocationDetailsPictures";
+import { LocationDetailsHistory } from "@/components/LocationDetails/LocationDetailsHistory";
+import { LocationDetailsBasics } from "@/components/LocationDetails/LocationDetailsBasics";
+import { LocationForm } from "@/components/LocationForm";
+import { DetailsModal } from "@/components/DetailsModal";
+import { DeleteModal } from "@/components/DeleteModal";
 
 import dynamic from "next/dynamic";
 const LocationDetailsMap = dynamic((): any => import("@/components/LocationDetails/LocationDetailsMap"), {
@@ -98,9 +98,7 @@ export default function LocationDetails({
             setModal={setModal}
           />
         )}
-        {modal.type === "deleteLocation" && (
-          <DeleteModal type={"location"} deleteData={async () => await deleteLocation(location)} closeModal={closeModal} />
-        )}
+        {modal.type === "deleteLocation" && <DeleteModal type={"location"} deleteData={async () => await deleteLocation(location)} />}
       </DetailsModal>
 
       <LoadingOverlay visible={loading} overlayBlur={2} />
@@ -180,7 +178,7 @@ export default function LocationDetails({
         <Tabs.Panel value="map" pt="xs">
           {activeTab === "map" && (
             <LocationDetailsMap
-              // @ts-ignore
+              //@ts-ignore
               latitude={location?.latitude}
               longitude={location?.longitude}
               isMobile={isMobile}

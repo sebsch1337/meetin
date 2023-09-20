@@ -12,7 +12,7 @@ interface InvitedMemberCardProps {
 export const InvitedMemberCard: React.FC<InvitedMemberCardProps> = ({ invitedMembers, setInvitedEmails }) => {
   const deleteItemHandler = async (email: any) => {
     const newInvitedMembers = await declineInvitation(email);
-    setInvitedEmails(newInvitedMembers.invitedEmails);
+    setInvitedEmails(newInvitedMembers);
   };
 
   return (

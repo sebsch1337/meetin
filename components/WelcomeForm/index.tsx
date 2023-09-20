@@ -17,9 +17,10 @@ export const WelcomeForm: React.FC<WelcomeFormProps> = ({ setButtonDisabled, set
     const fetchTeamName = async (searchString: string) => {
       try {
         if (searchString.length > 0) {
-          const foundTeamName = await getTeamByName(searchString);
+          const foundTeam = await getTeamByName(searchString);
+          const foundTeamName = foundTeam?.name ? foundTeam.name : "";
 
-          if (foundTeamName?.name?.length > 0) {
+          if (foundTeamName.length > 0) {
             setInputError("Name bereits vergeben.");
             setButtonDisabled(true);
           } else {

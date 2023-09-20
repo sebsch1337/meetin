@@ -8,12 +8,12 @@ import { getAllLocations } from "@/lib/locationLib";
 import { getAllTags } from "@/lib/tagLib";
 import { getAllEvents } from "@/lib/eventLib";
 
-import LocationCardCompact from "@/components/LocationCardCompact";
-import LocationForm from "@/components/LocationForm";
-import LocationFilter from "@/components/LocationFilter";
-import LocationSort from "@/components/LocationSort";
-import FormModal from "@/components/FormModal";
-import SearchInput from "@/components/SearchInput";
+import { LocationCardCompact } from "@/components/LocationCardCompact";
+import { LocationForm } from "@/components/LocationForm";
+import { LocationFilter } from "@/components/LocationFilter";
+import { LocationSort } from "@/components/LocationSort";
+import { FormModal } from "@/components/FormModal";
+import { SearchInput } from "@/components/SearchInput";
 
 import { IconFilter, IconPlus } from "@tabler/icons-react";
 
@@ -39,11 +39,11 @@ export default function Locations() {
 
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [editLocationMode, setEditLocationMode] = useState(false);
-  const [preValues, setPreValues] = useState({});
+  const [preValues] = useState<Location>();
   const [isLoading, setIsLoading] = useState(false);
 
   const [filterOpened, setFilterOpened] = useState(false);
-  const [filteredTagIds, setFilteredTagIds] = useState([]);
+  const [filteredTagIds, setFilteredTagIds] = useState<string[]>([]);
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [sortBy, setSortBy] = useState("aToZ");
   const [searchLocation, setSearchLocation] = useState("");
@@ -133,7 +133,6 @@ export default function Locations() {
             color={"teal"}
             onClick={() => {
               setEditLocationMode(false);
-              setPreValues({});
               setModal((prev) => ({
                 ...prev,
                 title: "Neue Location",

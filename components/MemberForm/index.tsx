@@ -28,7 +28,7 @@ export const AddMemberForm: React.FC<AddMemberFormProps> = ({ closeModal, setInv
     setButtonLoading(true);
     const newInvitations = await createInvitation(values.email, values.role);
     if (newInvitations) {
-      setInvitedEmails(newInvitations.invitedEmails);
+      setInvitedEmails(newInvitations);
     }
     setButtonLoading(false);
     closeModal();

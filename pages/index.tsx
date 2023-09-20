@@ -8,8 +8,8 @@ import { getAllLocationsFromDb } from "@/services/locationService";
 
 import { Title, Container, Stack, Grid, Space, Text } from "@mantine/core";
 
-import EventCardCompact from "@/components/EventCardCompact";
-import WelcomeModal from "@/components/WelcomeModal";
+import { EventCardCompact } from "@/components/EventCardCompact";
+import { WelcomeModal } from "@/components/WelcomeModal";
 
 import dynamic from "next/dynamic";
 import { getTeamByInvitedEmailFromDb } from "@/services/teamService";
@@ -74,7 +74,7 @@ export default function Home({
                     <EventCardCompact
                       key={event.id}
                       event={event}
-                      location={locations.find((location) => location.id === event.locationId)}
+                      location={locations?.find((location) => location.id === event.locationId)}
                     />
                   ))
                 ) : (
