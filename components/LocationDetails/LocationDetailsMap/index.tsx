@@ -14,7 +14,7 @@ export interface LocationDetailsMapProps {
   isMobile: boolean;
 }
 
-export const LocationDetailsMap: React.FC<LocationDetailsMapProps> = ({ latitude, longitude, isMobile }) => {
+const LocationDetailsMap: React.FC<LocationDetailsMapProps> = ({ latitude, longitude, isMobile }) => {
   const pinBlueIcon = L.icon({
     iconUrl: PinBlueImg.src,
     iconRetinaUrl: PinBlueImg.src,
@@ -39,3 +39,5 @@ export const LocationDetailsMap: React.FC<LocationDetailsMapProps> = ({ latitude
     </MapContainer>
   );
 };
+
+export default LocationDetailsMap;
