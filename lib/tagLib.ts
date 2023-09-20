@@ -1,4 +1,4 @@
-export const getAllTags = async (): Promise<any> => {
+export const getAllTags = async (): Promise<Tag[]> => {
   const response = await fetch("/api/tags", {
     method: "GET",
     headers: {
@@ -9,5 +9,7 @@ export const getAllTags = async (): Promise<any> => {
   if (response.ok) {
     const data = await response.json();
     return data;
+  } else {
+    throw Error;
   }
 };
