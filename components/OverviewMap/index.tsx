@@ -19,7 +19,7 @@ interface OverviewMapProps {
   isMobile: boolean;
 }
 
-export const OverviewMap: React.FC<OverviewMapProps> = ({ locations, events, isMobile }) => {
+const OverviewMap: React.FC<OverviewMapProps> = ({ locations, events, isMobile }) => {
   const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
   const sixMonthsNotVisitedLocations = getSixMonthsNotVisitedLocations(locations, events);
 
@@ -73,3 +73,5 @@ export const OverviewMap: React.FC<OverviewMapProps> = ({ locations, events, isM
     </MapContainer>
   );
 };
+
+export default OverviewMap;
