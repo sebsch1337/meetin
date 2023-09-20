@@ -9,7 +9,7 @@ import Link from "next/link";
 
 interface EventCardCompact {
   event: Event;
-  location: Location | undefined;
+  location?: Location;
 }
 
 export const EventCardCompact: React.FC<EventCardCompact> = ({ event, location }) => {
