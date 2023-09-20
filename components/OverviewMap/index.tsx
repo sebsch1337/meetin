@@ -13,7 +13,13 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 
-export default function OverviewMap({ locations, events, isMobile }: { locations: Location[]; events: Event[]; isMobile: boolean }) {
+interface OverviewMapProps {
+  locations: Location[];
+  events: Event[];
+  isMobile: boolean;
+}
+
+export const OverviewMap: React.FC<OverviewMapProps> = ({ locations, events, isMobile }) => {
   const fiveLeastVisitedLocations = getFiveLeastVisitedLocations(locations, events);
   const sixMonthsNotVisitedLocations = getSixMonthsNotVisitedLocations(locations, events);
 
@@ -66,4 +72,4 @@ export default function OverviewMap({ locations, events, isMobile }: { locations
       })}
     </MapContainer>
   );
-}
+};
