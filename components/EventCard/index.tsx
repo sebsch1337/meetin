@@ -4,7 +4,7 @@ import Image from "next/image";
 import { getLocalDateTimeLong } from "@/utils/date";
 
 import { IconSpeakerphone, IconUsers, IconPhotoOff, IconChecks } from "@tabler/icons-react";
-import NoGoIcon from "../NoGoIcon";
+import { NoGoIcon } from "../NoGoIcon";
 import Link from "next/link";
 
 interface EventCardProps {
