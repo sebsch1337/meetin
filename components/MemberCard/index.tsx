@@ -7,7 +7,7 @@ import { Session } from "next-auth/core/types";
 interface MemberCardProps {
   teamId?: string;
   teamMembers: Team[];
-  setTeamMembers: React.Dispatch<React.SetStateAction<string[]>>;
+  setTeamMembers: React.Dispatch<React.SetStateAction<Member[]>>;
   session: Session | null;
 }
 
@@ -15,10 +15,10 @@ export const MemberCard: React.FC<MemberCardProps> = ({ teamId, teamMembers, set
   const router = useRouter();
 
   const deleteItemHandler = async (userId: any) => {
-    if (!userId || !teamId) return;
+    if (!userId || !teamId || !session) return;
 
     await removeUserFromTeam(userId);
-    if (userId === session?.user?.id) router.push("/team");
+    if (userId === session.user?.id) router.push("/team");
 
     const newMembers = await getUsersAndAdminsForTeamId(teamId);
     setTeamMembers(newMembers);

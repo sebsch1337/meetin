@@ -133,7 +133,7 @@ export const acceptInvitation = async (): Promise<void> => {
  *          - If the response from the API is successful, the Promise resolves to true.
  *          - If the response from the API is not successful, the Promise resolves to false.
  */
-export const declineInvitation = async (eMail?: string): Promise<InvitedEmails[]> => {
+export const declineInvitation = async (eMail: string): Promise<InvitedEmails[]> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",
     body: JSON.stringify({ type: "decline", eMail }),

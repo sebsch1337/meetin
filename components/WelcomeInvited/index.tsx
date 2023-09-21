@@ -3,12 +3,13 @@ import { Blockquote, Button, Group, Text } from "@mantine/core";
 import { IconComet } from "@tabler/icons-react";
 
 interface WelcomeInvitedProps {
+  eMail: string;
   invitedTeam: Team;
   setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setInvitationState: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const WelcomeInvited: React.FC<WelcomeInvitedProps> = ({ invitedTeam, setButtonDisabled, setInvitationState }) => {
+export const WelcomeInvited: React.FC<WelcomeInvitedProps> = ({ eMail, invitedTeam, setButtonDisabled, setInvitationState }) => {
   return (
     <Blockquote p={"sm"} icon={<IconComet size={"2rem"} />}>
       <Text>
@@ -36,7 +37,7 @@ export const WelcomeInvited: React.FC<WelcomeInvitedProps> = ({ invitedTeam, set
           variant="outline"
           onClick={() => {
             setButtonDisabled(false);
-            declineInvitation();
+            declineInvitation(eMail);
             setInvitationState("declined");
           }}
         >

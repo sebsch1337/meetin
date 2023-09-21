@@ -47,7 +47,12 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ session, invitedTeam
       </Text>
 
       {invitedTeam && invitationState === "" ? (
-        <WelcomeInvited invitedTeam={invitedTeam} setButtonDisabled={setButtonDisabled} setInvitationState={setInvitationState} />
+        <WelcomeInvited
+          invitedTeam={invitedTeam}
+          setButtonDisabled={setButtonDisabled}
+          setInvitationState={setInvitationState}
+          eMail={session?.user?.email ? session.user.email : ""}
+        />
       ) : invitationState === "accepted" ? (
         <Text>Einladung angenommen.</Text>
       ) : (
