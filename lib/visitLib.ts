@@ -15,13 +15,13 @@ export const getEventsByLocationId = (locationId: string, events: Event[]): Even
  * @param events An array of Event objects.
  * @returns The last visit event object or `false` if no events are found for the location.
  */
-export const getLastVisit = (locationId: string, events: Event[]): Event | null => {
+export const getLastVisit = (locationId: string, events: Event[]): Event | undefined => {
   const locationEvents = getEventsByLocationId(locationId, events);
 
   const lastVisit =
     locationEvents.length > 0
       ? locationEvents?.reduce((prev: any, current: any) => (prev.dateTime > current.dateTime ? prev : current))
-      : null;
+      : undefined;
 
   return lastVisit;
 };
@@ -54,7 +54,7 @@ export const getFiveLeastVisitedLocations = (locations: Location[], events: Even
           .filter((location: any) => location.indoor && !location.noGo)
           .map((location: any) => ({
             id: location.id,
-            lastVisited: getLastVisit(location.id, events).dateTime ?? null,
+            lastVisited: getLastVisit(location.id, events)?.dateTime ?? null,
           }))
           .filter((location: any) => location.lastVisited)
       : [];
@@ -79,7 +79,7 @@ export const getSixMonthsNotVisitedLocations = (locations: Location[], events: E
         .filter((location: any) => location.indoor && !location.noGo)
         .filter((location: any) => {
           return (
-            !getLastVisit(location.id, events).dateTime || new Date(getLastVisit(location.id, events).dateTime) < new Date(sixMonthsAgo)
+            !getLastVisit(location.id, events)?.dateTime || new Date(getLastVisit(location.id, events)?.dateTime) < new Date(sixMonthsAgo)
           );
         })
         .map((location: any) => location.id)
