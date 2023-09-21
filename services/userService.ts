@@ -22,7 +22,7 @@ export async function setUserTeamInDb(userId: string, teamId: string): Promise<v
  * @param teamId - The ID of the team.
  * @returns The user's role (admin, user) in the specified team, or an empty string if the user is not found in the team.
  */
-export async function getUserRoleInTeamFromDb(userId: any, teamId: any): Promise<any> {
+export async function getUserRoleInTeamFromDb(userId: string, teamId: string): Promise<string> {
   const team = await Teams.findById(teamId);
   if (!team) return "";
 

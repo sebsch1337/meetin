@@ -40,7 +40,7 @@ export async function getAllTeamsFromDb(): Promise<any[]> {
  * @returns A promise that resolves to the retrieved team.
  * @throws If the team is not found in the database.
  */
-export async function getTeamByIdFromDb(teamId: any): Promise<any> {
+export async function getTeamByIdFromDb(teamId: string): Promise<any> {
   await dbConnect();
 
   const sanitizedInput = await validateTeam(sanitizeTeam({ id: teamId }));
@@ -113,7 +113,7 @@ export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise
  * @returns The updated team object.
  * @throws Error if the team is not found in the database or if there's a permission / existing email problem.
  */
-export async function addEmailToInvitedEmailsInDb(invitedEmail: string, invitedRole: string, teamId: any, securityRole: string) {
+export async function addEmailToInvitedEmailsInDb(invitedEmail: string, invitedRole: string, teamId: string, securityRole: string) {
   await dbConnect();
 
   try {
@@ -260,7 +260,7 @@ export async function changeUserRoleInDb(userId: string, role: string): Promise<
  * @param userId - The ID of the user creating the team.
  * @returns A Promise that resolves to a `Team` object representing the created team.
  */
-export async function createTeamInDb(teamName: any, userId: string | undefined): Promise<Team | object> {
+export async function createTeamInDb(teamName: string, userId: string): Promise<Team | object> {
   if (!teamName || !userId) return {};
   await dbConnect();
 
@@ -281,7 +281,7 @@ export async function createTeamInDb(teamName: any, userId: string | undefined):
  * @returns {Promise<any[]>} - A promise that resolves to an array of sanitized user data.
  * @throws {Error} - If the team with the given `teamId` is not found in the database.
  */
-export async function getUsersAndAdminsForTeamFromDb(teamId: any): Promise<any[]> {
+export async function getUsersAndAdminsForTeamFromDb(teamId: string): Promise<Member[]> {
   await dbConnect();
 
   const team = await Teams.findOne({ _id: teamId }).exec();
@@ -298,7 +298,7 @@ export async function getUsersAndAdminsForTeamFromDb(teamId: any): Promise<any[]
   ];
 
   const sanitizedInput = await Promise.all(usersWithRole.map(async (user) => await validateUser(sanitizeUser(user))));
-  return sanitizedInput;
+  return sanitizedInput.length > 0 ? sanitizedInput : [];
 }
 
 /**
@@ -311,7 +311,7 @@ export async function getUsersAndAdminsForTeamFromDb(teamId: any): Promise<any[]
  *   - The team containing the email address in "invitedEmails" is not found.
  *   - The invited user with the given email address is not found in the team's "invitedEmails" array.
  */
-export async function deleteEmailFromInvitationsInDb(invitedEmail: any) {
+export async function deleteEmailFromInvitationsInDb(invitedEmail: string) {
   await dbConnect();
 
   const sanitizedInput = await validateUser(sanitizeUser({ email: invitedEmail }));
@@ -354,7 +354,7 @@ export async function deleteEmailFromInvitationsInDb(invitedEmail: any) {
  *                            If an error occurs during the removal process, the Promise also resolves to `false`.
  * @throws Error with status code 404 if the team with the given ID is not found.
  */
-export async function removeUserIdFromTeamInDb(teamId: any, userId: string): Promise<boolean> {
+export async function removeUserIdFromTeamInDb(teamId: string, userId: string): Promise<boolean> {
   await dbConnect();
 
   const sanitizedTeamId = new Types.ObjectId(teamId);
@@ -395,7 +395,7 @@ export async function removeUserIdFromTeamInDb(teamId: any, userId: string): Pro
  * @param {any} teamId - The ID of the team to be deleted.
  * @returns {Promise<boolean>} - A Promise that resolves to true if the team is deleted successfully, false otherwise.
  */
-export async function deleteTeamInDb(teamId?: string): Promise<boolean> {
+export async function deleteTeamInDb(teamId: string): Promise<boolean> {
   await dbConnect();
 
   const sanitizedTeam = await validateTeam(sanitizeTeam({ id: teamId }));
