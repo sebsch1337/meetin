@@ -1,22 +1,21 @@
-import PictureBox from "@/components/PictureBox";
-import PictureDropzone from "@/components/PictureDropzone";
-import { deleteImage } from "@/lib/imageLib";
-import { Carousel } from "@mantine/carousel";
+import { PictureBox } from "@/components/PictureBox";
+import { PictureDropzone } from "@/components/PictureDropzone";
+
 import { ActionIcon, Flex, getStylesRef, rem, Image } from "@mantine/core";
+import { Carousel } from "@mantine/carousel";
+
 import { IconDownload } from "@tabler/icons-react";
+
 import Link from "next/link";
 
-export default function LocationDetailsPictures({
-  location,
-  setLoading,
-  setLocation,
-  isMobile,
-}: {
+interface LocationDetailsPicturesProps {
   location: Location;
-  setLoading: any;
-  setLocation: any;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLocation: React.Dispatch<React.SetStateAction<Location>>;
   isMobile: boolean;
-}) {
+}
+
+export const LocationDetailsPictures: React.FC<LocationDetailsPicturesProps> = ({ location, setLoading, setLocation, isMobile }) => {
   return (
     <Flex justify={"center"} align={"center"} direction={"column"} gap={"xs"}>
       <Carousel
@@ -83,7 +82,7 @@ export default function LocationDetailsPictures({
           </Flex>
         </Carousel.Slide>
       </Carousel>
-      <PictureBox location={location} deleteImage={deleteImage} setLocation={setLocation} />
+      <PictureBox location={location} setLocation={setLocation} />
     </Flex>
   );
-}
+};

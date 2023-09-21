@@ -8,7 +8,7 @@ import { sanitizeEvent, validateEvent } from "@/validators/eventValidator";
  * @returns An array of sanitized and validated event objects.
  * @throws Error if the event array is not found or not an array.
  */
-export async function getAllEventsFromDb(teamId: string | undefined): Promise<any[]> {
+export async function getAllEventsFromDb(teamId: string): Promise<any[]> {
   if (!teamId) return [];
 
   await dbConnect();
@@ -23,7 +23,7 @@ export async function getAllEventsFromDb(teamId: string | undefined): Promise<an
     dateTime: event.dateTime.toISOString(),
   }));
 
-  return newEvents;
+  return newEvents.length > 0 ? newEvents : [];
 }
 
 /**
@@ -32,8 +32,8 @@ export async function getAllEventsFromDb(teamId: string | undefined): Promise<an
  * @returns A promise that resolves to the retrieved event.
  * @throws If the event is not found in the database.
  */
-export async function getEventByIdFromDb(eventId: string, teamId: string | undefined): Promise<any> {
-  if (!teamId) return;
+export async function getEventByIdFromDb(eventId: string, teamId: string): Promise<Event | null> {
+  if (!teamId) return null;
 
   await dbConnect();
 
@@ -46,7 +46,7 @@ export async function getEventByIdFromDb(eventId: string, teamId: string | undef
   const newEvent = {
     ...sanitizedEvent,
     dateTime: sanitizedEvent?.dateTime?.toISOString(),
-  };
+  } as Event;
 
   return newEvent;
 }
@@ -58,7 +58,7 @@ export async function getEventByIdFromDb(eventId: string, teamId: string | undef
  * @returns An array of sanitized and validated event objects.
  * @throws Error if the event array is not found or not an array.
  */
-export async function getAllEventsByLocationIdFromDb(locationId: string, teamId: string | undefined): Promise<any> {
+export async function getAllEventsByLocationIdFromDb(locationId: string, teamId: string): Promise<any[]> {
   if (!teamId) return [];
 
   await dbConnect();
@@ -73,7 +73,7 @@ export async function getAllEventsByLocationIdFromDb(locationId: string, teamId:
     dateTime: event.dateTime.toISOString(),
   }));
 
-  return newEvents;
+  return newEvents.length > 0 ? newEvents : [];
 }
 
 /**
@@ -82,7 +82,7 @@ export async function getAllEventsByLocationIdFromDb(locationId: string, teamId:
  * @param event - The event data to store.
  * @returns The sanitized and validated event object.
  */
-export async function postEventToDb(event: any, teamId: string | undefined): Promise<any> {
+export async function postEventToDb(event: Event, teamId: string): Promise<any> {
   if (!teamId) return;
   event.teamId = teamId;
   await dbConnect();
@@ -101,7 +101,7 @@ export async function postEventToDb(event: any, teamId: string | undefined): Pro
  * @returns A Promise that resolves to the updated event document in the database.
  * @throws An error indicating that the update operation did not complete successfully.
  */
-export async function updateEventInDb(id: string, event: Event, teamId: string | undefined): Promise<any> {
+export async function updateEventInDb(id: string, event: Event, teamId: string): Promise<any> {
   if (!teamId) return;
 
   await dbConnect();
@@ -123,7 +123,7 @@ export async function updateEventInDb(id: string, event: Event, teamId: string |
  * @returns A promise that resolves with the status of the deletion operation.
  * @throws If the deletion operation fails.
  */
-export async function deleteEventFromDb(id: string, teamId: string | undefined): Promise<any> {
+export async function deleteEventFromDb(id: string, teamId: string): Promise<any> {
   if (!teamId) return;
 
   await dbConnect();

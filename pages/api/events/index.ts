@@ -10,12 +10,12 @@ export default async function handler(req: any, res: any): Promise<any> {
   } = req;
 
   const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401).json({ message: "unauthorized" });
+  if (!session || !session?.user?.teamId) return res.status(401).json({ message: "unauthorized" });
 
   switch (method) {
     case "GET":
       try {
-        const tags = await getAllEventsFromDb(session?.user?.teamId);
+        const tags = await getAllEventsFromDb(session.user.teamId);
         res.status(200).json(tags);
       } catch (error: any) {
         if (error.status) {
@@ -28,7 +28,7 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "POST":
       try {
-        const newEvent: any = await postEventToDb(req.body, session?.user?.teamId);
+        const newEvent = await postEventToDb(req.body, session.user.teamId);
         res.status(200).json(newEvent);
       } catch (error: any) {
         if (error.status) {

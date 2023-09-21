@@ -2,12 +2,18 @@ import { Button, LoadingOverlay, Space, Stack, Text } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 
-export default function DeleteTeamModal({ team, deleteTeam, signOut }: { team: Team; deleteTeam: any; signOut: any }) {
+interface DeleteTeamModalProps {
+  team: Team;
+  deleteTeam: (teamId: string) => Promise<boolean>;
+  signOut: () => void;
+}
+
+export const DeleteTeamModal: React.FC<DeleteTeamModalProps> = ({ team, deleteTeam, signOut }) => {
   const [visible, setVisible] = useState(false);
 
   const deleteTeamHandler = async () => {
     setVisible(true);
-    const teamDeleted = await deleteTeam(team.id);
+    const teamDeleted = team?.id ? await deleteTeam(team.id) : false;
     if (!teamDeleted) {
       setVisible(false);
       return;
@@ -25,4 +31,4 @@ export default function DeleteTeamModal({ team, deleteTeam, signOut }: { team: T
       </Button>
     </Stack>
   );
-}
+};

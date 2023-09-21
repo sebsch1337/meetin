@@ -1,6 +1,15 @@
 import { Chip, Flex, ScrollArea, Title } from "@mantine/core";
 
-export default function LocationSort({ sortBy, setSortBy }: { sortBy: string; setSortBy: any }) {
+interface LocationSortProps {
+  sortBy: string;
+  setSortBy: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const LocationSort: React.FC<LocationSortProps> = ({ sortBy, setSortBy }) => {
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+  };
+
   return (
     <>
       <Title order={2} size={"h6"} my={"xs"}>
@@ -8,7 +17,7 @@ export default function LocationSort({ sortBy, setSortBy }: { sortBy: string; se
       </Title>
       <ScrollArea type={"never"} style={{ overflow: "auto", whiteSpace: "nowrap" }}>
         <Flex gap={5} wrap={"nowrap"}>
-          <Chip.Group value={sortBy} onChange={setSortBy}>
+          <Chip.Group value={sortBy} onChange={handleSortChange}>
             <Chip value={"aToZ"} color="teal">
               A-Z
             </Chip>
@@ -29,4 +38,4 @@ export default function LocationSort({ sortBy, setSortBy }: { sortBy: string; se
       </ScrollArea>
     </>
   );
-}
+};

@@ -3,7 +3,12 @@ import { Space, Text, TextInput } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 
-export default function WelcomeForm({ setButtonDisabled, setTeamName }: { setButtonDisabled: any; setTeamName: any }) {
+interface WelcomeFormProps {
+  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setTeamName: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const WelcomeForm: React.FC<WelcomeFormProps> = ({ setButtonDisabled, setTeamName }) => {
   const [searchString, setSearchString] = useState("");
   const [inputError, setInputError]: any = useState(false);
   const [debouncedSearchString] = useDebouncedValue(searchString, 200);
@@ -12,9 +17,10 @@ export default function WelcomeForm({ setButtonDisabled, setTeamName }: { setBut
     const fetchTeamName = async (searchString: string) => {
       try {
         if (searchString.length > 0) {
-          const foundTeamName = await getTeamByName(searchString);
+          const foundTeam = await getTeamByName(searchString);
+          const foundTeamName = foundTeam?.name ? foundTeam.name : "";
 
-          if (foundTeamName?.name?.length > 0) {
+          if (foundTeamName.length > 0) {
             setInputError("Name bereits vergeben.");
             setButtonDisabled(true);
           } else {
@@ -54,4 +60,4 @@ export default function WelcomeForm({ setButtonDisabled, setTeamName }: { setBut
       />
     </>
   );
-}
+};

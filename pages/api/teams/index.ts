@@ -10,7 +10,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   } = req;
 
   const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401).json({ message: "unauthorized" });
+  if (!session || !session?.user) return res.status(401).json({ message: "unauthorized" });
 
   try {
     switch (method) {
@@ -21,7 +21,7 @@ export default async function handler(req: any, res: any): Promise<any> {
 
       case "POST":
         const teamData = JSON.parse(req.body);
-        const team = await createTeamInDb(teamData.teamName, session?.user?.id);
+        const team = await createTeamInDb(teamData.teamName, session.user.id);
         res.status(200).json(team);
         break;
 

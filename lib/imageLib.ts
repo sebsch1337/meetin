@@ -1,10 +1,9 @@
 import { uploadImageToCloudinary } from "@/services/cloudinaryService";
+import { FileWithPath } from "@mantine/dropzone";
 
-export const uploadImages = async (uploadedImages: any[], location: any): Promise<Location> => {
+export const uploadImages = async (uploadedImages: FileWithPath[], location: Location): Promise<Location> => {
   try {
-    const uploadedImageData: any[] = await Promise.all(
-      uploadedImages.map(async (image: any) => uploadImageToCloudinary(image))
-    );
+    const uploadedImageData: any[] = await Promise.all(uploadedImages.map(async (image: any) => uploadImageToCloudinary(image)));
 
     const response = await fetch(`/api/locations/${location.id}`, {
       method: "PATCH",
@@ -23,7 +22,11 @@ export const uploadImages = async (uploadedImages: any[], location: any): Promis
   }
 };
 
-export const deleteImage = async (deleteImageId: string, locationId: string, setLocation?: any) => {
+export const deleteImage = async (
+  deleteImageId: string,
+  locationId: string,
+  setLocation?: React.Dispatch<React.SetStateAction<Location>>
+) => {
   const response = await fetch(`/api/images/${deleteImageId.replace("/", "-")}/?locationId=${locationId}`, {
     method: "DELETE",
   });
@@ -34,10 +37,7 @@ export const deleteImage = async (deleteImageId: string, locationId: string, set
       const imageIndexToDelete = location.images.findIndex((image: any) => image.publicId === deleteImageId);
 
       if (imageIndexToDelete >= 0) {
-        const newImages = [
-          ...location.images.slice(0, imageIndexToDelete),
-          ...location.images.slice(imageIndexToDelete + 1),
-        ];
+        const newImages = [...location.images.slice(0, imageIndexToDelete), ...location.images.slice(imageIndexToDelete + 1)];
 
         const newLocation = { ...location, images: newImages };
         return newLocation;

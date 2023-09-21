@@ -1,16 +1,13 @@
 import { Modal } from "@mantine/core";
 
-export default function FormModal({
-  opened,
-  close,
-  title = "",
-  children,
-}: {
+interface FormModalProps {
   opened: boolean;
-  close: any;
-  title: string | undefined;
-  children: any;
-}) {
+  close: () => void;
+  title?: string;
+  children: React.ReactNode;
+}
+
+export const FormModal: React.FC<FormModalProps> = ({ opened, close, title = "", children }) => {
   return (
     <Modal.Root opened={opened} onClose={close} centered>
       <Modal.Overlay />
@@ -23,4 +20,4 @@ export default function FormModal({
       </Modal.Content>
     </Modal.Root>
   );
-}
+};

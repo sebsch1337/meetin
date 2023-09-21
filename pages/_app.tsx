@@ -9,7 +9,7 @@ import { RouterTransition } from "@/components/RouterTransition";
 
 import { SessionProvider } from "next-auth/react";
 
-export default function App(props: AppProps) {
+const App: React.FC<AppProps> = (props) => {
   const {
     Component,
     pageProps: { session, ...pageProps },
@@ -41,4 +41,6 @@ export default function App(props: AppProps) {
       </MantineProvider>
     </>
   );
-}
+};
+
+export default App;

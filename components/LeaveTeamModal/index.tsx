@@ -4,12 +4,16 @@ import { IconDoorExit } from "@tabler/icons-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 
-export default function LeaveTeamModal({ userId }: { userId: any }) {
+interface LeaveTeamModal {
+  userId?: string;
+}
+
+export const LeaveTeamModal: React.FC<LeaveTeamModal> = ({ userId }) => {
   const [visible, setVisible] = useState(false);
 
   const leaveTeamHandler = async () => {
     setVisible(true);
-    const userRemoved = await removeUserFromTeam(userId);
+    const userRemoved = userId ? await removeUserFromTeam(userId) : false;
     if (!userRemoved) {
       setVisible(false);
       return;
@@ -28,4 +32,4 @@ export default function LeaveTeamModal({ userId }: { userId: any }) {
       </Button>
     </Stack>
   );
-}
+};

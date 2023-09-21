@@ -8,7 +8,7 @@ import Tags from "../models/tagsModel";
  * @returns An array of sanitized and validated tag objects.
  * @throws Error if the tag array is not found or not an array.
  */
-export async function getAllTagsFromDb(): Promise<any> {
+export async function getAllTagsFromDb(): Promise<any[]> {
   await dbConnect();
 
   const tags = await Tags.find({});

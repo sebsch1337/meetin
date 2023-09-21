@@ -2,7 +2,11 @@ import { getLocalDateTimeShort } from "@/utils/date";
 import { Table, Text } from "@mantine/core";
 import Link from "next/link";
 
-export default function LocationDetailsHistory({ locationEvents = [] }: { locationEvents: any }) {
+interface LocationDetailsHistoryProps {
+  locationEvents: Event[];
+}
+
+export const LocationDetailsHistory: React.FC<LocationDetailsHistoryProps> = ({ locationEvents = [] }) => {
   return (
     <Table>
       <thead>
@@ -26,4 +30,4 @@ export default function LocationDetailsHistory({ locationEvents = [] }: { locati
       </tbody>
     </Table>
   );
-}
+};

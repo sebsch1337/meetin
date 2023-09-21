@@ -10,7 +10,7 @@ import { IconCheck, IconX } from "@tabler/icons-react";
  *                        The function makes a GET request to the API using the provided teamId and returns the data obtained.
  *                        If the team with the given ID is not found, the Promise resolves to undefined.
  */
-export const getTeamById = async (teamId: string): Promise<any> => {
+export const getTeamById = async (teamId: string): Promise<Team> => {
   const sanitizedInput = await validateTeam(sanitizeTeam({ id: teamId }));
 
   const response = await fetch(`/api/teams/search?teamid=${sanitizedInput.id}`, {
@@ -27,7 +27,7 @@ export const getTeamById = async (teamId: string): Promise<any> => {
  * @param teamName The name of the team used to search for the team.
  * @returns A Promise that resolves to the team data retrieved from the API.
  */
-export const getTeamByName = async (teamName: string): Promise<any> => {
+export const getTeamByName = async (teamName: string): Promise<Team> => {
   const sanitizedTeamName = teamName.replaceAll(" ", "+");
   const response = await fetch(`/api/teams/search?teamname=${sanitizedTeamName}`, {
     method: "GET",
@@ -43,7 +43,7 @@ export const getTeamByName = async (teamName: string): Promise<any> => {
  * @param eMail The email address used to search for the team invitation.
  * @returns A Promise that resolves to the team data retrieved from the API.
  */
-export const getTeamByInvitedEmail = async (eMail: string): Promise<any> => {
+export const getTeamByInvitedEmail = async (eMail: string): Promise<Team> => {
   const response = await fetch(`/api/teams/search?invitedemail=${eMail}`, {
     method: "GET",
   });
@@ -60,7 +60,7 @@ export const getTeamByInvitedEmail = async (eMail: string): Promise<any> => {
  * @returns If the invitation is successfully created, returns the response data from the server.
  *          Otherwise, returns `false` and displays an error notification.
  */
-export const createInvitation = async (eMail: string, role: string): Promise<any> => {
+export const createInvitation = async (eMail: string, role: string): Promise<Team["invitedEmails"]> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",
     body: JSON.stringify({ type: "create", eMail, role }),
@@ -76,7 +76,7 @@ export const createInvitation = async (eMail: string, role: string): Promise<any
         title: "Teameinladung",
         message: `${eMail} erfolgreich eingladen.`,
       });
-      return data;
+      return data.invitedEmails;
     }
   }
 
@@ -89,7 +89,6 @@ export const createInvitation = async (eMail: string, role: string): Promise<any
     title: eMail,
     message: errorMessage,
   });
-  return false;
 };
 
 /**
@@ -100,7 +99,7 @@ export const createInvitation = async (eMail: string, role: string): Promise<any
  *                        If the API response is not successful, it shows an error notification.
  *                        If the API response is not successful, the Promise resolves to false.
  */
-export const acceptInvitation = async (): Promise<any> => {
+export const acceptInvitation = async (): Promise<void> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",
     body: JSON.stringify({ type: "accept" }),
@@ -115,8 +114,7 @@ export const acceptInvitation = async (): Promise<any> => {
       title: "Teameinladung",
       message: `Team erfolgreich beigetreten.`,
     });
-
-    return data;
+    return;
   }
 
   notifications.show({
@@ -125,7 +123,7 @@ export const acceptInvitation = async (): Promise<any> => {
     title: "Teameinladung",
     message: "Fehler beim Teambeitritt.",
   });
-  return false;
+  throw new Error();
 };
 
 /**
@@ -135,7 +133,7 @@ export const acceptInvitation = async (): Promise<any> => {
  *          - If the response from the API is successful, the Promise resolves to true.
  *          - If the response from the API is not successful, the Promise resolves to false.
  */
-export const declineInvitation = async (eMail?: string): Promise<any> => {
+export const declineInvitation = async (eMail: string): Promise<InvitedEmails[]> => {
   const response = await fetch(`/api/teams/invitation`, {
     method: "POST",
     body: JSON.stringify({ type: "decline", eMail }),
@@ -156,10 +154,10 @@ export const declineInvitation = async (eMail?: string): Promise<any> => {
       message: deleteMessage,
     });
 
-    return data;
+    return data.invitedEmails;
   }
 
-  return false;
+  return [];
 };
 
 /**
@@ -240,7 +238,7 @@ export const removeUserFromTeam = async (userId: string): Promise<boolean> => {
  * @param {string} teamId - The ID of the team to fetch users and admins for.
  * @returns {Promise<false | UserData[]>} A Promise that resolves to an array of UserData or false if the request fails.
  */
-export const getUsersAndAdminsForTeamId = async (teamId: string): Promise<any> => {
+export const getUsersAndAdminsForTeamId = async (teamId: string): Promise<Member[]> => {
   const response = await fetch(`/api/teams/users`, {
     method: "GET",
   });

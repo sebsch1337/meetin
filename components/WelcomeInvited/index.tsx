@@ -2,15 +2,14 @@ import { acceptInvitation, declineInvitation } from "@/lib/teamLib";
 import { Blockquote, Button, Group, Text } from "@mantine/core";
 import { IconComet } from "@tabler/icons-react";
 
-export default function WelcomeInvited({
-  invitedTeam,
-  setButtonDisabled,
-  setInvitationState,
-}: {
+interface WelcomeInvitedProps {
+  eMail: string;
   invitedTeam: Team;
-  setButtonDisabled: any;
-  setInvitationState: any;
-}) {
+  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setInvitationState: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const WelcomeInvited: React.FC<WelcomeInvitedProps> = ({ eMail, invitedTeam, setButtonDisabled, setInvitationState }) => {
   return (
     <Blockquote p={"sm"} icon={<IconComet size={"2rem"} />}>
       <Text>
@@ -24,10 +23,10 @@ export default function WelcomeInvited({
         <Button
           size="xs"
           fullWidth
-          onClick={() => {
+          onClick={async () => {
             setButtonDisabled(false);
             setInvitationState("accepted");
-            acceptInvitation();
+            await acceptInvitation();
           }}
         >
           Einladung annehmen
@@ -38,7 +37,7 @@ export default function WelcomeInvited({
           variant="outline"
           onClick={() => {
             setButtonDisabled(false);
-            declineInvitation();
+            declineInvitation(eMail);
             setInvitationState("declined");
           }}
         >
@@ -47,4 +46,4 @@ export default function WelcomeInvited({
       </Group>
     </Blockquote>
   );
-}
+};

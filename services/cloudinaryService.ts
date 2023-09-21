@@ -5,7 +5,7 @@ const apiKey = "129367815296377";
 const apiSecret = process.env.CLOUDINARY_SECRET;
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}`;
 
-export const createCloudinarySignature = (publicId: any, timestamp: any, uploadPreset: any): string => {
+export const createCloudinarySignature = (publicId: string, timestamp: string, uploadPreset: string): string => {
   const secret = `${publicId ? `public_id=${publicId}&` : ""}${timestamp ? `timestamp=${timestamp}` : ""}${
     uploadPreset ? `&upload_preset=${uploadPreset}` : ""
   }${apiSecret}`;
@@ -51,7 +51,7 @@ export const uploadImageToCloudinary = async (image: any): Promise<any> => {
 
 export const deleteImageFromCloudinary = async (publicId: string): Promise<any> => {
   const timestamp = Math.floor(Date.now() / 1000).toString();
-  const signature = createCloudinarySignature(publicId, timestamp, null);
+  const signature = createCloudinarySignature(publicId, timestamp, "");
 
   const formData = new FormData();
   formData.append("public_id", publicId);
@@ -71,6 +71,6 @@ export const deleteImageFromCloudinary = async (publicId: string): Promise<any> 
       throw error;
     }
   } catch (error) {
-    return error;
+    return 500;
   }
 };

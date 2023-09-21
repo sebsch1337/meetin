@@ -11,7 +11,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   } = req;
 
   const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401).json({ message: "unauthorized" });
+  if (!session || !session.user?.teamId) return res.status(401).json({ message: "unauthorized" });
 
   const role = await getUserRoleInTeamFromDb(session.user?.id, session.user?.teamId);
   if (role !== "admin") return res.status(403).json({ message: "forbidden" });
@@ -19,7 +19,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   try {
     switch (method) {
       case "GET":
-        const users = await getUsersAndAdminsForTeamFromDb(session?.user?.teamId);
+        const users = session?.user?.teamId ? await getUsersAndAdminsForTeamFromDb(session.user.teamId) : [];
         return res.status(200).json(users);
 
       case "POST":

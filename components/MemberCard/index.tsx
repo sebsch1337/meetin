@@ -1,31 +1,35 @@
-import PaperCard from "../PaperCard";
-import MemberCardItem from "../MemberCardItem";
+import { PaperCard } from "../PaperCard";
+import { MemberCardItem } from "../MemberCardItem";
 import { changeUserRole, getUsersAndAdminsForTeamId, removeUserFromTeam } from "@/lib/teamLib";
 import { useRouter } from "next/router";
+import { Session } from "next-auth/core/types";
 
-export default function MemberCard({
-  teamId,
-  teamMembers,
-  setTeamMembers,
-  session,
-}: {
-  teamId: any;
-  teamMembers: any[];
-  setTeamMembers: any;
-  session: any;
-}) {
+interface MemberCardProps {
+  teamId?: string;
+  teamMembers: Team[];
+  setTeamMembers: React.Dispatch<React.SetStateAction<Member[]>>;
+  session: Session | null;
+}
+
+export const MemberCard: React.FC<MemberCardProps> = ({ teamId, teamMembers, setTeamMembers, session }) => {
   const router = useRouter();
 
   const deleteItemHandler = async (userId: any) => {
+    if (!userId || !teamId || !session) return;
+
     await removeUserFromTeam(userId);
-    if (userId === session.user.id) router.push("/team");
+    if (userId === session.user?.id) router.push("/team");
+
     const newMembers = await getUsersAndAdminsForTeamId(teamId);
     setTeamMembers(newMembers);
   };
 
-  const changeRoleHandler = async (userId: string, role: string) => {
+  const changeRoleHandler = async (userId?: string, role?: string) => {
+    if (!userId || !role || !teamId) return;
+
     await changeUserRole(userId, role);
-    if (userId === session.user.id) router.push("/team");
+    if (userId === session?.user?.id) router.push("/team");
+
     const newMembers = await getUsersAndAdminsForTeamId(teamId);
     setTeamMembers(newMembers);
   };
@@ -36,10 +40,10 @@ export default function MemberCard({
         <MemberCardItem
           key={member.id}
           member={member}
-          changeUserRole={changeRoleHandler}
+          changeRoleHandler={changeRoleHandler}
           deleteItem={async () => await deleteItemHandler(member.id)}
         />
       ))}
     </PaperCard>
   );
-}
+};

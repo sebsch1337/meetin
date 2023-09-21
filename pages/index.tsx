@@ -8,22 +8,25 @@ import { getAllLocationsFromDb } from "@/services/locationService";
 
 import { Title, Container, Stack, Grid, Space, Text } from "@mantine/core";
 
-import EventCardCompact from "@/components/EventCardCompact";
-import WelcomeModal from "@/components/WelcomeModal";
+import { EventCardCompact } from "@/components/EventCardCompact";
+import { WelcomeModal } from "@/components/WelcomeModal";
 
 import dynamic from "next/dynamic";
 import { getTeamByInvitedEmailFromDb } from "@/services/teamService";
 import { useState } from "react";
+import { GetServerSidePropsContext } from "next";
 
 const OverviewMap = dynamic((): any => import("@/components/OverviewMap"), {
   ssr: false,
 });
 
-export async function getServerSideProps(context: any) {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return { redirect: { destination: "/login", permanent: false } };
 
-  const [locations, events] = await Promise.all([getAllLocationsFromDb(session?.user?.teamId), getAllEventsFromDb(session?.user?.teamId)]);
+  const [locations, events] = session?.user?.teamId
+    ? await Promise.all([getAllLocationsFromDb(session?.user?.teamId), getAllEventsFromDb(session?.user?.teamId)])
+    : [[], []];
 
   const invitedTeam = !session?.user?.teamId && session?.user?.email ? await getTeamByInvitedEmailFromDb(session?.user?.email) : null;
   const showWelcome = !session?.user?.teamId;
@@ -36,19 +39,16 @@ export async function getServerSideProps(context: any) {
       showWelcome,
     },
   };
-}
+};
 
-export default function Home({
-  locations,
-  events,
-  invitedTeam,
-  showWelcome,
-}: {
+interface HomeProps {
   locations: Location[];
   events: Event[];
   invitedTeam: Team;
   showWelcome: boolean;
-}) {
+}
+
+const Home: React.FC<HomeProps> = ({ locations, events, invitedTeam, showWelcome }) => {
   const { data: session } = useSession();
 
   const [showWelcomeModal, setShowWelcomeModal] = useState(showWelcome);
@@ -74,7 +74,7 @@ export default function Home({
                     <EventCardCompact
                       key={event.id}
                       event={event}
-                      location={locations.find((location) => location.id === event.locationId)}
+                      location={locations?.find((location) => location.id === event.locationId)}
                     />
                   ))
                 ) : (
@@ -118,4 +118,6 @@ export default function Home({
       )}
     </>
   );
-}
+};
+
+export default Home;

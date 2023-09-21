@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { createStyles, Header, Group, ActionIcon, Container, Burger, rem, Text, Drawer, ScrollArea, Divider, Button } from "@mantine/core";
+import { createStyles, Header, Group, Container, Burger, rem, Text, Drawer, ScrollArea, Divider, Button } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { IconBrandInstagram, IconBrandFacebook, IconHeartHandshake } from "@tabler/icons-react";
+import { IconHeartHandshake } from "@tabler/icons-react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { useSession, signOut } from "next-auth/react";
 
-import UserMenu from "@/components/UserMenu";
+import { UserMenu } from "@/components/UserMenu";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -92,7 +92,7 @@ interface HeaderMiddleProps {
   children: any;
 }
 
-export default function HeaderMiddle({ children }: HeaderMiddleProps) {
+const HeaderMiddle: React.FC<HeaderMiddleProps> = ({ children }) => {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
 
@@ -221,4 +221,6 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
       <main>{children}</main>
     </>
   );
-}
+};
+
+export default HeaderMiddle;

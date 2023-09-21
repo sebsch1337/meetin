@@ -1,8 +1,14 @@
 import { Avatar, Menu, UnstyledButton } from "@mantine/core";
 import { IconLogout, IconSettings, IconTrash, IconUsersGroup } from "@tabler/icons-react";
+import { Session } from "next-auth/core/types";
 import Link from "next/link";
 
-export default function UserMenu({ session, signOut }: { session: any; signOut: any }) {
+interface UserMenuProps {
+  session: Session;
+  signOut: Function;
+}
+
+export const UserMenu: React.FC<UserMenuProps> = ({ session, signOut }) => {
   return (
     <Menu shadow="md" withArrow>
       <Menu.Target>
@@ -32,4 +38,4 @@ export default function UserMenu({ session, signOut }: { session: any; signOut: 
       </Menu.Dropdown>
     </Menu>
   );
-}
+};

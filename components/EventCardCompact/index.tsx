@@ -4,19 +4,24 @@ import Image from "next/image";
 import { getLocalDateTimeLong } from "@/utils/date";
 
 import { IconPhotoOff } from "@tabler/icons-react";
-import NoGoIcon from "../NoGoIcon";
+import { NoGoIcon } from "../NoGoIcon";
 import Link from "next/link";
 
-export default function EventCardCompact({ event, location }: { event: Event; location: any }) {
+interface EventCardCompact {
+  event: Event;
+  location?: Location;
+}
+
+export const EventCardCompact: React.FC<EventCardCompact> = ({ event, location }) => {
   return (
     <Card component={Link} href={`/events/${event.id}`} style={{ background: "transparent" }} p={"xs"}>
       <Group noWrap>
-        {location?.images?.length > 0 ? (
+        {location && location.images.length > 0 ? (
           <Image
-            src={location?.images[0].url}
+            src={location.images[0].url}
             width={50}
             height={50}
-            alt={`Bild von ${location?.name}`}
+            alt={`Bild von ${location.name}`}
             style={{ objectFit: "cover", borderRadius: 5 }}
           />
         ) : (
@@ -44,4 +49,4 @@ export default function EventCardCompact({ event, location }: { event: Event; lo
       </Group>
     </Card>
   );
-}
+};

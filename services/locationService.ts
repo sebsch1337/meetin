@@ -9,7 +9,7 @@ import { deleteImageFromCloudinary } from "./cloudinaryService";
  * @returns An array of sanitized and validated location objects.
  * @throws Error if the locations array is not found or not an array.
  */
-export async function getAllLocationsFromDb(teamId: string | undefined): Promise<any> {
+export async function getAllLocationsFromDb(teamId: string): Promise<any> {
   if (!teamId) return [];
 
   await dbConnect();

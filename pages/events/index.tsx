@@ -1,30 +1,31 @@
-import { Space, Group, Button, Loader, Container, SimpleGrid, Flex, Center } from "@mantine/core";
+import { Space, Group, Button, Loader, Container, SimpleGrid, Center } from "@mantine/core";
 
-import EventCard from "@/components/EventCard";
+import { EventCard } from "@/components/EventCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
-import EventForm from "@/components/EventForm";
+import { EventForm } from "@/components/EventForm";
 
 import { eventsAtom, locationsAtom } from "@/store";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { getAllEvents } from "@/lib/eventLib";
 import { getAllLocations } from "@/lib/locationLib";
-import FormModal from "@/components/FormModal";
-import SearchInput from "@/components/SearchInput";
+import { FormModal } from "@/components/FormModal";
+import { SearchInput } from "@/components/SearchInput";
 
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import { GetServerSidePropsContext } from "next";
 
-export async function getServerSideProps(context: any) {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return { redirect: { destination: "/login", permanent: false } };
   if (!session?.user?.teamId) return { redirect: { destination: "/", permanent: false } };
 
   return { props: {} };
-}
+};
 
-export default function Events() {
+const Events: React.FC = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [events, setEvents] = useAtom(eventsAtom);
   const [locations, setLocations] = useAtom(locationsAtom);
@@ -81,4 +82,6 @@ export default function Events() {
       </Container>
     </>
   );
-}
+};
+
+export default Events;

@@ -1,13 +1,12 @@
 import { Input } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
-export default function SearchInput({
-  searchString,
-  setSearchString,
-}: {
+interface SearchInputProps {
   searchString: string;
-  setSearchString: any;
-}) {
+  setSearchString: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const SearchInput: React.FC<SearchInputProps> = ({ searchString, setSearchString }) => {
   return (
     <Input
       icon={<IconSearch size="1rem" />}
@@ -16,4 +15,4 @@ export default function SearchInput({
       onChange={(event) => setSearchString(event.target.value)}
     />
   );
-}
+};

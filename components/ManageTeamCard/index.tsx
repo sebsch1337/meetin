@@ -1,18 +1,15 @@
 import { Button } from "@mantine/core";
-import PaperCard from "../PaperCard";
+import { PaperCard } from "../PaperCard";
 import { IconDoorExit, IconPlus, IconTrash } from "@tabler/icons-react";
 
-export default function ManageTeamCard({
-  team,
-  setModal,
-  openModal,
-  isAdmin = false,
-}: {
+interface ManageTeamCardProps {
   team: Team;
-  setModal: any;
-  openModal: any;
+  setModal: React.Dispatch<React.SetStateAction<Modal>>;
+  openModal: Function;
   isAdmin: boolean;
-}) {
+}
+
+export const ManageTeamCard: React.FC<ManageTeamCardProps> = ({ team, setModal, openModal, isAdmin = false }) => {
   return (
     <PaperCard title={`Team '${team.name}' verwalten`}>
       {isAdmin && (
@@ -55,4 +52,4 @@ export default function ManageTeamCard({
       </Button>
     </PaperCard>
   );
-}
+};

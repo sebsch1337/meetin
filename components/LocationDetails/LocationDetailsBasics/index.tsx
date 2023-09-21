@@ -1,30 +1,15 @@
-import {
-  ActionIcon,
-  Badge,
-  Center,
-  Container,
-  Divider,
-  Grid,
-  Group,
-  Space,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, Badge, Center, Container, Divider, Grid, Group, Space, Stack, Text, Title } from "@mantine/core";
 import { IconHome, IconPhone, IconSun } from "@tabler/icons-react";
 import Link from "next/link";
 
-export default function LocationDetailsBasics({
-  location,
-  averageVisitors,
-  lastVisit,
-  tags,
-}: {
+interface LocationDetailsBasicsProps {
   location: Location;
   averageVisitors: number;
   lastVisit: string;
   tags: Tag[];
-}) {
+}
+
+export const LocationDetailsBasics: React.FC<LocationDetailsBasicsProps> = ({ location, averageVisitors, lastVisit, tags }) => {
   return (
     <Container fluid px={"xl"} py={"xs"}>
       <Grid grow>
@@ -74,13 +59,7 @@ export default function LocationDetailsBasics({
                   <Group spacing={"xs"}>
                     <Text size={"sm"}>{location?.tel || "-"}</Text>
                     {location?.tel && (
-                      <ActionIcon
-                        component={Link}
-                        href={`tel://${location?.tel}`}
-                        size={"sm"}
-                        color="teal"
-                        variant="light"
-                      >
+                      <ActionIcon component={Link} href={`tel://${location?.tel}`} size={"sm"} color="teal" variant="light">
                         <IconPhone size={"0.9rem"} />
                       </ActionIcon>
                     )}
@@ -92,9 +71,7 @@ export default function LocationDetailsBasics({
                 <Grid.Col span={6}>
                   <Stack spacing={0}>
                     <Text size={"sm"}>{`${location?.address?.road} ${location?.address?.houseNo}`}</Text>
-                    <Text
-                      size={"sm"}
-                    >{`${location?.address?.postcode} ${location?.address?.city}-${location?.address?.suburb}`}</Text>
+                    <Text size={"sm"}>{`${location?.address?.postcode} ${location?.address?.city}-${location?.address?.suburb}`}</Text>
                   </Stack>
                 </Grid.Col>
               </Grid>
@@ -113,12 +90,7 @@ export default function LocationDetailsBasics({
                     </Badge>
                   ))
                 ) : (
-                  <Text
-                    size={"sm"}
-                    mt={"xs"}
-                    fs={!location?.tags ? "italic" : ""}
-                    c={!location?.tags ? "dimmed" : ""}
-                  >
+                  <Text size={"sm"} mt={"xs"} fs={!location?.tags ? "italic" : ""} c={!location?.tags ? "dimmed" : ""}>
                     {location?.tags || "Keine Tags vorhanden."}
                   </Text>
                 )}
@@ -165,4 +137,4 @@ export default function LocationDetailsBasics({
       </Grid>
     </Container>
   );
-}
+};
