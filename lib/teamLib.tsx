@@ -157,7 +157,7 @@ export const declineInvitation = async (eMail: string): Promise<InvitedEmails[]>
     return data.invitedEmails;
   }
 
-  throw new Error();
+  return [];
 };
 
 /**

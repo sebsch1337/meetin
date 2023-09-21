@@ -11,7 +11,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   } = req;
 
   const session = await getServerSession(req, res, authOptions);
-  if (!session || !session?.user?.teamId || !session?.user?.email) return res.status(401).json({ message: "unauthorized" });
+  if (!session || !session?.user?.email) return res.status(401).json({ message: "unauthorized" });
 
   switch (method) {
     case "POST":
@@ -36,7 +36,7 @@ export default async function handler(req: any, res: any): Promise<any> {
         }
 
         if (invitation.type === "decline") {
-          if (invitation.eMail) {
+          if (invitation.eMail && session.user.teamId) {
             const role = await getUserRoleInTeamFromDb(session.user.id, session.user.teamId);
             if (role === "admin") {
               const newInvitations = await deleteEmailFromInvitationsInDb(invitation.eMail);

@@ -96,12 +96,11 @@ export async function getTeamByInvitedEmailFromDb(invitedEmail: string): Promise
   const team = await Teams.findOne({ "invitedEmails.email": sanitizedInput.email });
 
   if (!team) {
-    console.error("Team not found.");
+    console.error(`Invitation for ${sanitizedInput.email} not found`);
     return false;
   }
 
   const sanitizedTeam = await validateTeam(sanitizeTeam(team));
-
   return sanitizedTeam;
 }
 
