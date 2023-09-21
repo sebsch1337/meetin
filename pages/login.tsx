@@ -3,7 +3,7 @@ import { IconBrandFacebook, IconBrandGoogle, IconHeartHandshake } from "@tabler/
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
 
-export default function Login() {
+const Login: React.FC = () => {
   const { data: session } = useSession();
 
   const [visible, setVisible] = useState(false);
@@ -32,7 +32,6 @@ export default function Login() {
               Anmelden mit Facebook
             </Button>
             <Button
-              // disabled
               w={"100%"}
               color={"red"}
               leftIcon={<IconBrandGoogle />}
@@ -57,4 +56,6 @@ export default function Login() {
       </Stack>
     </Center>
   );
-}
+};
+
+export default Login;

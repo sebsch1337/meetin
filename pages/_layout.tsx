@@ -92,7 +92,7 @@ interface HeaderMiddleProps {
   children: any;
 }
 
-export default function HeaderMiddle({ children }: HeaderMiddleProps) {
+const HeaderMiddle: React.FC<HeaderMiddleProps> = ({ children }) => {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
 
@@ -221,4 +221,6 @@ export default function HeaderMiddle({ children }: HeaderMiddleProps) {
       <main>{children}</main>
     </>
   );
-}
+};
+
+export default HeaderMiddle;

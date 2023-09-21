@@ -16,17 +16,19 @@ import { deleteEvent } from "@/lib/eventLib";
 
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import { GetServerSidePropsContext } from "next";
 
-export async function getServerSideProps(context: any) {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return { redirect: { destination: "/login", permanent: false } };
   if (!session?.user?.teamId) return { redirect: { destination: "/", permanent: false } };
 
-  const eventId = context.params.eventId;
+  const eventId = context.params?.eventId;
 
   try {
-    const eventData = await getEventByIdFromDb(eventId, session?.user?.teamId);
-    const locationData = await getAllLocationsFromDb(session?.user?.teamId);
+    if (typeof eventId !== "string") throw new Error();
+    const eventData = await getEventByIdFromDb(eventId, session.user.teamId);
+    const locationData = await getAllLocationsFromDb(session.user.teamId);
 
     return {
       props: {
@@ -38,9 +40,14 @@ export async function getServerSideProps(context: any) {
     console.error(error);
     return { redirect: { destination: "/404", permanent: false } };
   }
+};
+
+interface EventDetailsProps {
+  eventData: Event;
+  locationData: Location[];
 }
 
-export default function EventDetails({ eventData, locationData }: { eventData: Event; locationData: Location[] }) {
+const EventDetails: React.FC<EventDetailsProps> = ({ eventData, locationData }) => {
   const [event, setEvent] = useState(eventData ?? {});
   const [location, setLocation] = useState<Location>();
   const [modal, setModal] = useState<Modal>({});
@@ -212,4 +219,6 @@ export default function EventDetails({ eventData, locationData }: { eventData: E
       </Container>
     </>
   );
-}
+};
+
+export default EventDetails;

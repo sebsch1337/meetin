@@ -16,11 +16,12 @@ import { useSession, signOut } from "next-auth/react";
 import { getTeamByIdFromDb, getUsersAndAdminsForTeamFromDb } from "@/services/teamService";
 import { getUserRoleInTeamFromDb } from "@/services/userService";
 
-import { createInvitation, deleteTeam } from "@/lib/teamLib";
+import { deleteTeam } from "@/lib/teamLib";
 import { DeleteTeamModal } from "@/components/DeleteTeamModal";
 import { LeaveTeamModal } from "@/components/LeaveTeamModal";
+import { GetServerSidePropsContext } from "next";
 
-export async function getServerSideProps(context: any) {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return { redirect: { destination: "/login", permanent: false } };
   if (!session?.user?.teamId) return { redirect: { destination: "/", permanent: false } };
@@ -31,9 +32,15 @@ export async function getServerSideProps(context: any) {
   if (!team || !members || !userRole) return { redirect: { destination: "/", permanent: false } };
 
   return { props: { team, members, userRole } };
+};
+
+interface ManageTeamProps {
+  team: Team;
+  members: Member[];
+  userRole: string;
 }
 
-export default function ManageTeam({ team, members, userRole }: { team: Team; members: any[]; userRole: string }) {
+const ManageTeam: React.FC<ManageTeamProps> = ({ team, members, userRole }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [modal, setModal] = useState<Modal>({});
@@ -67,4 +74,6 @@ export default function ManageTeam({ team, members, userRole }: { team: Team; me
       </Container>
     </>
   );
-}
+};
+
+export default ManageTeam;
