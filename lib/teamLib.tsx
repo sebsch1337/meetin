@@ -89,7 +89,6 @@ export const createInvitation = async (eMail: string, role: string): Promise<Tea
     title: eMail,
     message: errorMessage,
   });
-  throw new Error();
 };
 
 /**
@@ -239,7 +238,7 @@ export const removeUserFromTeam = async (userId: string): Promise<boolean> => {
  * @param {string} teamId - The ID of the team to fetch users and admins for.
  * @returns {Promise<false | UserData[]>} A Promise that resolves to an array of UserData or false if the request fails.
  */
-export const getUsersAndAdminsForTeamId = async (teamId: string): Promise<string[]> => {
+export const getUsersAndAdminsForTeamId = async (teamId: string): Promise<Member[]> => {
   const response = await fetch(`/api/teams/users`, {
     method: "GET",
   });
