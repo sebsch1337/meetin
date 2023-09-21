@@ -1,4 +1,4 @@
-import { getTeamByIdFromDb, getTeamByInvitedEmailFromDb, getTeamByNameFromDb, removeUserIdFromTeamInDb } from "@/services/teamService";
+import { removeUserIdFromTeamInDb } from "@/services/teamService";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
@@ -11,7 +11,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   } = req;
 
   const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401).json({ message: "unauthorized" });
+  if (!session || !session.user?.teamId) return res.status(401).json({ message: "unauthorized" });
 
   const role = await getUserRoleInTeamFromDb(session.user?.id, session.user?.teamId);
   if (role !== "admin") return res.status(403).json({ message: "forbidden" });
@@ -19,7 +19,7 @@ export default async function handler(req: any, res: any): Promise<any> {
   switch (method) {
     case "DELETE":
       try {
-        const removedUser = await removeUserIdFromTeamInDb(session?.user?.teamId, userId);
+        const removedUser = await removeUserIdFromTeamInDb(session.user.teamId, userId);
         return res.status(200).json({ deleted: removedUser });
       } catch (error: any) {
         if (error.status) {

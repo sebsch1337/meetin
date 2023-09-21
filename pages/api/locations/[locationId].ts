@@ -10,12 +10,12 @@ export default async function handler(req: any, res: any): Promise<any> {
   } = req;
 
   const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401).json({ message: "unauthorized" });
+  if (!session || !session?.user?.teamId) return res.status(401).json({ message: "unauthorized" });
 
   switch (method) {
     case "PATCH":
       try {
-        const udpatedLocation = await updateLocationInDb(locationId, req.body.values, session?.user?.teamId);
+        const udpatedLocation = await updateLocationInDb(locationId, req.body.values, session.user.teamId);
         res.status(200).json(udpatedLocation);
       } catch (error: any) {
         if (error.status) {
@@ -28,7 +28,7 @@ export default async function handler(req: any, res: any): Promise<any> {
 
     case "DELETE":
       try {
-        const deletedLocation: any = await deleteLocationFromDb(locationId, session?.user?.teamId);
+        const deletedLocation: any = await deleteLocationFromDb(locationId, session.user.teamId);
         res.status(200).json(deletedLocation);
       } catch (error: any) {
         if (error.status) {
