@@ -17,7 +17,7 @@ export default async function handler(req: any, res: any): Promise<any> {
     case "POST":
       const invitation = await JSON.parse(req.body);
       try {
-        if (invitation.type === "create") {
+        if (invitation.type === "create" && session.user.teamId) {
           const userRole = await getUserRoleInTeamFromDb(session.user.id, session.user.teamId);
           const team = await addEmailToInvitedEmailsInDb(invitation.eMail, invitation.role, session.user.teamId, userRole);
           if (!team) {
