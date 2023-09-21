@@ -15,10 +15,15 @@ export const getEventsByLocationId = (locationId: string, events: Event[]): Even
  * @param events An array of Event objects.
  * @returns The last visit event object or `false` if no events are found for the location.
  */
-export const getLastVisit = (locationId: string, events: Event[]): Event => {
+export const getLastVisit = (locationId: string, events: Event[]): Event | null => {
   const locationEvents = getEventsByLocationId(locationId, events);
 
-  return locationEvents?.reduce((prev: any, current: any) => (prev.dateTime > current.dateTime ? prev : current));
+  const lastVisit =
+    locationEvents.length > 0
+      ? locationEvents?.reduce((prev: any, current: any) => (prev.dateTime > current.dateTime ? prev : current))
+      : null;
+
+  return lastVisit;
 };
 
 /**
