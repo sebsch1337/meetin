@@ -1,5 +1,6 @@
 interface Event {
   id?: string;
+  _id?: string;
   name: string;
   locationId: string;
   dateTime: date | string;
